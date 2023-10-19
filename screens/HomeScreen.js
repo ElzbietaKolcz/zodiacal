@@ -6,7 +6,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View>
       <Text>Home Screen</Text>
       <Button
         title="Horoscope"
@@ -14,6 +14,6 @@ const HomeScreen = () => {
       ></Button>
     </View>
   );
-}
+};
 
 export default HomeScreen;

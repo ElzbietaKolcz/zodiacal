@@ -4,7 +4,7 @@ import SignIn from "./SignIn";
 import HomeScreen from "./HomeScreen";
 import Horoscope from "./Horoscope";
 import SignUp from "./SignUp";
-import useAuth from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 const Stack = createNativeStackNavigator();
 

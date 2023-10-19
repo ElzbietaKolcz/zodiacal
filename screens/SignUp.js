@@ -10,7 +10,11 @@ import {
 import images from "../images";
 import { TextInput } from "react-native-paper";
 import tw from "twrnc";
-import { getAuth, createUserWithEmailAndPassword, updateProfile  } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -22,11 +26,10 @@ const SignIn = () => {
   const handleSignUp = () => {
     const auth = getAuth();
 
-
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        
+
         updateProfile(user, { username })
           .then(() => {
             console.log("Ustawiono nazwę użytkownika:", username);
@@ -88,7 +91,8 @@ const SignIn = () => {
             </View>
 
             <View style={tw`w-full`}>
-              <Pressable onPress={() => handleSignUp(username)}
+              <Pressable
+                onPress={() => handleSignUp(username)}
                 style={tw`rounded-full p-4 mb-3 mt-8 bg-[#9C27B0]`}
               >
                 <Text style={tw`text-center text-lg uppercase text-white`}>

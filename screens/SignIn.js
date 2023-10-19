@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Image,
@@ -10,29 +10,32 @@ import {
 import images from "../images";
 import { TextInput } from "react-native-paper";
 import tw from "twrnc";
-import { auth } from "../firebase";
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from "../hooks/useAuth";
+import { app } from "../firebase";
 
 const SignIn = () => {
   const navigation = useNavigation();
+  const { setUser } = useAuth();
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
+  const signIn = () => {
+    const auth = getAuth(app);
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        // Po pomyślnym zalogowaniu, ustaw użytkownika
+        setUser(auth.currentUser);
+        // Nawiguj do ekranu "Home"
         navigation.replace("Home");
-      }
-    });
-
-    return () => {
-      // Clean up the subscription when the component unmounts
-      unsubscribe();
-    };
-  }, []);
-
-  const signIn = () => {};
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
 
   return (
     <KeyboardAvoidingView style={tw`flex-1`}>
