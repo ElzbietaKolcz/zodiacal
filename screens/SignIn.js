@@ -30,7 +30,7 @@ const SignIn = () => {
         // Po pomyślnym zalogowaniu, ustaw użytkownika
         setUser(auth.currentUser);
         // Nawiguj do ekranu "Home"
-        navigation.replace("Home");
+        navigation.replace("Home", { screen: "Home" });
       })
       .catch((error) => {
         setError(error.message);
