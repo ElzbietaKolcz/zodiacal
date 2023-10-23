@@ -1,5 +1,5 @@
 {
-  "name": "apka",
+  "name": "zodiacal",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -17,7 +17,6 @@
     "@reduxjs/toolkit": "^1.9.7",
     "dotenv": "^16.3.1",
     "expo": "~49.0.15",
-    "expo-google-app-auth": "~8.3.0",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.5.0",
     "react": "18.2.0",

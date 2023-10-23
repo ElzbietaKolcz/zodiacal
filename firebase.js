@@ -1,6 +1,18 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import {
+  initializeApp,
+  getApp,
+  getApps,
+  deleteApp,
+  SDK_VERSION,
+} from 'firebase/app';
+
+import { getAuth, Auth, Persistence, onAuthStateChanged } from 'firebase/auth';
+import { initializeAppCheck } from 'firebase/app-check';
+import { FirebaseAppCheckDebugProviderFactory } from 'firebase/app-check';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -11,8 +23,16 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+let app;
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
 
-export { db, auth, app };
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+export { db, auth, app, storage, onAuthStateChanged };

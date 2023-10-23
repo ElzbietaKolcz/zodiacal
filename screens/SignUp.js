@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import * as React from "react";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Image,
@@ -15,34 +15,47 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { app } from "../firebase";
+import { login } from "../features/userSlice";
 
-const SignIn = () => {
+const SignUp = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [username, setUsername] = React.useState("");
+  const dispatch = useDispatch();
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   const handleSignUp = () => {
-    const auth = getAuth();
+    const auth = getAuth(app);
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-
-        updateProfile(user, { username })
-          .then(() => {
-            console.log("Ustawiono nazwę użytkownika:", username);
-          })
+      .then((userAuth) => {
+        updateProfile(userAuth.user, {
+          displayName: username,
+        })
+          .then(
+            dispatch(
+              login({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+                displayName: username,
+              }),
+            ),
+          )
           .catch((error) => {
-            console.error("Błąd podczas ustawiania nazwy użytkownika:", error);
+            console.log("user not updated");
           });
-
-        console.log("Utworzono użytkownika:", user);
-        navigation.replace("SignIn");
       })
-      .catch((error) => {
-        console.error("Błąd podczas tworzenia użytkownika:", error);
+      .catch((err) => {
+        alert(err);
       });
   };
 
@@ -86,13 +99,19 @@ const SignIn = () => {
                 label="Password"
                 value={password}
                 onChangeText={(text) => setPassword(text)}
-                secureTextEntry
+                secureTextEntry={!isPasswordVisible}
+                right={
+                  <TextInput.Icon
+                    icon={isPasswordVisible ? "eye-off" : "eye"}
+                    onPress={togglePasswordVisibility}
+                  />
+                }
               />
             </View>
 
             <View style={tw`w-full`}>
               <Pressable
-                onPress={() => handleSignUp(username)}
+                onPress={() => handleSignUp()}
                 style={tw`rounded-full p-4 mb-3 mt-8 bg-[#9C27B0]`}
               >
                 <Text style={tw`text-center text-lg uppercase text-white`}>
@@ -123,4 +142,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

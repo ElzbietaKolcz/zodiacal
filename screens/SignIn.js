@@ -11,30 +11,35 @@ import images from "../images";
 import { TextInput } from "react-native-paper";
 import tw from "twrnc";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useAuth } from "../hooks/useAuth";
 import { app } from "../firebase";
+
+import { useDispatch } from "react-redux";
+import { login } from "../features/userSlice";
 
 const SignIn = () => {
   const navigation = useNavigation();
-  const { setUser } = useAuth();
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
-  const signIn = () => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  const handleSignIn = () => {
     const auth = getAuth(app);
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        // Po pomyślnym zalogowaniu, ustaw użytkownika
-        setUser(auth.currentUser);
-        // Nawiguj do ekranu "Home"
-        navigation.replace("Home", { screen: "Home" });
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+    signInWithEmailAndPassword(auth, email, password).then((userAuth) => {
+      dispatch(
+        login({
+          email: userAuth.user.email,
+          uid: userAuth.user.uid,
+        }),
+      );
+    });
   };
 
   return (
@@ -69,13 +74,19 @@ const SignIn = () => {
                 label="Password"
                 value={password}
                 onChangeText={(text) => setPassword(text)}
-                secureTextEntry
+                secureTextEntry={!isPasswordVisible}
+                right={
+                  <TextInput.Icon
+                    icon={isPasswordVisible ? "eye-off" : "eye"}
+                    onPress={togglePasswordVisibility}
+                  />
+                }
               />
             </View>
 
             <View style={tw`w-full`}>
               <Pressable
-                onPress={signIn}
+                onPress={handleSignIn}
                 style={tw`rounded-full p-4 mb-3 mt-8 bg-[#9C27B0]`}
               >
                 <Text style={tw`text-center text-lg uppercase text-white`}>
