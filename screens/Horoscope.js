@@ -1,6 +1,8 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { useGetHoroscopeQuery } from "../services/astrologyApi";
+import images from "../images";
+import tw from "twrnc";
 
 export default function Horoscope() {
   const sign = "aquarius";
@@ -23,9 +25,21 @@ export default function Horoscope() {
   if (isSuccess) {
     const horoscope = horoscopeData.horoscope;
     return (
-      <View>
-        <Text>Today, your horoscope for {sign} is...</Text>
-        <Text>{horoscope}</Text>
+      <View style={tw`flex-1 bg-white h-full w-full`}>
+        <View style={tw`items-center justify-center mt-11`}>
+          <Image
+            style={tw`w-full h-[60] `}
+            source={images.aquarius}
+            resizeMode="contain"
+          />
+          <View style={tw`items-center justify-center mt-5`}>
+            <Text style={tw`text-center text-xl font-semibold `}>
+              Your horoscope for today
+            </Text>
+
+            <Text style={tw` text-lg  mt-5 mx-7`}>{horoscope}</Text>
+          </View>
+        </View>
       </View>
     );
   }

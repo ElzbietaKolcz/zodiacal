@@ -15,6 +15,9 @@ const images = {
   apple: {
     uri: "https://firebasestorage.googleapis.com/v0/b/zodaical.appspot.com/o/icons%2Fapple.png?alt=media&token=7c167339-a18b-4d33-b284-197f646f81ca",
   },
+  aquarius:{
+    uri: "https://firebasestorage.googleapis.com/v0/b/zodaical.appspot.com/o/signs%2Faquarius.png?alt=media&token=fa739035-46d4-4575-ba9a-fc6d70efde91"
+  }
 };
 
 export default images;

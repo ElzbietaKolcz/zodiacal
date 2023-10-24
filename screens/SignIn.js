@@ -8,7 +8,8 @@ import {
   Text,
 } from "react-native";
 import images from "../images";
-import { TextInput } from "react-native-paper";
+import { TextInput, Button } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "twrnc";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../firebase";
@@ -66,6 +67,8 @@ const SignIn = () => {
                 label="Email"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
+
+                // error={true}
               />
             </View>
             <View style={tw`w-full`}>
@@ -98,24 +101,31 @@ const SignIn = () => {
             <View style={tw`flex-col justify-center mt-4`}>
               <Text style={tw`text-center text-lg`}> - Or sign in with - </Text>
               <View style={tw`flex-row my-3 mb-6 `}>
-                <Pressable
-                  style={tw`flex-row rounded-full mx-4 bg-white p-4 mb-3 mt-5`}
+                <Button
+                  style={tw`flex-row rounded-full mx-2 bg-white p-2 mb-3 mt-5`}
+                  icon={() => (
+                    <Icon
+                      name="google"
+                      size={36}
+                    />
+                  )}
                 >
-                  <Image
-                    style={tw`h-[8] w-[8]`}
-                    source={images.google}
-                  />
-                  <Text style={tw`p-2 `}> Google </Text>
-                </Pressable>
-                <Pressable
-                  style={tw`flex-row rounded-full mx-4 bg-white p-4 mb-3 mt-5`}
+                  <Text style={tw`p-2 text-lg`}>Google</Text>
+                </Button>
+
+                <Button
+                  disabled={true}
+                  style={tw`flex-row rounded-full mx-2 bg-gray-200 p-2 mb-3 mt-5`}
+                  icon={() => (
+                    <Icon
+                      name="apple"
+                      size={36}
+                      color="#888"
+                    />
+                  )}
                 >
-                  <Image
-                    style={tw`h-[8] w-[6.5]`}
-                    source={images.apple}
-                  />
-                  <Text style={tw`p-2 `}> Apple </Text>
-                </Pressable>
+                  <Text style={tw`p-2 text-lg`}>Apple</Text>
+                </Button>
               </View>
 
               <View style={tw`flex-row justify-center`}>

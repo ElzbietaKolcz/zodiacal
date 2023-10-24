@@ -1,18 +1,9 @@
-import {
-  initializeApp,
-  getApp,
-  getApps,
-  deleteApp,
-  SDK_VERSION,
-} from 'firebase/app';
+import { initializeApp, getApp, getApps } from "firebase/app";
 
-import { getAuth, Auth, Persistence, onAuthStateChanged } from 'firebase/auth';
-import { initializeAppCheck } from 'firebase/app-check';
-import { FirebaseAppCheckDebugProviderFactory } from 'firebase/app-check';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
