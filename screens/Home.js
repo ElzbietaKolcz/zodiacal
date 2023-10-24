@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Button, View } from "react-native";
+import { Button, View, StatusBar } from "react-native";
 import Header from "./Header";
 import { useNavigation } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import tw from "twrnc";
+ import { Formik, Form, Field } from 'formik';
 
 const Home = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={tw`bg-white h-full w-full mt-10 `}>
+    <View style={tw`bg-white h-full w-full  `}>
+      <StatusBar backgroundColor="white" />
       <Header />
       <Button
         title="Horoscope"

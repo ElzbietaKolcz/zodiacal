@@ -67,6 +67,7 @@ const SignIn = () => {
                 label="Email"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
+                left={<TextInput.Icon icon="email-outline" />}
 
                 // error={true}
               />
@@ -78,6 +79,7 @@ const SignIn = () => {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry={!isPasswordVisible}
+                left={<TextInput.Icon icon="lock-outline" />}
                 right={
                   <TextInput.Icon
                     icon={isPasswordVisible ? "eye-off" : "eye"}

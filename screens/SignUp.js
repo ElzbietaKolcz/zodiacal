@@ -83,6 +83,7 @@ const SignUp = () => {
                 label="Username"
                 value={username}
                 onChangeText={(text) => setUsername(text)}
+                left={<TextInput.Icon icon="account-outline" />}
               />
             </View>
             <View style={tw`w-full`}>
@@ -91,6 +92,7 @@ const SignUp = () => {
                 label="Email"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
+                left={<TextInput.Icon icon="email-outline" />}
               />
             </View>
             <View style={tw`w-full`}>
@@ -100,6 +102,7 @@ const SignUp = () => {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry={!isPasswordVisible}
+                left={<TextInput.Icon icon="lock-outline" />}
                 right={
                   <TextInput.Icon
                     icon={isPasswordVisible ? "eye-off" : "eye"}
