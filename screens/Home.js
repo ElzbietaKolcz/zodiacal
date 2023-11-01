@@ -4,10 +4,10 @@ import Header from "./Header";
 import { useNavigation } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import tw from "twrnc";
- import { Formik, Form, Field } from 'formik';
 
 const Home = () => {
   const navigation = useNavigation();
+  let today = new Date().toISOString().slice(0, 10)
 
   return (
     <View style={tw`bg-white h-full w-full  `}>
@@ -24,14 +24,14 @@ const Home = () => {
           borderColor: "gray",
           height: 350,
         }}
-        current={"2012-03-01"}
+        current={today}
         onDayPress={(day) => {
           console.log("selected day", day);
         }}
         markedDates={{
-          "2012-03-01": { selected: true, marked: true, selectedColor: "blue" },
-          "2012-03-02": { marked: true },
-          "2012-03-03": { selected: true, marked: true, selectedColor: "blue" },
+          "2023-11-01": { selected: true, marked: true, selectedColor: "blue" },
+          "2023-11-02": { marked: true },
+          "2023-11-03": { selected: true, marked: true, selectedColor: "pink" },
         }}
       />
     </View>
