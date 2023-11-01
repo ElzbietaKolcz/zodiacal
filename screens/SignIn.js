@@ -47,14 +47,16 @@ const SignIn = () => {
       validationSchema={validationSchema}
       onSubmit={(values) => {
         const auth = getAuth(app);
-          signInWithEmailAndPassword(auth, values.email, values.password).then((userAuth) => {
+        signInWithEmailAndPassword(auth, values.email, values.password)
+          .then((userAuth) => {
             dispatch(
               login({
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,
               }),
             );
-          }).catch((error) => console.error("Login error", error.message));
+          })
+          .catch((error) => console.error("Login error", error.message));
       }}
     >
       {({ values, handleSubmit, handleChange, isValid, errors }) => (
@@ -68,7 +70,7 @@ const SignIn = () => {
 
             <View style={tw`flex-row justify-around w-full absolute`}>
               <Image
-                style={tw`h-[60] w-[45] mt-7`}
+                style={tw`h-[60] w-[45] mt-10`}
                 source={images.logo}
               />
             </View>
@@ -80,17 +82,19 @@ const SignIn = () => {
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
                     label="Email"
                     value={values.email}
-                    onChangeText={handleChange('email')}
+                    onChangeText={handleChange("email")}
                     left={<TextInput.Icon icon="email-outline" />}
                   />
-                  {errors.email ? <Text style={tw`text-red-500`}>{errors.email}</Text> : null}
+                  {errors.email ? (
+                    <Text style={tw`text-red-500`}>{errors.email}</Text>
+                  ) : null}
                 </View>
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
                     label="Password"
                     value={values.password}
-                    onChangeText={handleChange('password')}
+                    onChangeText={handleChange("password")}
                     secureTextEntry={!isPasswordVisible}
                     left={<TextInput.Icon icon="lock-outline" />}
                     right={
@@ -100,7 +104,9 @@ const SignIn = () => {
                       />
                     }
                   />
-                  {errors.password ? <Text style={tw`text-red-500`}>{errors.password}</Text> : null}
+                  {errors.password ? (
+                    <Text style={tw`text-red-500`}>{errors.password}</Text>
+                  ) : null}
                 </View>
 
                 <View style={tw`w-full`}>
