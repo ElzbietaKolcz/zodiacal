@@ -10,11 +10,14 @@ import {
 import images from "../images";
 import { TextInput } from "react-native-paper";
 import tw from "twrnc";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
+
 import { useDispatch } from "react-redux";
 import { app } from "../firebase";
 import { login } from "../features/userSlice";
@@ -28,6 +31,11 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [toDo, setToDo] = useState("");
+
+  const handleToDoChange = (text) => {
+    setToDo(text);
+  };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -55,17 +63,35 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, values.email, values.password)
           .then((userAuth) => {
             updateProfile(userAuth.user, {
-              displayName: username,
+              displayName: values.username,
             })
-              .then(
-                dispatch(
-                  login({
-                    email: userAuth.user.email,
-                    uid: userAuth.user.uid,
-                    displayName: username,
-                  }),
-                ),
-              )
+              .then(() => {
+                const db = getFirestore(app);
+                const userId = userAuth.user.uid;
+
+                const userDocRef = doc(db, "users", userId);
+
+                setDoc(userDocRef, {
+                  username: values.username,
+                  email: values.email,
+                  toDo: toDo,
+                })
+                  .then(() => {
+                    dispatch(
+                      login({
+                        email: userAuth.user.email,
+                        uid: userAuth.user.uid,
+                        displayName: values.username,
+                      }),
+                    );
+                  })
+                  .catch((error) => {
+                    console.error(
+                      "Błąd podczas zapisywania danych użytkownika:",
+                      error,
+                    );
+                  });
+              })
               .catch((error) => {
                 console.log("user not updated", error.message);
               });
@@ -103,6 +129,16 @@ const SignUp = () => {
                     <Text style={tw`text-red-500`}>{errors.username}</Text>
                   ) : null}
                 </View>
+
+                {/* Test */}
+
+                <TextInput
+                  style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
+                  label="Zadanie"
+                  value={toDo}
+                  onChangeText={handleToDoChange}
+                />
+
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
