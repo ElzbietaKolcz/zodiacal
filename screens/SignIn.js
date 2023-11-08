@@ -23,6 +23,8 @@ const SignIn = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  const [error, setError] = useState(null);
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -33,10 +35,10 @@ const SignIn = () => {
     email: yup
       .string()
       .email("Please enter a valid email.")
-      .required("Email Address is required."),
+      .required("Email address is required."),
     password: yup
       .string()
-      .min(6)
+      .min(6, "Password must be at least 6 characters.")
       .max(24)
       .required("Minimum 6 characters required."),
   });
@@ -56,7 +58,10 @@ const SignIn = () => {
               }),
             );
           })
-          .catch((error) => console.error("Login error", error.message));
+          .catch((error) => {
+            setError("Invalid email or password");
+            console.error("Login error", error.message);
+          });
       }}
     >
       {({ values, handleSubmit, handleChange, isValid, errors }) => (
@@ -77,6 +82,7 @@ const SignIn = () => {
 
             <View style={tw`h-full w-full flex justify-around mt-30 absolute`}>
               <View style={tw`flex items-center mx-8 `}>
+                {/* Emali input */}
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
@@ -89,6 +95,8 @@ const SignIn = () => {
                     <Text style={tw`text-red-500`}>{errors.email}</Text>
                   ) : null}
                 </View>
+
+                {/* Password input */}
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
@@ -109,11 +117,20 @@ const SignIn = () => {
                   ) : null}
                 </View>
 
+                {/* Button Sign In */}
                 <View style={tw`w-full`}>
+                  {error && (
+                    <Text style={tw`text-red-500 text-center my-2`}>
+                      {error}
+                    </Text>
+                  )}
                   <Pressable
                     onPress={handleSubmit}
                     disabled={!isValid}
-                    style={tw`rounded-full p-4 mb-3 mt-8 bg-[#9C27B0]`}
+                    style={[
+                      tw`rounded-full p-4 mb-3 mt-8`,
+                      isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
+                    ]}
                   >
                     <Text style={tw`text-center text-lg uppercase text-white`}>
                       Sign in
@@ -126,6 +143,8 @@ const SignIn = () => {
                     {" "}
                     - Or sign in with -{" "}
                   </Text>
+
+                  {/* Button Google*/}
                   <View style={tw`flex-row my-3 mb-6 `}>
                     <Button
                       style={tw`flex-row rounded-full mx-2 bg-white p-2 mb-3 mt-5`}
@@ -136,9 +155,10 @@ const SignIn = () => {
                         />
                       )}
                     >
-                      <Text style={tw`p-2 text-lg`}>Google</Text>
+                      <Text style={tw`p-2 text-lg text-black `}>Google</Text>
                     </Button>
 
+                    {/* Button Apple*/}
                     <Button
                       disabled={true}
                       style={tw`flex-row rounded-full mx-2 bg-gray-200 p-2 mb-3 mt-5`}
@@ -159,6 +179,8 @@ const SignIn = () => {
                       {" "}
                       Don't have an account?
                     </Text>
+
+                    {/* Button Sign Up*/}
                     <Pressable onPress={() => navigation.navigate("SignUp")}>
                       <Text
                         style={tw`text-center text-lg font-semibold px-2 text-[#9C27B0]`}

@@ -29,13 +29,9 @@ const SignUp = () => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+  const [error, setError] = useState(null);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [toDo, setToDo] = useState("");
-
-  const handleToDoChange = (text) => {
-    setToDo(text);
-  };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -46,10 +42,10 @@ const SignUp = () => {
     email: yup
       .string()
       .email("Please enter a valid email.")
-      .required("Email Address is required."),
+      .required("Email address is required."),
     password: yup
       .string()
-      .min(6)
+      .min(6, "Password must be at least 6 characters.")
       .max(24)
       .required("Minimum 6 characters required."),
   });
@@ -58,7 +54,7 @@ const SignUp = () => {
     <Formik
       initialValues={{ username: "", email: "", password: "" }}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
+      onSubmit={(values, { setSubmitting }) => {
         const auth = getAuth(app);
         createUserWithEmailAndPassword(auth, values.email, values.password)
           .then((userAuth) => {
@@ -74,7 +70,7 @@ const SignUp = () => {
                 setDoc(userDocRef, {
                   username: values.username,
                   email: values.email,
-                  toDo: toDo,
+                  
                 })
                   .then(() => {
                     dispatch(
@@ -93,13 +89,29 @@ const SignUp = () => {
                   });
               })
               .catch((error) => {
-                console.log("user not updated", error.message);
+                console.log("User not updated", error.message);
               });
           })
-          .catch((error) => console.error("Login error", error.message));
+          .catch((error) => {
+            if (error.code === "auth/email-already-in-use") {
+              setError(
+                "This email is already in use. Please use a different email.",
+              );
+            } else {
+              console.error("Login error", error.message);
+            }
+            setSubmitting(false);
+          });
       }}
     >
-      {({ values, handleSubmit, handleChange, isValid, errors }) => (
+      {({
+        values,
+        handleSubmit,
+        handleChange,
+        isValid,
+        errors,
+        isSubmitting,
+      }) => (
         <KeyboardAvoidingView style={tw`flex-1`}>
           <View style={tw`bg-white h-full w-full`}>
             <Image
@@ -117,6 +129,8 @@ const SignUp = () => {
 
             <View style={tw`h-full w-full flex justify-around mt-25 absolute`}>
               <View style={tw`flex items-center mx-8 `}>
+
+                {/* Username input */}
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
@@ -130,15 +144,7 @@ const SignUp = () => {
                   ) : null}
                 </View>
 
-                {/* Test */}
-
-                <TextInput
-                  style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
-                  label="Zadanie"
-                  value={toDo}
-                  onChangeText={handleToDoChange}
-                />
-
+                {/* Email input */}
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
@@ -152,6 +158,7 @@ const SignUp = () => {
                   ) : null}
                 </View>
                 <View style={tw`w-full`}>
+                  {/* Password input */}
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
                     label="Password"
@@ -171,11 +178,20 @@ const SignUp = () => {
                   ) : null}
                 </View>
 
+                {/* Button Sign Up */}
                 <View style={tw`w-full`}>
+                  {error && (
+                    <Text style={tw`text-red-500 text-center my-2`}>
+                      {error}
+                    </Text>
+                  )}
                   <Pressable
                     onPress={handleSubmit}
-                    disabled={!isValid}
-                    style={tw`rounded-full p-4 mb-3 mt-8 bg-[#9C27B0]`}
+                    disabled={!isValid || isSubmitting}
+                    style={[
+                      tw`rounded-full p-4 mb-3 mt-8`,
+                      isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
+                    ]}
                   >
                     <Text style={tw`text-center text-lg uppercase text-white`}>
                       Sign up
@@ -189,6 +205,8 @@ const SignUp = () => {
                       {" "}
                       Do you have an account?
                     </Text>
+
+                    {/* Button Sign In*/}
                     <Pressable onPress={() => navigation.navigate("SignIn")}>
                       <Text
                         style={tw`text-center text-lg font-semibold px-2 mt-10 text-[#9C27B0]`}
