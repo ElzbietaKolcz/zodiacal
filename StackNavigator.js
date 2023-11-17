@@ -6,6 +6,7 @@ import Home from "./screens/Home";
 import Horoscope from "./screens/Horoscope";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
+import YearlyCalendar from "./screens/YearlyCalendar"
 
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, selectUser } from "./features/userSlice";
@@ -59,6 +60,12 @@ export default function StackNavigator() {
             name="Horoscope"
             options={{ headerShown: true }}
             component={Horoscope}
+          />
+
+<Stack.Screen
+            name="YearlyCalendar"
+            options={{ headerShown: true }}
+            component={YearlyCalendar}
           />
         </>
       )}

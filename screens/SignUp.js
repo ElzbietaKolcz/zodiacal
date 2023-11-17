@@ -88,9 +88,6 @@ const SignUp = () => {
                     );
                   });
               })
-              .catch((error) => {
-                console.log("User not updated", error.message);
-              });
           })
           .catch((error) => {
             if (error.code === "auth/email-already-in-use") {

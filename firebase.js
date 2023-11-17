@@ -1,7 +1,5 @@
-import { initializeApp, getApp, getApps } from "firebase/app";
-
+import { initializeApp, getApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -15,14 +13,13 @@ const firebaseConfig = {
 };
 
 let app;
-if (getApps().length === 0) {
+if (getApp.length === 0) {
   app = initializeApp(firebaseConfig);
 } else {
   app = getApp();
 }
 
 const auth = getAuth(app);
-
 const db = getFirestore(app);
 const storage = getStorage(app);
 

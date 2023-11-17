@@ -52,23 +52,28 @@ const Home = () => {
         onPress={() => navigation.navigate("Horoscope")}
       />
 
+      <Button
+        title="Year"
+        onPress={() => navigation.navigate("YearlyCalendar")}
+      />
+
       <Text style={tw`text-lg mt-3`}>{userName}</Text>
 
       <Calendar
         style={{
-          borderWidth: 1,
           borderColor: "gray",
           height: 350,
         }}
         current={today}
-        onDayPress={(day) => {
-          console.log("selected day", day);
-        }}
-        markedDates={{
-          "2023-11-01": { selected: true, marked: true, selectedColor: "blue" },
-          "2023-11-02": { marked: true },
-          "2023-11-03": { selected: true, marked: true, selectedColor: "pink" },
-        }}
+        // onDayPress={(day) => {
+        //   console.log("selected day", day);
+        // }}
+        // markedDates={{
+        //   "2023-11-01": { selected: true, marked: true, selectedColor: "blue" },
+        //   "2023-11-02": { marked: true },
+        //   "2023-11-03": { selected: true, marked: true, selectedColor: "pink" },
+        // }}
+        firstDay={1} // Ustawienie, aby tydzień zaczynał się od poniedziałku
       />
 
       <Text style={tw`text-lg mt-3`}>{toDo}</Text>
