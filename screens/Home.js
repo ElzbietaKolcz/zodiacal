@@ -2,18 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Button, View, StatusBar, Text } from "react-native";
 import Header from "./Header";
 import { useNavigation } from "@react-navigation/native";
-import { Calendar } from "react-native-calendars";
+
 import tw from "twrnc";
 import { doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { app, db } from "../firebase";
+import MonthCalendar from "./MonthCalendar";
+import { collection, getDocs } from "firebase/firestore";
 
 const Home = () => {
   const navigation = useNavigation();
-  let today = new Date().toISOString().slice(0, 10);
+  const currentYear = new Date().getFullYear();
+  const month = new Date().getMonth() + 1;
 
   const [toDo, setToDo] = useState("");
   const [userName, setUserName] = useState("");
+  const [userBirthdays, setUserBirthdays] = useState([]);
 
   const auth = getAuth(app);
   const userId = auth.currentUser ? auth.currentUser.uid : null;
@@ -38,9 +42,33 @@ const Home = () => {
       console.error("Błąd podczas pobierania danych użytkownika:", error);
     }
   };
+  const fetchUserBirthdays = async () => {
+    if (!userId) {
+      return;
+    }
+
+    const userBirthdaysCollectionRef = collection(
+      db,
+      `users/${userId}/birthday`,
+    );
+
+    try {
+      const querySnapshot = await getDocs(userBirthdaysCollectionRef);
+
+      const data = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      setUserBirthdays(data);
+    } catch (error) {
+      console.error("Błąd podczas pobierania danych urodzin:", error.message);
+    }
+  };
 
   useEffect(() => {
     fetchUserData();
+    fetchUserBirthdays();
   }, []);
 
   return (
@@ -59,21 +87,10 @@ const Home = () => {
 
       <Text style={tw`text-lg mt-3`}>{userName}</Text>
 
-      <Calendar
-        style={{
-          borderColor: "gray",
-          height: 350,
-        }}
-        current={today}
-        // onDayPress={(day) => {
-        //   console.log("selected day", day);
-        // }}
-        // markedDates={{
-        //   "2023-11-01": { selected: true, marked: true, selectedColor: "blue" },
-        //   "2023-11-02": { marked: true },
-        //   "2023-11-03": { selected: true, marked: true, selectedColor: "pink" },
-        // }}
-        firstDay={1} // Ustawienie, aby tydzień zaczynał się od poniedziałku
+      <MonthCalendar
+        currentYear={currentYear}
+        month={month}
+        userBirthdays={userBirthdays}
       />
 
       <Text style={tw`text-lg mt-3`}>{toDo}</Text>

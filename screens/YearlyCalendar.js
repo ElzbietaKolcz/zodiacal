@@ -8,11 +8,15 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
-import { Calendar } from "react-native-calendars";
+
 import tw from "twrnc";
-import { TextInput, FAB, Text, PaperProvider } from "react-native-paper";
+import { TextInput, FAB, Text, HelperText } from "react-native-paper";
+
+import { Formik } from "formik";
+import * as yup from "yup";
+
+import MonthCalendar from "./MonthCalendar";
 
 const YearlyCalendar = () => {
   const currentYear = new Date().getFullYear();
@@ -22,9 +26,31 @@ const YearlyCalendar = () => {
   const user = auth.currentUser;
 
   const [userBirthdays, setUserBirthdaysData] = useState([]);
-  const [inputDay, setInputDay] = useState("");
-  const [inputMonth, setInputMonth] = useState("");
-  const [inputName, setInputName] = useState("");
+  const [setInputDay] = useState("");
+  const [setInputMonth] = useState("");
+  const [setInputName] = useState("");
+
+  const validationSchema = yup.object().shape({
+    day: yup
+      .number()
+      .integer()
+      .typeError("Must be a number")
+      .min(1, "Must be at least 1")
+      .max(31, "Must be at most 31")
+      .required("Required"),
+    month: yup
+      .number()
+      .integer()
+      .typeError("Must be a number")
+      .min(1, "Must be at least 1")
+      .max(12, "Must be at most 12")
+      .required("Required"),
+    name: yup
+      .string()
+      .min(2, "Too short")
+      .max(20, "Too long")
+      .required("Required"),
+  });
 
   const fetchData = async (collectionRef, setData) => {
     try {
@@ -42,7 +68,7 @@ const YearlyCalendar = () => {
     }
   };
 
-  const addNewUserBirthday = async () => {
+  const addNewUserBirthday = async (day, month, name) => {
     try {
       if (user) {
         const userId = user.uid;
@@ -52,9 +78,9 @@ const YearlyCalendar = () => {
         );
 
         const newUserBirthdayData = {
-          name: inputName,
-          day: parseInt(inputDay, 10),
-          month: parseInt(inputMonth, 10),
+          name: name,
+          day: parseInt(day, 10),
+          month: parseInt(month, 10),
         };
 
         const docRef = await addDoc(
@@ -87,358 +113,121 @@ const YearlyCalendar = () => {
     }
   }, [user]);
 
-  function generateMarkedDates(userBirthdays, currentYear) {
-    const markedDates = {};
-
-    userBirthdays.forEach((birthday, index) => {
-      const formattedDay = birthday.day.toString().padStart(2, "0");
-      const formattedMonth = birthday.month.toString().padStart(2, "0");
-      const dateKey = `${currentYear}-${formattedMonth}-${formattedDay}`;
-
-      markedDates[dateKey] = {
-        selected: true,
-        selectedColor: "purple",
-      };
-    });
-
-    return markedDates;
-  }
-
   return (
-    <ScrollView style={tw` bg-white h-full w-full`}>
-      <View style={tw` mt-2`}>
-        <Text
-          style={tw` mt-6 ml-5 text-black`}
-          variant="titleLarge"
-        >
-          Add new data
-        </Text>
-        <View style={tw`mx-3 my-6 flex-row`}>
-          <TextInput
-            style={tw`bg-fuchsia-50 rounded-lg mx-1`}
-            label="Day"
-            value={inputDay}
-            onChangeText={(text) => setInputDay(text)}
-            activeUnderlineColor="#a21caf"
-          />
+    <Formik
+      initialValues={{ day: "", month: "", name: "" }}
+      onSubmit={async (values, actions) => {
+        try {
+          await addNewUserBirthday(values.day, values.month, values.name);
+          actions.resetForm();
+        } catch (error) {
+          console.error(
+            "Błąd podczas dodawania nowych urodzin użytkownika:",
+            error.message,
+          );
+        } finally {
+          actions.setSubmitting(false);
+        }
+      }}
+      validationSchema={validationSchema}
+    >
+      {({
+        values,
+        handleSubmit,
+        handleChange,
+        isValid,
+        errors,
+        isSubmitting,
+      }) => (
+        <ScrollView style={tw` bg-white h-full w-full`}>
+          <View style={tw` mt-2`}>
+            <Text
+              style={tw` mt-6 ml-4 text-black`}
+              variant="titleLarge"
+            >
+              Add new data
+            </Text>
 
-          <TextInput
-            style={tw`bg-fuchsia-50 rounded-lg mx-1`}
-            label="Month"
-            value={inputMonth}
-            onChangeText={(text) => setInputMonth(text)}
-            activeUnderlineColor="#a21caf"
-          />
+            <View style={tw`flex-row flex-wrap mt-6`}>
+              <View style={tw`flex-grow mb-2 ml-2`}>
+                <TextInput
+                  style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                  label="Day"
+                  value={values.day}
+                  onChangeText={handleChange("day")}
+                  activeUnderlineColor="#a21caf"
+                />
+                <HelperText
+                  type="error"
+                  visible={errors.day ? true : false}
+                >
+                  {errors.day}
+                </HelperText>
+              </View>
 
-          <TextInput
-            style={tw`bg-fuchsia-50 rounded-lg mx-1 w-32`}
-            label="Name"
-            value={inputName}
-            onChangeText={(text) => setInputName(text)}
-            activeUnderlineColor="#a21caf"
-          />
-          <FAB
-            style={tw`bg-fuchsia-700 rounded-full m-2 mx-4 absolute right-1 bottom-0`}
-            size="small"
-            icon="plus"
-            color="#FFFFFF"
-            onPress={addNewUserBirthday}
-            mode="elevated"
-          />
-        </View>
-      </View>
-      <View style={tw`mt-4`}>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-01-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 1) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
+              <View style={tw`flex-grow mb-2`}>
+                <TextInput
+                  style={tw`bg-fuchsia-50 rounded-lg mx-1  `}
+                  label="Month"
+                  value={values.month}
+                  onChangeText={handleChange("month")}
+                  activeUnderlineColor="#a21caf"
+                />
+                <HelperText
+                  type="error"
+                  visible={errors.month ? true : false}
                 >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
+                  {errors.month}
+                </HelperText>
+              </View>
 
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-02-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 2) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
+              <View style={tw`flex-grow mb-2`}>
+                <TextInput
+                  style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                  label="Name"
+                  value={values.name}
+                  onChangeText={handleChange("name")}
+                  activeUnderlineColor="#a21caf"
+                />
+                <HelperText
+                  type="error"
+                  visible={errors.name ? true : false}
                 >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-03-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 3) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-04-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 4) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-05-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 5) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-06-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 6) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-07-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 7) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-08-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 8) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-09-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 9) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-10-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 10) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-11-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 11) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-        <Calendar
-          style={tw`border-4 rounded border-fuchsia-100`}
-          current={`${currentYear}-12-01`}
-          markedDates={generateMarkedDates(userBirthdays, currentYear)}
-          hideExtraDays={true}
-          firstDay={1}
-          hideArrows={true}
-        />
-        <View style={tw`my-4 flex-row flex-wrap`}>
-          {userBirthdays.map(function (birthday) {
-            if (birthday.month === 12) {
-              return (
-                <Text
-                  variant="bodyLarge"
-                  style={tw`ml-7 text-black `}
-                  key={birthday.id}
-                >
-                  {birthday.day} {birthday.name}
-                </Text>
-              );
-            }
-            return null;
-          })}
-        </View>
-      </View>
-    </ScrollView>
+                  {errors.name}
+                </HelperText>
+              </View>
+
+              <View style={tw`m-3`}>
+                <FAB
+                  onPress={handleSubmit}
+                  disabled={!isValid || isSubmitting}
+                  style={[
+                    tw`bg-fuchsia-700 rounded-full  right-1`,
+                    isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
+                  ]}
+                  size="small"
+                  icon="plus"
+                  color="#FFFFFF"
+                  mode="elevated"
+                />
+              </View>
+            </View>
+          </View>
+          <View style={tw`mt-1`}>
+            <View style={tw`flex-col flex-wrap mt-4`}>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
+                <MonthCalendar
+                  key={month}
+                  currentYear={currentYear}
+                  month={month}
+                  userBirthdays={userBirthdays}
+                />
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+      )}
+    </Formik>
   );
 };
 
