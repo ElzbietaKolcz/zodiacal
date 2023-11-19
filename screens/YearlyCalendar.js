@@ -11,12 +11,21 @@ import {
 import { getAuth } from "firebase/auth";
 
 import tw from "twrnc";
-import { TextInput, FAB, Text, HelperText } from "react-native-paper";
+import {
+  TextInput,
+  FAB,
+  Text,
+  HelperText,
+  Modal,
+  Portal,
+  PaperProvider,
+} from "react-native-paper";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
 import MonthCalendar from "./MonthCalendar";
+import EditBirthdays from "./EditBirthdays";
 
 const YearlyCalendar = () => {
   const currentYear = new Date().getFullYear();
@@ -26,9 +35,15 @@ const YearlyCalendar = () => {
   const user = auth.currentUser;
 
   const [userBirthdays, setUserBirthdaysData] = useState([]);
-  const [setInputDay] = useState("");
-  const [setInputMonth] = useState("");
-  const [setInputName] = useState("");
+  const [inputday, setInputDay] = useState("");
+  const [inputMonth, setInputMonth] = useState("");
+  const [inputName, setInputName] = useState("");
+
+  const [visible, setVisible] = React.useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = tw`bg-white mx-4 my-8 rounded-lg`;
 
   const validationSchema = yup.object().shape({
     day: yup
@@ -111,123 +126,148 @@ const YearlyCalendar = () => {
 
       fetchData(userBirthdaysCollectionRef, setUserBirthdaysData);
     }
-  }, [user]);
+  }, []);
 
   return (
-    <Formik
-      initialValues={{ day: "", month: "", name: "" }}
-      onSubmit={async (values, actions) => {
-        try {
-          await addNewUserBirthday(values.day, values.month, values.name);
-          actions.resetForm();
-        } catch (error) {
-          console.error(
-            "Błąd podczas dodawania nowych urodzin użytkownika:",
-            error.message,
-          );
-        } finally {
-          actions.setSubmitting(false);
-        }
-      }}
-      validationSchema={validationSchema}
-    >
-      {({
-        values,
-        handleSubmit,
-        handleChange,
-        isValid,
-        errors,
-        isSubmitting,
-      }) => (
-        <ScrollView style={tw` bg-white h-full w-full`}>
-          <View style={tw` mt-2`}>
-            <Text
-              style={tw` mt-6 ml-4 text-black`}
-              variant="titleLarge"
-            >
-              Add new data
-            </Text>
+    <PaperProvider>
+      <Formik
+        initialValues={{ day: "", month: "", name: "" }}
+        onSubmit={async (values, actions) => {
+          try {
+            await addNewUserBirthday(values.day, values.month, values.name);
+            actions.resetForm();
+          } catch (error) {
+            console.error(
+              "Błąd podczas dodawania nowych urodzin użytkownika:",
+              error.message,
+            );
+          } finally {
+            actions.setSubmitting(false);
+          }
+        }}
+        validationSchema={validationSchema}
+      >
+        {({
+          values,
+          handleSubmit,
+          handleChange,
+          isValid,
+          errors,
+          isSubmitting,
+        }) => (
+          <ScrollView style={tw` bg-white h-full w-full`}>
+            <Portal>
+              <Modal
+                visible={visible}
+                onDismiss={hideModal}
+                contentContainerStyle={containerStyle}
+              >
+                <EditBirthdays />
+              </Modal>
+            </Portal>
 
-            <View style={tw`flex-row flex-wrap mt-6`}>
-              <View style={tw`flex-grow mb-2 ml-2`}>
-                <TextInput
-                  style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
-                  label="Day"
-                  value={values.day}
-                  onChangeText={handleChange("day")}
-                  activeUnderlineColor="#a21caf"
-                />
-                <HelperText
-                  type="error"
-                  visible={errors.day ? true : false}
+            <View style={tw` mt-2`}>
+              <View
+                style={tw`mt-2 w-full flex-row justify-between items-center`}
+              >
+                <Text
+                  style={tw`ml-4 text-black`}
+                  variant="titleLarge"
                 >
-                  {errors.day}
-                </HelperText>
-              </View>
-
-              <View style={tw`flex-grow mb-2`}>
-                <TextInput
-                  style={tw`bg-fuchsia-50 rounded-lg mx-1  `}
-                  label="Month"
-                  value={values.month}
-                  onChangeText={handleChange("month")}
-                  activeUnderlineColor="#a21caf"
-                />
-                <HelperText
-                  type="error"
-                  visible={errors.month ? true : false}
-                >
-                  {errors.month}
-                </HelperText>
-              </View>
-
-              <View style={tw`flex-grow mb-2`}>
-                <TextInput
-                  style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
-                  label="Name"
-                  value={values.name}
-                  onChangeText={handleChange("name")}
-                  activeUnderlineColor="#a21caf"
-                />
-                <HelperText
-                  type="error"
-                  visible={errors.name ? true : false}
-                >
-                  {errors.name}
-                </HelperText>
-              </View>
-
-              <View style={tw`m-3`}>
+                  Add new data
+                </Text>
                 <FAB
-                  onPress={handleSubmit}
-                  disabled={!isValid || isSubmitting}
-                  style={[
-                    tw`bg-fuchsia-700 rounded-full  right-1`,
-                    isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
-                  ]}
+                  title="EditBirthdays"
+                  onPress={showModal}
+                  style={tw`bg-fuchsia-700 rounded-full mr-4`}
                   size="small"
-                  icon="plus"
+                  icon="pencil"
                   color="#FFFFFF"
                   mode="elevated"
                 />
               </View>
+
+              <View style={tw`flex-row flex-wrap mt-6`}>
+                <View style={tw`flex-grow mb-2 ml-2`}>
+                  <TextInput
+                    style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                    label="Day"
+                    value={values.day}
+                    onChangeText={handleChange("day")}
+                    activeUnderlineColor="#a21caf"
+                  />
+                  <HelperText
+                    type="error"
+                    visible={errors.day ? true : false}
+                  >
+                    {errors.day}
+                  </HelperText>
+                </View>
+
+                <View style={tw`flex-grow mb-2`}>
+                  <TextInput
+                    style={tw`bg-fuchsia-50 rounded-lg mx-1  `}
+                    label="Month"
+                    value={values.month}
+                    onChangeText={handleChange("month")}
+                    activeUnderlineColor="#a21caf"
+                  />
+                  <HelperText
+                    type="error"
+                    visible={errors.month ? true : false}
+                  >
+                    {errors.month}
+                  </HelperText>
+                </View>
+
+                <View style={tw`flex-grow mb-2`}>
+                  <TextInput
+                    style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                    label="Name"
+                    value={values.name}
+                    onChangeText={handleChange("name")}
+                    activeUnderlineColor="#a21caf"
+                  />
+                  <HelperText
+                    type="error"
+                    visible={errors.name ? true : false}
+                  >
+                    {errors.name}
+                  </HelperText>
+                </View>
+
+                <View style={tw`m-3`}>
+                  <FAB
+                    onPress={handleSubmit}
+                    disabled={!isValid || isSubmitting}
+                    style={[
+                      tw`bg-fuchsia-700 rounded-full  right-1`,
+                      isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
+                    ]}
+                    size="small"
+                    icon="plus"
+                    color="#FFFFFF"
+                    mode="elevated"
+                  />
+                </View>
+              </View>
             </View>
-          </View>
-          <View style={tw`mt-1`}>
-            <View style={tw`flex-col flex-wrap mt-4`}>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
-                <MonthCalendar
-                  key={month}
-                  currentYear={currentYear}
-                  month={month}
-                  userBirthdays={userBirthdays}
-                />
-              ))}
+            <View style={tw`mt-1`}>
+              <View style={tw`flex-col flex-wrap mt-4`}>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
+                  <MonthCalendar
+                    key={month}
+                    currentYear={currentYear}
+                    month={month}
+                    userBirthdays={userBirthdays}
+                  />
+                ))}
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      )}
-    </Formik>
+          </ScrollView>
+        )}
+      </Formik>
+    </PaperProvider>
   );
 };
 

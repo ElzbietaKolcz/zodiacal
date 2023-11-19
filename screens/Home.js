@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, StatusBar, Text } from "react-native";
+import { Button, View, StatusBar, ScrollView } from "react-native";
 import Header from "./Header";
 import { useNavigation } from "@react-navigation/native";
 
@@ -9,6 +9,7 @@ import { getAuth } from "firebase/auth";
 import { app, db } from "../firebase";
 import MonthCalendar from "./MonthCalendar";
 import { collection, getDocs } from "firebase/firestore";
+import { FAB, Text } from "react-native-paper";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -72,18 +73,20 @@ const Home = () => {
   }, []);
 
   return (
-    <View style={tw`bg-white h-full w-full`}>
+    <ScrollView style={tw` bg-white h-full w-full`}>
       <StatusBar backgroundColor="white" />
       <Header />
-      <Button
-        title="Horoscope"
-        onPress={() => navigation.navigate("Horoscope")}
-      />
+      <View style={tw`m-3`}>
+        <Button
+          title="Horoscope"
+          onPress={() => navigation.navigate("Horoscope")}
+        />
 
-      <Button
-        title="Year"
-        onPress={() => navigation.navigate("YearlyCalendar")}
-      />
+        <Button
+          title="Year"
+          onPress={() => navigation.navigate("YearlyCalendar")}
+        />
+      </View>
 
       <Text style={tw`text-lg mt-3`}>{userName}</Text>
 
@@ -94,7 +97,7 @@ const Home = () => {
       />
 
       <Text style={tw`text-lg mt-3`}>{toDo}</Text>
-    </View>
+    </ScrollView>
   );
 };
 

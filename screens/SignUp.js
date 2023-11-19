@@ -60,34 +60,32 @@ const SignUp = () => {
           .then((userAuth) => {
             updateProfile(userAuth.user, {
               displayName: values.username,
-            })
-              .then(() => {
-                const db = getFirestore(app);
-                const userId = userAuth.user.uid;
+            }).then(() => {
+              const db = getFirestore(app);
+              const userId = userAuth.user.uid;
 
-                const userDocRef = doc(db, "users", userId);
+              const userDocRef = doc(db, "users", userId);
 
-                setDoc(userDocRef, {
-                  username: values.username,
-                  email: values.email,
-                  
-                })
-                  .then(() => {
-                    dispatch(
-                      login({
-                        email: userAuth.user.email,
-                        uid: userAuth.user.uid,
-                        displayName: values.username,
-                      }),
-                    );
-                  })
-                  .catch((error) => {
-                    console.error(
-                      "Błąd podczas zapisywania danych użytkownika:",
-                      error,
-                    );
-                  });
+              setDoc(userDocRef, {
+                username: values.username,
+                email: values.email,
               })
+                .then(() => {
+                  dispatch(
+                    login({
+                      email: userAuth.user.email,
+                      uid: userAuth.user.uid,
+                      displayName: values.username,
+                    }),
+                  );
+                })
+                .catch((error) => {
+                  console.error(
+                    "Błąd podczas zapisywania danych użytkownika:",
+                    error,
+                  );
+                });
+            });
           })
           .catch((error) => {
             if (error.code === "auth/email-already-in-use") {
@@ -126,7 +124,6 @@ const SignUp = () => {
 
             <View style={tw`h-full w-full flex justify-around mt-25 absolute`}>
               <View style={tw`flex items-center mx-8 `}>
-
                 {/* Username input */}
                 <View style={tw`w-full`}>
                   <TextInput

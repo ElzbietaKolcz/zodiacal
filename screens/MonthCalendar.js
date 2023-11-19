@@ -36,13 +36,15 @@ const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
       <View style={tw`my-4 flex-row flex-wrap`}>
         {userBirthdays.map((birthday) => {
           if (birthday.month === month) {
+            const formattedDay =
+              birthday.day < 10 ? `0${birthday.day}` : birthday.day;
             return (
               <Text
                 variant="bodyLarge"
                 style={tw`ml-7 text-black`}
                 key={birthday.id}
               >
-                {birthday.day} {birthday.name}
+                {formattedDay} {birthday.name}
               </Text>
             );
           }
