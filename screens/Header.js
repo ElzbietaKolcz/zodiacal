@@ -1,11 +1,12 @@
-import React from "react";
-import { View, Button } from "react-native";
+import React from 'react';
+import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
+import { Text, Button } from "react-native-paper";
+import tw from "twrnc";
 
-function Header() {
-  const user = useSelector(selectUser);
+function Header({ userName }) {
   const dispatch = useDispatch();
   const logoutOfApp = () => {
     dispatch(logout());
@@ -13,20 +14,26 @@ function Header() {
   };
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        padding: 10,
-      }}
-    >
-      {user ? (
-        <Button
-          title="Logout"
-          onPress={logoutOfApp}
-        />
-      ) : null}
+    <View style={tw`w-full flex-row justify-between items-center p-4`}>
+      <Text
+        variant="headlineSmall"
+        style={tw`p-4 mt-1 text-black font-medium`}
+      >
+        Welcome back {userName}!
+      </Text>
+
+      <View style={tw`flex-row items-center justify-end `}>
+        {userName ? (
+          <Button
+            style={tw`bg-fuchsia-700  rounded-lg`}
+            mode="contained"
+            textColor="#FFFFFF"
+            onPress={logoutOfApp}
+          >
+            Logout
+          </Button>
+        ) : null}
+      </View>
     </View>
   );
 }

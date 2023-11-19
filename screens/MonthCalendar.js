@@ -32,6 +32,10 @@ const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
         hideExtraDays={true}
         firstDay={1}
         hideArrows={true}
+        theme={{
+          todayTextColor: "purple",
+          textMonthFontWeight: "semibold",
+        }}
       />
       <View style={tw`my-4 flex-row flex-wrap`}>
         {userBirthdays.map((birthday) => {

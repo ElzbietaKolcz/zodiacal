@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, StatusBar, ScrollView } from "react-native";
-import Header from "./Header";
-import { useNavigation } from "@react-navigation/native";
-
+import { View, StatusBar, ScrollView } from "react-native";
+import {  Text } from "react-native-paper";
 import tw from "twrnc";
-import { doc, getDoc } from "firebase/firestore";
+
+import { useNavigation } from "@react-navigation/native";
+import Header from "./Header";
+import MonthCalendar from "./MonthCalendar";
+
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { app, db } from "../firebase";
-import MonthCalendar from "./MonthCalendar";
-import { collection, getDocs } from "firebase/firestore";
-import { FAB, Text } from "react-native-paper";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -75,28 +75,20 @@ const Home = () => {
   return (
     <ScrollView style={tw` bg-white h-full w-full`}>
       <StatusBar backgroundColor="white" />
-      <Header />
-      <View style={tw`m-3`}>
-        <Button
-          title="Horoscope"
-          onPress={() => navigation.navigate("Horoscope")}
-        />
+      <Header userName={userName} />
 
-        <Button
-          title="Year"
-          onPress={() => navigation.navigate("YearlyCalendar")}
-        />
-      </View>
 
-      <Text style={tw`text-lg mt-3`}>{userName}</Text>
-
+      <View style={tw`mt-2`}>
       <MonthCalendar
         currentYear={currentYear}
         month={month}
         userBirthdays={userBirthdays}
       />
-
-      <Text style={tw`text-lg mt-3`}>{toDo}</Text>
+      </View>
+      <View style={tw`m-4`}>
+      <Text variant="headlineSmall" style={tw`text-black font-bold`} >Goals for this month</Text>
+      <Text style={tw`text-black text-lg mt-3`}>{toDo}</Text>
+      </View>
     </ScrollView>
   );
 };

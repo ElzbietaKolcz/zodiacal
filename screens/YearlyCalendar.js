@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView } from "react-native";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-
-import tw from "twrnc";
-import {
   TextInput,
   FAB,
   Text,
@@ -20,6 +9,17 @@ import {
   Portal,
   PaperProvider,
 } from "react-native-paper";
+import tw from "twrnc";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -43,7 +43,7 @@ const YearlyCalendar = () => {
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = tw`bg-white mx-4 my-8 rounded-lg`;
+  const containerStyle = tw`bg-white mx-8 my-10 rounded-lg`;
 
   const validationSchema = yup.object().shape({
     day: yup

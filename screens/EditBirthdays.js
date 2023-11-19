@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView } from "react-native";
+import { IconButton, Text, DataTable } from "react-native-paper";
+import tw from "twrnc";
+
 import {
   getFirestore,
   collection,
@@ -10,8 +13,6 @@ import {
   doc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import tw from "twrnc";
-import { IconButton, Text, DataTable } from "react-native-paper";
 
 const EditBirthdays = () => {
   const [userBirthdays, setUserBirthdaysData] = useState([]);
