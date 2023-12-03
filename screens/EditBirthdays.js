@@ -1,68 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { View, ScrollView } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
-
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { removeBirthday } from "../features/birthdaySlice";
 
 const EditBirthdays = () => {
-  const [userBirthdays, setUserBirthdaysData] = useState([]);
-  const db = getFirestore();
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const dispatch = useDispatch();
+  const userBirthdays = useSelector((state) => state.birthdays);
 
-  const fetchData = async (collectionRef, setData) => {
-    try {
-      const q = query(collectionRef, orderBy("month"), orderBy("day"));
-      const querySnapshot = await getDocs(q);
-
-      const data = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      setData(data);
-    } catch (error) {
-      console.error("Błąd podczas pobierania danych:", error.message);
+  // Sortuj urodziny według miesiąca, a następnie dnia
+  const sortedBirthdays = [...userBirthdays].sort((a, b) => {
+    if (a.month !== b.month) {
+      return a.month - b.month;
     }
+    return a.day - b.day;
+  });
+
+  const handleDelete = (birthdayId) => {
+    // Wyślij akcję do Reduxa, aby usunąć urodziny
+    dispatch(removeBirthday(birthdayId));
+
+    // Możesz również dodać logikę usuwania z Firebase, jeśli to nadal potrzebne
+    // ...
+
+    console.log(`Birthday with ID ${birthdayId} deleted successfully.`);
   };
-
-  const handleDelete = async (birthdayId) => {
-    try {
-      const userBirthdaysCollectionRef = collection(
-        db,
-        `users/${user.uid}/birthday`,
-      );
-
-      await deleteDoc(doc(userBirthdaysCollectionRef, birthdayId));
-      fetchData(userBirthdaysCollectionRef, setUserBirthdaysData);
-
-      console.log(`Birthday with ID ${birthdayId} deleted successfully.`);
-    } catch (error) {
-      console.error("Błąd podczas usuwania urodzin:", error.message);
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      const userId = user.uid;
-      const userBirthdaysCollectionRef = collection(
-        db,
-        `users/${userId}/birthday`,
-      );
-
-      fetchData(userBirthdaysCollectionRef, setUserBirthdaysData);
-    }
-  }, []);
 
   return (
     <ScrollView style={tw`bg-white h-full mb-8 mt-2`}>
@@ -82,7 +45,7 @@ const EditBirthdays = () => {
             <DataTable.Title style={tw`text-black`}>Delete</DataTable.Title>
           </DataTable.Header>
 
-          {userBirthdays.map((birthday) => {
+          {sortedBirthdays.map((birthday) => {
             const formattedDay =
               birthday.day < 10 ? `0${birthday.day}` : birthday.day;
             const formattedMonth =

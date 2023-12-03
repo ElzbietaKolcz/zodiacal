@@ -144,11 +144,11 @@ export default function StackNavigator() {
         </>
       ) : (
         <>
-          <Stack.Screen
-            name="Home"
-            options={{ headerShown: false }}
-            component={HomeTabs}
-          />
+      <Stack.Screen
+          name="HomeTabs"
+          options={{ headerShown: false }}
+          component={HomeTabs}
+        />
           <Stack.Screen
             name="Horoscope"
             options={{ headerShown: true }}

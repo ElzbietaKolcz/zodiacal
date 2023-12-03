@@ -27,6 +27,13 @@ import * as yup from "yup";
 import MonthCalendar from "./MonthCalendar";
 import EditBirthdays from "./EditBirthdays";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addBirthday,
+  setBirthdays,
+  removeBirthday,
+} from "../features/birthdaySlice";
+
 const YearlyCalendar = () => {
   const currentYear = new Date().getFullYear();
 
@@ -34,13 +41,11 @@ const YearlyCalendar = () => {
   const auth = getAuth();
   const user = auth.currentUser;
 
-  const [userBirthdays, setUserBirthdaysData] = useState([]);
   const [inputday, setInputDay] = useState("");
   const [inputMonth, setInputMonth] = useState("");
   const [inputName, setInputName] = useState("");
 
-  const [visible, setVisible] = React.useState(false);
-
+  const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = tw`bg-white mx-8 my-10 rounded-lg`;
@@ -67,7 +72,7 @@ const YearlyCalendar = () => {
       .required("Required"),
   });
 
-  const fetchData = async (collectionRef, setData) => {
+  const fetchData = async (collectionRef) => {
     try {
       const q = query(collectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
@@ -77,7 +82,7 @@ const YearlyCalendar = () => {
         id: doc.id,
       }));
 
-      setData(data);
+      dispatch(setBirthdays(data));
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
     }
@@ -103,7 +108,9 @@ const YearlyCalendar = () => {
           newUserBirthdayData,
         );
 
-        fetchData(userBirthdaysCollectionRef, setUserBirthdaysData);
+        console.log("Urodziny dodane do Firebase");
+        fetchData(userBirthdaysCollectionRef);
+        console.log("Dane pobrane do Redux");
         setInputName("");
         setInputDay("");
         setInputMonth("");
@@ -116,15 +123,15 @@ const YearlyCalendar = () => {
     }
   };
 
+  const dispatch = useDispatch();
+  const birthdays = useSelector((state) => state.birthdays);
+
   useEffect(() => {
     if (user) {
       const userId = user.uid;
-      const userBirthdaysCollectionRef = collection(
-        db,
-        `users/${userId}/birthday`,
-      );
+      const userBirthdaysCollectionRef = collection(db, `users/${userId}/birthday`);
 
-      fetchData(userBirthdaysCollectionRef, setUserBirthdaysData);
+      fetchData(userBirthdaysCollectionRef);
     }
   }, []);
 
@@ -253,16 +260,16 @@ const YearlyCalendar = () => {
               </View>
             </View>
             <View style={tw`mt-1`}>
-              <View style={tw`flex-col flex-wrap mt-4`}>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
-                  <MonthCalendar
-                    key={month}
-                    currentYear={currentYear}
-                    month={month}
-                    userBirthdays={userBirthdays}
-                  />
-                ))}
-              </View>
+            <View style={tw`flex-col flex-wrap mt-4`}>
+  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
+    <MonthCalendar
+      key={month}
+      currentYear={currentYear}
+      month={month}
+      userBirthdays={birthdays}
+    />
+  ))}
+</View>
             </View>
           </ScrollView>
         )}
