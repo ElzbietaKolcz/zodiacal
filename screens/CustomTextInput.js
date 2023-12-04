@@ -2,34 +2,47 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { FAB, TextInput, Checkbox } from "react-native-paper";
 import tw from "twrnc";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectGoals,
+  selectGoalAdded,
+  setGoals,
+  addGoal,
+  updateGoal,
+  toggleGoalState,
+} from "../features/goalSlice";
 
 import {
+  query,
   collection,
   addDoc,
   getDocs,
-  query,
   setDoc,
   doc,
-} from "firebase/firestore";
+} from "@firebase/firestore";
+
 import { db, auth } from "../firebase";
 
-import { useDispatch, useSelector } from "react-redux";
-import { setGoals } from "../features/goalSlice";
-
 const CustomTextInput = ({ initialValue, index }) => {
-  const [goal, setGoal] = useState(initialValue || "");
+  const [goal, setGoal] = useState("");
   const [checked, setChecked] = useState(false);
 
-  const user = auth.currentUser;
   const dispatch = useDispatch();
-  const userGoals = useSelector((state) => state.goals);
+  const userGoals = useSelector(selectGoals);
+  const userGoalToUpdate = userGoals[index];
+  const goalAdded = useSelector(selectGoalAdded);
 
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const user = auth.currentUser;
 
   useEffect(() => {
-    setGoal(initialValue || "");
+    console.log("CustomTextInput useEffect triggered");
+    if (initialValue) {
+      setGoal(initialValue);
+    } else {
+      fetchData();
+    }
   }, [initialValue]);
 
   const fetchData = async () => {
@@ -49,7 +62,15 @@ const CustomTextInput = ({ initialValue, index }) => {
           id: doc.id,
         }));
 
+        console.log("Fetched data:", data);
+
+        const goalFromDatabase = data.find((goal) => goal.index === index);
+        if (goalFromDatabase) {
+          setGoal(goalFromDatabase.name);
+        }
+
         dispatch(setGoals(data));
+        console.log("Redux Store state after setGoals:", data);
       }
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
@@ -68,12 +89,13 @@ const CustomTextInput = ({ initialValue, index }) => {
         const newUserGoalData = {
           state: false,
           name: goal,
+          index: index,
         };
 
         const docRef = await addDoc(userGoalCollectionRef, newUserGoalData);
 
         console.log("Nowy cel dodany:", docRef.id);
-        fetchData();
+        dispatch(addGoal(newUserGoalData));
       }
     } catch (error) {
       console.error(
@@ -82,25 +104,24 @@ const CustomTextInput = ({ initialValue, index }) => {
       );
     }
   };
+
   const updateExistingUserGoal = async () => {
     try {
-      if (user) {
+      if (user && userGoalToUpdate) {
         const userId = user.uid;
         const userGoalCollectionRef = collection(
           db,
           `users/${userId}/${currentYear}/${currentMonth}/goals`,
         );
 
-        const userGoalToUpdate = userGoals[0];
-
         await setDoc(
           doc(userGoalCollectionRef, userGoalToUpdate.id),
-          { name: goal },
+          { name: goal, index: index },
           { merge: true },
         );
 
         console.log("Cel zaktualizowany");
-        fetchData();
+        dispatch(updateGoal({ index, name: goal }));
       }
     } catch (error) {
       console.error(
@@ -109,38 +130,67 @@ const CustomTextInput = ({ initialValue, index }) => {
       );
     }
   };
+  const handleFABPress = async () => {
+    if (userGoalToUpdate) {
+      await updateExistingUserGoal();
+    } else {
+      await addNewUserGoal();
+    }
+  };
 
   const handleInputChange = (value) => {
     setGoal(value);
-  };
 
-  const handleFABPress = async () => {
-    if (goal.trim() !== "") {
-      if (initialValue) {
-        await updateExistingUserGoal();
-      } else {
-        await addNewUserGoal();
+    if (!goalAdded && value.trim() !== "") {
+      const updatedGoal = userGoals.find(
+        (userGoal) => userGoal.index === index,
+      );
+      if (updatedGoal) {
+        dispatch(updateGoal({ index, name: value }));
       }
     }
   };
 
+  const handleCheckboxPress = async () => {
+    setChecked(!checked);
+    if (user && userGoalToUpdate) {
+      const userId = user.uid;
+      const userGoalCollectionRef = collection(
+        db,
+        `users/${userId}/${currentYear}/${currentMonth}/goals`,
+      );
+
+      await setDoc(
+        doc(userGoalCollectionRef, userGoalToUpdate.id),
+        { state: !checked },
+        { merge: true },
+      );
+
+      console.log("Stan celu zaktualizowany");
+
+      // Aktualizacja stanu w Redux za pomocą akcji toggleGoalState
+      dispatch(toggleGoalState(index)); // Upewnij się, że index jest poprawny
+    }
+  };
+
   return (
-    <View style={tw` w-full flex-row justify-between items-center`}>
-      <View style={tw`rounded-lg `}>
+    <View style={tw`w-full flex-row justify-between items-center`}>
+      <View style={tw`rounded-lg`}>
         <Checkbox
           status={checked ? "checked" : "unchecked"}
-          onPress={() => {
-            setChecked(!checked);
-          }}
+          onPress={handleCheckboxPress} // Zmiana onPress na funkcję obsługującą checkboxa
         />
       </View>
       <View style={tw`flex-grow m-1 ml-2`}>
-        <TextInput
-          style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+      <TextInput
+          style={[
+            tw`bg-fuchsia-50 rounded-lg mx-1`,
+            checked && tw`line-through`, // Dodaj styl 'line-through' jeśli checked === true
+          ]}
           onChangeText={handleInputChange}
           value={goal}
           activeUnderlineColor="#a21caf"
-          label="Gole"
+          label="Goals"
           editable={true}
         />
       </View>
@@ -148,7 +198,7 @@ const CustomTextInput = ({ initialValue, index }) => {
       <FAB
         style={tw`bg-fuchsia-700 rounded-full m-2`}
         size="small"
-        icon={initialValue ? "pencil" : "plus"}
+        icon={goalAdded ? "pencil" : "plus"}
         color="#FFFFFF"
         onPress={handleFABPress}
         mode="elevated"

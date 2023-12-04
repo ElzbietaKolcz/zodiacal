@@ -16,7 +16,7 @@ import { setBirthdays } from "../features/birthdaySlice";
 const Home = () => {
   const navigation = useNavigation();
   const currentYear = new Date().getFullYear();
-  const month = new Date().getMonth() + 1;
+  const currentMonth = new Date().getMonth() + 1;
 
   const [userName, setUserName] = useState("");
 
@@ -82,7 +82,7 @@ const Home = () => {
       <View style={tw`mt-2`}>
         <MonthCalendar
           currentYear={currentYear}
-          month={month}
+          month={currentMonth}
           userBirthdays={userBirthdays}
         />
       </View>
@@ -94,20 +94,13 @@ const Home = () => {
           Goals for this month
         </Text>
         <View>
-          <CustomTextInput
-            initialValue={goals[0]?.name || ""}
-            index={0}
-          />
-
-          <CustomTextInput
-            initialValue={goals[1]?.name || ""}
-            index={1}
-          />
-
-          <CustomTextInput
-            initialValue={goals[2]?.name || ""}
-            index={2}
-          />
+          {[0, 1, 2].map((index) => (
+            <CustomTextInput
+              key={index}
+              initialValue={goals[index]?.name || ""}
+              index={index}
+            />
+          ))}
         </View>
       </View>
     </ScrollView>
