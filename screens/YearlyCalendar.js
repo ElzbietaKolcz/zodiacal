@@ -12,14 +12,13 @@ import {
 import tw from "twrnc";
 
 import {
-  getFirestore,
   collection,
   addDoc,
   getDocs,
   query,
   orderBy,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { db, auth } from "../firebase";
 
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -28,17 +27,11 @@ import MonthCalendar from "./MonthCalendar";
 import EditBirthdays from "./EditBirthdays";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addBirthday,
-  setBirthdays,
-  removeBirthday,
-} from "../features/birthdaySlice";
+import { setBirthdays } from "../features/birthdaySlice";
 
 const YearlyCalendar = () => {
   const currentYear = new Date().getFullYear();
 
-  const db = getFirestore();
-  const auth = getAuth();
   const user = auth.currentUser;
 
   const [inputday, setInputDay] = useState("");
@@ -108,9 +101,6 @@ const YearlyCalendar = () => {
           newUserBirthdayData,
         );
 
-        console.log("Urodziny dodane do Firebase");
-        fetchData(userBirthdaysCollectionRef);
-        console.log("Dane pobrane do Redux");
         setInputName("");
         setInputDay("");
         setInputMonth("");
@@ -129,7 +119,10 @@ const YearlyCalendar = () => {
   useEffect(() => {
     if (user) {
       const userId = user.uid;
-      const userBirthdaysCollectionRef = collection(db, `users/${userId}/birthday`);
+      const userBirthdaysCollectionRef = collection(
+        db,
+        `users/${userId}/birthday`,
+      );
 
       fetchData(userBirthdaysCollectionRef);
     }
@@ -260,16 +253,16 @@ const YearlyCalendar = () => {
               </View>
             </View>
             <View style={tw`mt-1`}>
-            <View style={tw`flex-col flex-wrap mt-4`}>
-  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
-    <MonthCalendar
-      key={month}
-      currentYear={currentYear}
-      month={month}
-      userBirthdays={birthdays}
-    />
-  ))}
-</View>
+              <View style={tw`flex-col flex-wrap mt-4`}>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
+                  <MonthCalendar
+                    key={month}
+                    currentYear={currentYear}
+                    month={month}
+                    userBirthdays={birthdays}
+                  />
+                ))}
+              </View>
             </View>
           </ScrollView>
         )}

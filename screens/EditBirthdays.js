@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { View, ScrollView } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
@@ -9,7 +8,6 @@ const EditBirthdays = () => {
   const dispatch = useDispatch();
   const userBirthdays = useSelector((state) => state.birthdays);
 
-  // Sortuj urodziny według miesiąca, a następnie dnia
   const sortedBirthdays = [...userBirthdays].sort((a, b) => {
     if (a.month !== b.month) {
       return a.month - b.month;
@@ -18,11 +16,7 @@ const EditBirthdays = () => {
   });
 
   const handleDelete = (birthdayId) => {
-    // Wyślij akcję do Reduxa, aby usunąć urodziny
     dispatch(removeBirthday(birthdayId));
-
-    // Możesz również dodać logikę usuwania z Firebase, jeśli to nadal potrzebne
-    // ...
 
     console.log(`Birthday with ID ${birthdayId} deleted successfully.`);
   };

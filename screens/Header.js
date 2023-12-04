@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../features/userSlice";
@@ -17,7 +17,7 @@ function Header({ userName }) {
     <View style={tw`w-full flex-row justify-between items-center p-4`}>
       <Text
         variant="headlineSmall"
-        style={tw`p-4 mt-1 text-black font-medium`}
+        style={tw`p-2 mt-1 text-black font-medium`}
       >
         Welcome back {userName}!
       </Text>

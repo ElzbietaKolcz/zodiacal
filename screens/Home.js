@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, StatusBar, ScrollView } from "react-native";
+import { View, StatusBar, ScrollView, CheckBox } from "react-native";
 import { Text } from "react-native-paper";
 import tw from "twrnc";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "./Header";
 import MonthCalendar from "./MonthCalendar";
+import CustomTextInput from "./CustomTextInput";
+
 import { useSelector, useDispatch } from "react-redux";
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
@@ -16,8 +18,9 @@ const Home = () => {
   const currentYear = new Date().getFullYear();
   const month = new Date().getMonth() + 1;
 
-  const [toDo, setToDo] = useState("");
   const [userName, setUserName] = useState("");
+
+  const goals = useSelector((state) => state.goals);
 
   const userId = auth.currentUser ? auth.currentUser.uid : null;
 
@@ -36,8 +39,6 @@ const Home = () => {
       if (userDocSnapshot.exists()) {
         const userData = userDocSnapshot.data();
         const userName = userData.username;
-        const userToDo = userData.toDo;
-        setToDo(userToDo);
         setUserName(userName);
       }
     } catch (error) {
@@ -85,11 +86,29 @@ const Home = () => {
           userBirthdays={userBirthdays}
         />
       </View>
-      <View style={tw`m-4`}>
-        <Text variant="headlineSmall" style={tw`text-black font-bold`}>
+      <View style={tw`my-2 mx-4 `}>
+        <Text
+          variant="headlineSmall"
+          style={tw`text-black font-bold mb-4`}
+        >
           Goals for this month
         </Text>
-        <Text style={tw`text-black text-lg mt-3`}>{toDo}</Text>
+        <View>
+          <CustomTextInput
+            initialValue={goals[0]?.name || ""}
+            index={0}
+          />
+
+          <CustomTextInput
+            initialValue={goals[1]?.name || ""}
+            index={1}
+          />
+
+          <CustomTextInput
+            initialValue={goals[2]?.name || ""}
+            index={2}
+          />
+        </View>
       </View>
     </ScrollView>
   );
