@@ -121,12 +121,8 @@ const CustomTextInput = ({ initialValue, index }) => {
 
         console.log("Cel zaktualizowany");
         dispatch(updateGoal({ index, name: goal }));
-      }
-      if (user && userGoalToUpdate && userGoalToUpdate.id) {
-      } else {
-        console.error(
-          "Błąd: userGoalToUpdate lub userGoalToUpdate.id jest niezdefiniowany lub pusty.",
-        );
+        console.log("userGoalToUpdate:", userGoalToUpdate);
+        console.log("index:", index);
       }
     } catch (error) {
       console.error(
@@ -219,10 +215,11 @@ const CustomTextInput = ({ initialValue, index }) => {
       <FAB
         style={tw`bg-fuchsia-700 rounded-full m-2`}
         size="small"
-        icon={goal === "" || !userGoalToUpdate ? "plus" : "pencil"}
+        icon={userGoalToUpdate && userGoalToUpdate.state ? "pencil" : "plus"}
         color="#FFFFFF"
         onPress={handleFABPress}
         mode="elevated"
+        disabled={userGoalToUpdate && userGoalToUpdate.state}
       />
     </View>
   );
