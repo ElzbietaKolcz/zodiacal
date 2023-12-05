@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
-import { FAB, TextInput, Checkbox } from "react-native-paper";
+import { FAB, TextInput, Checkbox, Text } from "react-native-paper";
 import tw from "twrnc";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -37,7 +37,6 @@ const CustomTextInput = ({ initialValue, index }) => {
   const user = auth.currentUser;
 
   useEffect(() => {
-    console.log("CustomTextInput useEffect triggered");
     if (initialValue) {
       setGoal(initialValue);
     } else {
@@ -57,20 +56,20 @@ const CustomTextInput = ({ initialValue, index }) => {
         const q = query(userGoalCollectionRef);
         const querySnapshot = await getDocs(q);
 
-        const data = querySnapshot.docs.map((doc) => ({
+        const dataFromSnapshot = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
-        console.log("Fetched data:", data);
-
-        const goalFromDatabase = data.find((goal) => goal.index === index);
+        const goalFromDatabase = dataFromSnapshot.find(
+          (goal) => goal.index === index,
+        );
         if (goalFromDatabase) {
           setGoal(goalFromDatabase.name);
+          setChecked(goalFromDatabase.state);
         }
 
-        dispatch(setGoals(data));
-        console.log("Redux Store state after setGoals:", data);
+        dispatch(setGoals(dataFromSnapshot));
       }
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
@@ -123,6 +122,12 @@ const CustomTextInput = ({ initialValue, index }) => {
         console.log("Cel zaktualizowany");
         dispatch(updateGoal({ index, name: goal }));
       }
+      if (user && userGoalToUpdate && userGoalToUpdate.id) {
+      } else {
+        console.error(
+          "Błąd: userGoalToUpdate lub userGoalToUpdate.id jest niezdefiniowany lub pusty.",
+        );
+      }
     } catch (error) {
       console.error(
         "Błąd podczas aktualizowania celu użytkownika:",
@@ -138,6 +143,14 @@ const CustomTextInput = ({ initialValue, index }) => {
     }
   };
 
+  useEffect(() => {
+    if (initialValue) {
+      setGoal(initialValue);
+    } else {
+      fetchData();
+    }
+  }, [initialValue]);
+
   const handleInputChange = (value) => {
     setGoal(value);
 
@@ -149,10 +162,13 @@ const CustomTextInput = ({ initialValue, index }) => {
         dispatch(updateGoal({ index, name: value }));
       }
     }
+
+    console.log("Checked in handleInputChange:", checked);
   };
 
   const handleCheckboxPress = async () => {
     setChecked(!checked);
+
     if (user && userGoalToUpdate) {
       const userId = user.uid;
       const userGoalCollectionRef = collection(
@@ -162,14 +178,13 @@ const CustomTextInput = ({ initialValue, index }) => {
 
       await setDoc(
         doc(userGoalCollectionRef, userGoalToUpdate.id),
-        { state: !checked },
+        { state: !userGoalToUpdate.state },
         { merge: true },
       );
 
       console.log("Stan celu zaktualizowany");
-
-      // Aktualizacja stanu w Redux za pomocą akcji toggleGoalState
-      dispatch(toggleGoalState(index)); // Upewnij się, że index jest poprawny
+      dispatch(toggleGoalState(index));
+      setChecked(!userGoalToUpdate.state);
     }
   };
 
@@ -178,27 +193,33 @@ const CustomTextInput = ({ initialValue, index }) => {
       <View style={tw`rounded-lg`}>
         <Checkbox
           status={checked ? "checked" : "unchecked"}
-          onPress={handleCheckboxPress} // Zmiana onPress na funkcję obsługującą checkboxa
+          onPress={handleCheckboxPress}
         />
       </View>
       <View style={tw`flex-grow m-1 ml-2`}>
-      <TextInput
-          style={[
-            tw`bg-fuchsia-50 rounded-lg mx-1`,
-            checked && tw`line-through`, // Dodaj styl 'line-through' jeśli checked === true
-          ]}
-          onChangeText={handleInputChange}
-          value={goal}
-          activeUnderlineColor="#a21caf"
-          label="Goals"
-          editable={true}
-        />
+        {checked ? (
+          <Text
+            style={[
+              tw`bg-fuchsia-50 text-black rounded-lg mx-1 text-base line-through p-4`,
+            ]}
+          >
+            {goal}
+          </Text>
+        ) : (
+          <TextInput
+            style={tw`bg-fuchsia-50 text-black rounded-lg mx-1`}
+            onChangeText={handleInputChange}
+            value={goal}
+            activeUnderlineColor="#a21caf"
+            label="Goals"
+            editable={true}
+          />
+        )}
       </View>
-
       <FAB
         style={tw`bg-fuchsia-700 rounded-full m-2`}
         size="small"
-        icon={goalAdded ? "pencil" : "plus"}
+        icon={goal === "" || !userGoalToUpdate ? "plus" : "pencil"}
         color="#FFFFFF"
         onPress={handleFABPress}
         mode="elevated"
