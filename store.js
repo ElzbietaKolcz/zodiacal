@@ -4,6 +4,7 @@ import userReducer from "./features/userSlice";
 import birthdayReducer  from './features/birthdaySlice';
 import taskReducer from "./features/taskSlice";
 import goalReducer from "./features/goalSlice";
+import cosmeticSlice from "./features/cosmeticSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,7 @@ export const store = configureStore({
     birthdays: birthdayReducer,
     task: taskReducer,
     goals: goalReducer,
-    
+    cosmetics: cosmeticSlice,
     [astrologyApi.reducerPath]: astrologyApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
