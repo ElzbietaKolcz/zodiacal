@@ -12,7 +12,6 @@ const SkinCare = () => {
             <Text key={index}>{cosmetic.product_name}</Text>
           ))
         }
-        <Text style={tw`text-center`}>test</Text>
       </View>
     );
 };
