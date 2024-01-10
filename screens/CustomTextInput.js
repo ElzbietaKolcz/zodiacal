@@ -34,6 +34,7 @@ const CustomTextInput = ({ initialValue, index }) => {
 
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
+
   const user = auth.currentUser;
 
   useEffect(() => {
@@ -121,8 +122,12 @@ const CustomTextInput = ({ initialValue, index }) => {
 
         console.log("Cel zaktualizowany");
         dispatch(updateGoal({ index, name: goal }));
-        console.log("userGoalToUpdate:", userGoalToUpdate);
-        console.log("index:", index);
+      }
+      if (user && userGoalToUpdate && userGoalToUpdate.id) {
+      } else {
+        console.error(
+          "Błąd: userGoalToUpdate lub userGoalToUpdate.id jest niezdefiniowany lub pusty.",
+        );
       }
     } catch (error) {
       console.error(
@@ -215,11 +220,15 @@ const CustomTextInput = ({ initialValue, index }) => {
       <FAB
         style={tw`bg-fuchsia-700 rounded-full m-2`}
         size="small"
-        icon={userGoalToUpdate && userGoalToUpdate.state ? "pencil" : "plus"}
+        icon={
+          goal.trim() === "" && (!initialValue || initialValue.trim() === "")
+            ? "plus" // Jeżeli input jest pusty zarówno w interfejsie, jak i w bazie danych
+            : "pencil" // W pozostałych przypadkach, gdy input ma zawartość lub checkbox jest zaznaczony
+        }
         color="#FFFFFF"
         onPress={handleFABPress}
         mode="elevated"
-        disabled={userGoalToUpdate && userGoalToUpdate.state}
+        disabled={checked}
       />
     </View>
   );

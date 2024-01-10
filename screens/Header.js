@@ -23,16 +23,14 @@ function Header({ userName }) {
       </Text>
 
       <View style={tw`flex-row items-center justify-end `}>
-        {userName ? (
-          <Button
-            style={tw`bg-fuchsia-700  rounded-lg`}
-            mode="contained"
-            textColor="#FFFFFF"
-            onPress={logoutOfApp}
-          >
-            Logout
-          </Button>
-        ) : null}
+        <Button
+          style={tw`bg-fuchsia-700  rounded-lg`}
+          mode="contained"
+          textColor="#FFFFFF"
+          onPress={logoutOfApp}
+        >
+          Logout
+        </Button>
       </View>
     </View>
   );
