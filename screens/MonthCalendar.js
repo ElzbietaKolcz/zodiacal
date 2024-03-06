@@ -38,7 +38,7 @@ const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
         }}
       />
       <View style={tw`my-4 flex-row flex-wrap`}>
-        {userBirthdays.map((birthday) => {
+        {userBirthdays.map((birthday, index) => {
           if (birthday.month === month) {
             const formattedDay =
               birthday.day < 10 ? `0${birthday.day}` : birthday.day;
@@ -46,7 +46,7 @@ const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
               <Text
                 variant="bodyLarge"
                 style={tw`ml-7 text-black`}
-                key={birthday.id}
+                key={`${birthday.id}-${index}`}
               >
                 {formattedDay} {birthday.name}
               </Text>

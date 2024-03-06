@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, StatusBar, ScrollView, CheckBox } from "react-native";
+import { View, StatusBar, ScrollView } from "react-native";
 import { Text } from "react-native-paper";
 import tw from "twrnc";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "./Header";
 import MonthCalendar from "./MonthCalendar";
 import CustomTextInput from "./CustomTextInput";
 
-import { useSelector, useDispatch } from "react-redux";
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { setBirthdays } from "../features/birthdaySlice";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -19,13 +16,9 @@ const Home = () => {
   const currentMonth = new Date().getMonth() + 1;
 
   const [userName, setUserName] = useState("");
-
-  const goals = useSelector((state) => state.goals);
+  const [userBirthdays, setUserBirthdays] = useState([]);
 
   const userId = auth.currentUser ? auth.currentUser.uid : null;
-
-  const userBirthdays = useSelector((state) => state.birthdays);
-  const dispatch = useDispatch();
 
   const fetchUserData = async () => {
     if (!userId) {
@@ -40,39 +33,16 @@ const Home = () => {
         const userData = userDocSnapshot.data();
         const userName = userData.username;
         setUserName(userName);
+        setUserBirthdays(userData.birthday || []); 
       }
     } catch (error) {
       console.error("Błąd podczas pobierania danych użytkownika:", error);
     }
   };
 
-  const saveBirthdaysToStorage = async (birthdays) => {
-    try {
-      await AsyncStorage.setItem("birthdays", JSON.stringify(birthdays));
-    } catch (error) {
-      console.error("Błąd podczas zapisywania urodzin w AsyncStorage:", error);
-    }
-  };
-
-  const getBirthdaysFromStorage = async () => {
-    try {
-      const birthdays = await AsyncStorage.getItem("birthdays");
-      if (birthdays !== null) {
-        dispatch(setBirthdays(JSON.parse(birthdays)));
-      }
-    } catch (error) {
-      console.error("Błąd podczas odczytywania urodzin z AsyncStorage:", error);
-    }
-  };
-
   useEffect(() => {
     fetchUserData();
-    getBirthdaysFromStorage();
   }, []);
-
-  useEffect(() => {
-    saveBirthdaysToStorage(userBirthdays);
-  }, [userBirthdays]);
 
   return (
     <ScrollView style={tw` bg-white h-full w-full`}>
@@ -97,7 +67,6 @@ const Home = () => {
           {[0, 1, 2].map((index) => (
             <CustomTextInput
               key={index}
-              initialValue={goals[index]?.name || ""}
               index={index}
             />
           ))}
