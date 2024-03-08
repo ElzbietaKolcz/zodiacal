@@ -34,13 +34,13 @@ const SignIn = () => {
   const validationSchema = yup.object().shape({
     email: yup
       .string()
-      .email("Please enter a valid email.")
-      .required("Email address is required."),
+      .email()
+      .required(),
     password: yup
       .string()
-      .min(6, "Password must be at least 6 characters.")
+      .min(6)
       .max(24)
-      .required("Minimum 6 characters required."),
+      .required(),
   });
 
   return (
@@ -58,9 +58,8 @@ const SignIn = () => {
               }),
             );
           })
-          .catch((error) => {
+          .catch(() => {
             setError("Invalid email or password");
-            console.error("Login error", error.message);
           });
       }}
     >

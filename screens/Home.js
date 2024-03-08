@@ -7,7 +7,14 @@ import Header from "./Header";
 import MonthCalendar from "./MonthCalendar";
 import CustomTextInput from "./CustomTextInput";
 
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  orderBy,
+  doc,
+  getDocs,
+  getDoc
+} from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 const Home = () => {
@@ -17,8 +24,34 @@ const Home = () => {
 
   const [userName, setUserName] = useState("");
   const [userBirthdays, setUserBirthdays] = useState([]);
-
   const userId = auth.currentUser ? auth.currentUser.uid : null;
+
+  const fetchUserBirthdays = async () => {
+    try {
+      if (userId) {
+        console.log("Fetching user birthdays...");
+        const userBirthdaysCollectionRef = collection(
+          db,
+          `users/${userId}/birthday`
+        );
+  
+        const q = query(userBirthdaysCollectionRef, orderBy("day"));
+        const querySnapshot = await getDocs(q);
+  
+        const data = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+  
+        console.log("User birthdays data:", data);
+        setUserBirthdays(data);
+      } else {
+        console.log("User ID is not available.");
+      }
+    } catch (error) {
+      console.error("Error fetching user birthdays:", error.message);
+    }
+  };
 
   const fetchUserData = async () => {
     if (!userId) {
@@ -33,7 +66,7 @@ const Home = () => {
         const userData = userDocSnapshot.data();
         const userName = userData.username;
         setUserName(userName);
-        setUserBirthdays(userData.birthday || []); 
+        setUserBirthdays(userData.birthday || []);
       }
     } catch (error) {
       console.error("Błąd podczas pobierania danych użytkownika:", error);
@@ -41,8 +74,13 @@ const Home = () => {
   };
 
   useEffect(() => {
+    fetchUserBirthdays();
     fetchUserData();
-  }, []);
+  }, [userId]);
+
+  useEffect(() => {
+    console.log("userBirthdays:", userBirthdays);
+  }, [userBirthdays]);
 
   return (
     <ScrollView style={tw` bg-white h-full w-full`}>
@@ -57,18 +95,12 @@ const Home = () => {
         />
       </View>
       <View style={tw`my-2 mx-4 `}>
-        <Text
-          variant="headlineSmall"
-          style={tw`text-black font-bold mb-4`}
-        >
+        <Text variant="headlineSmall" style={tw`text-black font-bold mb-4`}>
           Goals for this month
         </Text>
         <View>
           {[0, 1, 2].map((index) => (
-            <CustomTextInput
-              key={index}
-              index={index}
-            />
+            <CustomTextInput key={index} index={index} />
           ))}
         </View>
       </View>

@@ -12,7 +12,7 @@ export default function App() {
       <PaperProvider>
         <SafeAreaProvider>
           <NavigationContainer>
-            <StackNavigator />
+          <StackNavigator testID="stack-navigator" />
           </NavigationContainer>
         </SafeAreaProvider>
       </PaperProvider>

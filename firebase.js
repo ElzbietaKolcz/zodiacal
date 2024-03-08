@@ -1,5 +1,5 @@
-import { initializeApp, getApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { initializeAuth, inMemoryPersistence } from 'firebase/auth';
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -14,9 +14,10 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: inMemoryPersistence
+});
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export { db, auth, app, storage, onAuthStateChanged };
+export { db, auth, app, storage };

@@ -14,7 +14,7 @@ import DayCalendar from "./screens/DayCalendar";
 
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, selectUser } from "./features/userSlice";
-import { auth, onAuthStateChanged } from "./firebase";
+import { auth } from "./firebase";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,7 +24,7 @@ export default function StackNavigator() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (userAuth) => {
+    const unsubscribe = auth.onAuthStateChanged(userAuth => {
       if (userAuth) {
         dispatch(
           login({
@@ -36,7 +36,9 @@ export default function StackNavigator() {
         dispatch(logout());
       }
     });
-  }, []);
+
+    return unsubscribe;
+  }, [dispatch]);
 
   function HomeTabs({ navigation, route }) {
     useEffect(() => {
