@@ -16,72 +16,46 @@ import {
   getDoc
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { setBirthdays } from "../features/birthdaySlice";
+
 
 const Home = () => {
   const navigation = useNavigation();
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
+  const user = auth.currentUser;
 
-  const [userName, setUserName] = useState("");
-  const [userBirthdays, setUserBirthdays] = useState([]);
-  const userId = auth.currentUser ? auth.currentUser.uid : null;
+  const dispatch = useDispatch();
 
-  const fetchUserBirthdays = async () => {
-    try {
-      if (userId) {
-        console.log("Fetching user birthdays...");
-        const userBirthdaysCollectionRef = collection(
-          db,
-          `users/${userId}/birthday`
-        );
-  
-        const q = query(userBirthdaysCollectionRef, orderBy("day"));
-        const querySnapshot = await getDocs(q);
-  
-        const data = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-  
-        console.log("User birthdays data:", data);
-        setUserBirthdays(data);
-      } else {
-        console.log("User ID is not available.");
-      }
-    } catch (error) {
-      console.error("Error fetching user birthdays:", error.message);
-    }
-  };
+  const birthdays = useSelector((state) => state.birthdays);
+  const userName = useSelector((state) => state.user.user ? state.user.user.username : "");
 
-  const fetchUserData = async () => {
-    if (!userId) {
-      return;
-    }
 
-    const userDocRef = doc(db, "users", userId);
-
-    try {
-      const userDocSnapshot = await getDoc(userDocRef);
-      if (userDocSnapshot.exists()) {
-        const userData = userDocSnapshot.data();
-        const userName = userData.username;
-        setUserName(userName);
-        setUserBirthdays(userData.birthday || []);
-      }
-    } catch (error) {
-      console.error("Błąd podczas pobierania danych użytkownika:", error);
-    }
-  };
 
   useEffect(() => {
-    fetchUserBirthdays();
-    fetchUserData();
-  }, [userId]);
+    if (user) {
+      const userId = user.uid;
+      const userBirthdaysCollectionRef = collection(db, `users/${userId}/birthday`);
+      fetchData(userBirthdaysCollectionRef);
+    }
+  }, []);
 
-  useEffect(() => {
-    console.log("userBirthdays:", userBirthdays);
-  }, [userBirthdays]);
+  const fetchData = async (collectionRef) => {
+    try {
+      const q = query(collectionRef, orderBy("day"));
+      const querySnapshot = await getDocs(q);
 
+      const data = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      dispatch(setBirthdays(data));
+    } catch (error) {
+      console.error("Błąd podczas pobierania danych:", error.message);
+    }
+  };
   return (
     <ScrollView style={tw` bg-white h-full w-full`}>
       <StatusBar backgroundColor="white" />
@@ -91,7 +65,7 @@ const Home = () => {
         <MonthCalendar
           currentYear={currentYear}
           month={currentMonth}
-          userBirthdays={userBirthdays}
+          userBirthdays={birthdays}
         />
       </View>
       <View style={tw`my-2 mx-4 `}>
