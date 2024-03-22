@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { logout, selectUser } from "../features/userSlice";
-import { auth } from "../firebase";
-import { Text, Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import tw from "twrnc";
+import { auth } from "../firebase";
 
-function Header({ userName }) {
-  const dispatch = useDispatch();
-  const logoutOfApp = () => {
-    dispatch(logout());
-    auth.signOut();
+function Header() {
+  const [displayName, setDisplayName] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setDisplayName(user.displayName);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+    } catch (error) {
+      console.error("Błąd podczas wylogowywania:", error.message);
+    }
   };
 
   return (
@@ -19,15 +31,14 @@ function Header({ userName }) {
         variant="headlineSmall"
         style={tw`p-2 mt-1 text-black font-medium`}
       >
-        Welcome back {userName}!
+        Welcome back {displayName ? displayName : "Guest"}!
       </Text>
-
       <View style={tw`flex-row items-center justify-end `}>
         <Button
           style={tw`bg-fuchsia-700  rounded-lg`}
           mode="contained"
           textColor="#FFFFFF"
-          onPress={logoutOfApp}
+          onPress={handleLogout}
         >
           Logout
         </Button>

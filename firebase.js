@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { initializeAuth, inMemoryPersistence } from 'firebase/auth';
+import { initializeApp, getApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -12,12 +12,15 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
+let app;
+if (getApp.length === 0) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
 
-const app = initializeApp(firebaseConfig);
-const auth = initializeAuth(app, {
-  persistence: inMemoryPersistence
-});
+const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export { db, auth, app, storage };
+export { db, auth, app, storage, onAuthStateChanged };

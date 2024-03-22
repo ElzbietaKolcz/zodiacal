@@ -104,6 +104,8 @@ const YearlyCalendar = () => {
         setInputName("");
         setInputDay("");
         setInputMonth("");
+
+        fetchData(userBirthdaysCollectionRef);
       }
     } catch (error) {
       console.error(
