@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { initializeAuth, browserLocalPersistence } from 'firebase/auth';
+import { getAuth, browserLocalPersistence } from 'firebase/auth'; // Zmieniono import autentykacji Firebase
+
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,9 +20,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = initializeAuth(app, {
-  persistence: browserLocalPersistence
-});
+
+const auth = getAuth(app); 
+
 const db = getFirestore(app);
 const storage = getStorage(app);
 

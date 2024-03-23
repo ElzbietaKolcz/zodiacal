@@ -25,9 +25,7 @@ import { login } from "../features/userSlice";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-const SignUp = () => {
-  const navigation = useNavigation();
-
+const SignUp = ({ navigation }) => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
 
@@ -57,46 +55,41 @@ const SignUp = () => {
       onSubmit={(values, { setSubmitting }) => {
         const auth = getAuth(app);
         createUserWithEmailAndPassword(auth, values.email, values.password)
-          .then((userAuth) => {
-            updateProfile(userAuth.user, {
-              displayName: values.username,
-            }).then(() => {
-              const db = getFirestore(app);
-              const userId = userAuth.user.uid;
-
-              const userDocRef = doc(db, "users", userId);
-
-              setDoc(userDocRef, {
-                username: values.username,
-                email: values.email,
+          .then(() => {
+            const db = getFirestore(app);
+            const userId = userAuth.user.uid;
+            const userDocRef = doc(db, "users", userId);
+            setDoc(userDocRef, {
+              username: values.username,
+              email: values.email,
+            })
+              .then(() => {
+                console.log("User data saved to Firestore successfully");
+                dispatch(
+                  login({
+                    email: userAuth.user.email,
+                    uid: userAuth.user.uid,
+                    displayName: values.username,
+                  }),
+                );
               })
-                .then(() => {
-                  dispatch(
-                    login({
-                      email: userAuth.user.email,
-                      uid: userAuth.user.uid,
-                      displayName: values.username,
-                    }),
-                  );
-                })
-                .catch((error) => {
-                  console.error(
-                    "Błąd podczas zapisywania danych użytkownika:",
-                    error,
-                  );
-                });
-            });
+              .catch((error) => {
+                console.error(
+                  "Error while saving user data to Firestore:",
+                  error,
+                );
+              });
           })
           .catch((error) => {
+            console.error("Error during user registration:", error);
             if (error.code === "auth/email-already-in-use") {
               setError(
                 "This email is already in use. Please use a different email.",
               );
-            } else {
-              console.error("Login error", error.message);
-            }
+            } 
             setSubmitting(false);
           });
+
       }}
     >
       {({
@@ -132,6 +125,8 @@ const SignUp = () => {
                     value={values.username}
                     onChangeText={handleChange("username")}
                     left={<TextInput.Icon icon="account-outline" />}
+                    accessibilityLabel="Username"
+                    
                   />
                   {errors.username ? (
                     <Text style={tw`text-red-500`}>{errors.username}</Text>
@@ -146,6 +141,7 @@ const SignUp = () => {
                     value={values.email}
                     onChangeText={handleChange("email")}
                     left={<TextInput.Icon icon="email-outline" />}
+                    accessibilityLabel="Email"
                   />
                   {errors.email ? (
                     <Text style={tw`text-red-500`}>{errors.email}</Text>
@@ -166,6 +162,7 @@ const SignUp = () => {
                         onPress={togglePasswordVisibility}
                       />
                     }
+                    accessibilityLabel="Password"
                   />
                   {errors.password ? (
                     <Text style={tw`text-red-500`}>{errors.password}</Text>
@@ -186,6 +183,7 @@ const SignUp = () => {
                       tw`rounded-full p-4 mb-3 mt-8`,
                       isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
                     ]}
+                    testID="sign-up-button"
                   >
                     <Text style={tw`text-center text-lg uppercase text-white`}>
                       Sign up

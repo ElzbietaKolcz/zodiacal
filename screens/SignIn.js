@@ -19,11 +19,9 @@ import { login } from "../features/userSlice";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-const SignIn = () => {
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-
+const SignIn = ({ navigation }) => {
   const [error, setError] = useState(null);
+  const dispatch = useDispatch(); 
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -32,15 +30,8 @@ const SignIn = () => {
   };
 
   const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .email()
-      .required(),
-    password: yup
-      .string()
-      .min(6)
-      .max(24)
-      .required(),
+    email: yup.string().email().required(),
+    password: yup.string().required(),
   });
 
   return (
@@ -49,17 +40,17 @@ const SignIn = () => {
       validationSchema={validationSchema}
       onSubmit={(values) => {
         const auth = getAuth(app);
+
         signInWithEmailAndPassword(auth, values.email, values.password)
           .then((userAuth) => {
             dispatch(
               login({
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,
-                username: userAuth.user.displayName
               }),
             );
           })
-          .catch(() => {
+          .catch((error) => {
             setError("Invalid email or password");
           });
       }}
@@ -90,10 +81,8 @@ const SignIn = () => {
                     value={values.email}
                     onChangeText={handleChange("email")}
                     left={<TextInput.Icon icon="email-outline" />}
+                    accessibilityLabel="Email"
                   />
-                  {errors.email ? (
-                    <Text style={tw`text-red-500`}>{errors.email}</Text>
-                  ) : null}
                 </View>
 
                 {/* Password input */}
@@ -111,19 +100,12 @@ const SignIn = () => {
                         onPress={togglePasswordVisibility}
                       />
                     }
+                    accessibilityLabel="Password"
                   />
-                  {errors.password ? (
-                    <Text style={tw`text-red-500`}>{errors.password}</Text>
-                  ) : null}
                 </View>
 
                 {/* Button Sign In */}
                 <View style={tw`w-full`}>
-                  {error && (
-                    <Text style={tw`text-red-500 text-center my-2`}>
-                      {error}
-                    </Text>
-                  )}
                   <Pressable
                     onPress={handleSubmit}
                     disabled={!isValid}
@@ -131,11 +113,20 @@ const SignIn = () => {
                       tw`rounded-full p-4 mb-3 mt-8`,
                       isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
                     ]}
+                    testID="sign-in-button"
                   >
                     <Text style={tw`text-center text-lg uppercase text-white`}>
                       Sign in
                     </Text>
                   </Pressable>
+                  <View>
+                    <Text
+
+                      style={[tw`text-red-500 text-center my-2`]}
+                    >
+                      {error}
+                    </Text>
+                  </View>
                 </View>
 
                 <View style={tw`flex-col justify-center mt-4`}>
