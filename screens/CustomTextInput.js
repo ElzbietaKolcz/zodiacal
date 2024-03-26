@@ -23,7 +23,7 @@ import {
 
 import { db, auth } from "../firebase";
 
-const CustomTextInput = ({ initialValue, index }) => {
+const CustomTextInput = ({ initialValue = "", index }) => {
   const [goal, setGoal] = useState("");
   const [checked, setChecked] = useState(false);
 

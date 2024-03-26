@@ -4,6 +4,7 @@ import { Calendar } from "react-native-calendars";
 import tw from "twrnc";
 
 const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
+
   const markedDates = generateMarkedDates(userBirthdays, currentYear, month);
 
   function generateMarkedDates(userBirthdays, currentYear) {
@@ -22,6 +23,7 @@ const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
 
     return markedDates;
   }
+  // console.log("markedDates:", markedDates);
 
   return (
     <View style={tw`w-full`}>

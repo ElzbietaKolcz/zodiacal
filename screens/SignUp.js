@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -26,6 +25,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 
 const SignUp = ({ navigation }) => {
+
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
 
@@ -55,41 +55,51 @@ const SignUp = ({ navigation }) => {
       onSubmit={(values, { setSubmitting }) => {
         const auth = getAuth(app);
         createUserWithEmailAndPassword(auth, values.email, values.password)
-          .then(() => {
-            const db = getFirestore(app);
-            const userId = userAuth.user.uid;
-            const userDocRef = doc(db, "users", userId);
-            setDoc(userDocRef, {
-              username: values.username,
-              email: values.email,
-            })
+          .then((userAuth) => {
+            updateProfile(userAuth.user, {
+              displayName: values.username,
+            }).then(() => {
+              const db = getFirestore(app);
+              const userId = userAuth.user.uid;
+
+              const userDocRef = doc(db, "users", userId);
+
+              setDoc(userDocRef, {
+                username: values.username,
+                email: values.email,
+              })
               .then(() => {
-                console.log("User data saved to Firestore successfully");
                 dispatch(
-                  login({
+                    login({
+                        email: userAuth.user.email,
+                        uid: userAuth.user.uid,
+                        displayName: values.username,
+                    }),
+                );
+                console.log("Dane użytkownika zapisane w Reduxie:", {
                     email: userAuth.user.email,
                     uid: userAuth.user.uid,
                     displayName: values.username,
-                  }),
-                );
-              })
-              .catch((error) => {
-                console.error(
-                  "Error while saving user data to Firestore:",
-                  error,
-                );
-              });
+                });
+            })
+                .catch((error) => {
+                  console.error(
+                    "Błąd podczas zapisywania danych użytkownika:",
+                    error,
+                  );
+                });
+            });
           })
           .catch((error) => {
-            console.error("Error during user registration:", error);
             if (error.code === "auth/email-already-in-use") {
               setError(
                 "This email is already in use. Please use a different email.",
               );
-            } 
+            } else {
+              console.error("Login error", error.message);
+            }
             setSubmitting(false);
           });
-
       }}
     >
       {({
@@ -126,7 +136,6 @@ const SignUp = ({ navigation }) => {
                     onChangeText={handleChange("username")}
                     left={<TextInput.Icon icon="account-outline" />}
                     accessibilityLabel="Username"
-                    
                   />
                   {errors.username ? (
                     <Text style={tw`text-red-500`}>{errors.username}</Text>
@@ -142,6 +151,7 @@ const SignUp = ({ navigation }) => {
                     onChangeText={handleChange("email")}
                     left={<TextInput.Icon icon="email-outline" />}
                     accessibilityLabel="Email"
+
                   />
                   {errors.email ? (
                     <Text style={tw`text-red-500`}>{errors.email}</Text>

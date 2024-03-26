@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, StatusBar, ScrollView } from "react-native";
 import { Text } from "react-native-paper";
 import tw from "twrnc";
-import { useNavigation } from "@react-navigation/native";
 import Header from "./Header";
 import MonthCalendar from "./MonthCalendar";
 import CustomTextInput from "./CustomTextInput";
@@ -21,7 +20,7 @@ import { setBirthdays } from "../features/birthdaySlice";
 
 
 const Home = () => {
-  const navigation = useNavigation();
+
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const user = auth.currentUser;
@@ -72,11 +71,11 @@ const Home = () => {
         <Text variant="headlineSmall" style={tw`text-black font-bold mb-4`}>
           Goals for this month
         </Text>
-        <View>
+        {/* <View>
           {[0, 1, 2].map((index) => (
             <CustomTextInput key={index} index={index} />
           ))}
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );
