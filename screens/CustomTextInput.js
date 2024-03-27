@@ -27,7 +27,9 @@ const CustomTextInput = ({ index }) => {
 
   const dispatch = useDispatch();
   const userGoals = useSelector(selectGoals);
-  const userGoalToUpdate = userGoals.find(goal => goal && goal.index === index);
+  const userGoalToUpdate = userGoals.find(
+    (goal) => goal && goal.index === index,
+  );
 
   const goalAdded = useSelector(selectGoalAdded);
 
@@ -51,13 +53,13 @@ const CustomTextInput = ({ index }) => {
         const q = query(userGoalCollectionRef);
         const querySnapshot = await getDocs(q);
 
-        const dataFromSnapshot = querySnapshot.docs.map(doc => ({
+        const dataFromSnapshot = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
         const goalFromDatabase = dataFromSnapshot.find(
-          goal => goal.index === index
+          (goal) => goal.index === index,
         );
         if (goalFromDatabase) {
           setGoal(goalFromDatabase.name);
@@ -73,6 +75,7 @@ const CustomTextInput = ({ index }) => {
 
   const addOrUpdateGoal = async () => {
     try {
+      console.log("addOrUpdateGoal called");
       if (user) {
         const userId = user.uid;
         const userGoalCollectionRef = collection(
@@ -90,7 +93,7 @@ const CustomTextInput = ({ index }) => {
           await setDoc(
             doc(userGoalCollectionRef, userGoalToUpdate.id),
             { name: goal, state: checked },
-            { merge: true }
+            { merge: true },
           );
           dispatch(updateGoal({ index, name: goal }));
         } else {
@@ -105,9 +108,9 @@ const CustomTextInput = ({ index }) => {
   };
 
   const handleFABPress = async () => {
+    console.log("handleFABPress called");
     await addOrUpdateGoal();
   };
-
   const handleInputChange = (value) => {
     setGoal(value);
   };
@@ -121,13 +124,20 @@ const CustomTextInput = ({ index }) => {
           db,
           `users/${userId}/${currentYear}/${currentMonth}/goals`,
         );
-  
+
         const goalDocRef = doc(userGoalCollectionRef, userGoalToUpdate.id);
-  
-        await setDoc(goalDocRef, { state: !userGoalToUpdate.state }, { merge: true });
+
+        await setDoc(
+          goalDocRef,
+          { state: !userGoalToUpdate.state },
+          { merge: true },
+        );
         console.log("State of the goal updated in Firebase");
       } catch (error) {
-        console.error("Error updating state of the goal in Firebase:", error.message);
+        console.error(
+          "Error updating state of the goal in Firebase:",
+          error.message,
+        );
       }
     }
   };
@@ -137,6 +147,7 @@ const CustomTextInput = ({ index }) => {
         <Checkbox
           status={checked ? "checked" : "unchecked"}
           onPress={handleCheckboxPress}
+          testID="checkbox"
         />
       </View>
       <View style={tw`flex-grow m-1 ml-2`}>
@@ -156,6 +167,8 @@ const CustomTextInput = ({ index }) => {
             activeUnderlineColor="#a21caf"
             label="Goals"
             editable={true}
+            testID="Goals"
+            accessibilityLabel="Goals"
           />
         )}
       </View>
@@ -167,6 +180,7 @@ const CustomTextInput = ({ index }) => {
         onPress={handleFABPress}
         mode="elevated"
         disabled={userGoalToUpdate && userGoalToUpdate.state}
+        accessibilityLabel="FAB"
       />
     </View>
   );
