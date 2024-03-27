@@ -9,7 +9,7 @@ import {
 import SignIn from "../screens/SignIn";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const mockStore = configureStore([]);
 
@@ -85,8 +85,8 @@ describe("SignIn Component", () => {
       fireEvent.changeText(emailInput, "test@example.com");
       fireEvent.changeText(passwordInput, "testPassword");
     
-      await act(async () => { // Wrap state updates in act()
-        await fireEvent.press(signInButton); // Move fireEvent.press() inside act()
+      await act(async () => { 
+        await fireEvent.press(signInButton); 
       });
     
       await waitFor(() => {

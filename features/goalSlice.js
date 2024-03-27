@@ -1,51 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
-
-const initialState = {
-  goals: [],
-  goalAdded: false,
-};
+import { createSlice } from '@reduxjs/toolkit';
 
 const goalSlice = createSlice({
-  name: "goals",
-  initialState,
+  name: 'goals',
+  initialState: [],
   reducers: {
     setGoals: (state, action) => {
-      state.goals = action.payload;
-      state.goalAdded = false;
+      return action.payload;
     },
-    addGoal: (state, action) => {
-      state.goals.push(action.payload);
-      state.goalAdded = true;
-    },
+    addGoal: (state, action) => [...state, action.payload],
     updateGoal: (state, action) => {
       const { index, name } = action.payload;
-      state.goals[index].name = name;
-      state.goalAdded = true;
+      return state.map(goal => {
+        if (goal.index === index) {
+          return { ...goal, name };
+        }
+        return goal;
+      });
     },
     toggleGoalState: (state, action) => {
       const index = action.payload;
-
-      state.goals[index].state = !state.goals[index].state;
-      state.goalAdded = true;
-    },
-    removeGoal: (state, action) => {
-      const goalIdToRemove = action.payload;
-      state.goals = state.goals.filter((goal) => goal.id !== goalIdToRemove);
-      state.goalAdded = false;
+      return state.map(goal => {
+        if (goal.index === index) {
+          return { ...goal, state: !goal.state };
+        }
+        return goal;
+      });
     },
   },
 });
 
-export const {
-  setGoals,
-  addGoal,
-  updateGoal,
-  resetGoalAdded,
-  removeGoal,
-  toggleGoalState,
-} = goalSlice.actions;
-
-export const selectGoals = (state) => state.goals.goals;
-export const selectGoalAdded = (state) => state.goals.goalAdded;
-
+export const { setGoals, addGoal, updateGoal, toggleGoalState } = goalSlice.actions;
+export const selectGoals = state => state.goals;
+export const selectGoalAdded = state => state.goalAdded; 
 export default goalSlice.reducer;

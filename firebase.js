@@ -1,9 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, browserLocalPersistence } from 'firebase/auth'; // Zmieniono import autentykacji Firebase
+import { getAuth } from 'firebase/auth';
 
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { LogLevel } from '@firebase/logger';
 import { setLogLevel } from '@firebase/logger';

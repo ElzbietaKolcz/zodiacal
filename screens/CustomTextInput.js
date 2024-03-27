@@ -9,9 +9,9 @@ import {
   setGoals,
   addGoal,
   updateGoal,
-  toggleGoalState,
 } from "../features/goalSlice";
 
+import { db, auth } from "../firebase";
 import {
   query,
   collection,
@@ -21,29 +21,23 @@ import {
   doc,
 } from "@firebase/firestore";
 
-import { db, auth } from "../firebase";
-
-const CustomTextInput = ({ initialValue = "", index }) => {
+const CustomTextInput = ({ index }) => {
   const [goal, setGoal] = useState("");
   const [checked, setChecked] = useState(false);
 
   const dispatch = useDispatch();
   const userGoals = useSelector(selectGoals);
-  const userGoalToUpdate = userGoals[index];
+  const userGoalToUpdate = userGoals.find(goal => goal && goal.index === index);
+
   const goalAdded = useSelector(selectGoalAdded);
 
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
-
   const user = auth.currentUser;
 
   useEffect(() => {
-    if (initialValue) {
-      setGoal(initialValue);
-    } else {
-      fetchData();
-    }
-  }, [initialValue]);
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -57,13 +51,13 @@ const CustomTextInput = ({ initialValue = "", index }) => {
         const q = query(userGoalCollectionRef);
         const querySnapshot = await getDocs(q);
 
-        const dataFromSnapshot = querySnapshot.docs.map((doc) => ({
+        const dataFromSnapshot = querySnapshot.docs.map(doc => ({
           ...doc.data(),
           id: doc.id,
         }));
 
         const goalFromDatabase = dataFromSnapshot.find(
-          (goal) => goal.index === index,
+          goal => goal.index === index
         );
         if (goalFromDatabase) {
           setGoal(goalFromDatabase.name);
@@ -77,7 +71,7 @@ const CustomTextInput = ({ initialValue = "", index }) => {
     }
   };
 
-  const addNewUserGoal = async () => {
+  const addOrUpdateGoal = async () => {
     try {
       if (user) {
         const userId = user.uid;
@@ -86,109 +80,57 @@ const CustomTextInput = ({ initialValue = "", index }) => {
           `users/${userId}/${currentYear}/${currentMonth}/goals`,
         );
 
-        const newUserGoalData = {
-          state: false,
+        const newGoalData = {
+          state: checked,
           name: goal,
           index: index,
         };
 
-        const docRef = await addDoc(userGoalCollectionRef, newUserGoalData);
-
-        console.log("Nowy cel dodany:", docRef.id);
-        dispatch(addGoal(newUserGoalData));
+        if (userGoalToUpdate) {
+          await setDoc(
+            doc(userGoalCollectionRef, userGoalToUpdate.id),
+            { name: goal, state: checked },
+            { merge: true }
+          );
+          dispatch(updateGoal({ index, name: goal }));
+        } else {
+          const docRef = await addDoc(userGoalCollectionRef, newGoalData);
+          console.log("New goal added:", docRef.id);
+          dispatch(addGoal(newGoalData));
+        }
       }
     } catch (error) {
-      console.error(
-        "Błąd podczas dodawania nowego celu użytkownika:",
-        error.message,
-      );
+      console.error("Error adding or updating goal:", error.message);
     }
   };
 
-  const updateExistingUserGoal = async () => {
-    try {
-      if (user && userGoalToUpdate) {
+  const handleFABPress = async () => {
+    await addOrUpdateGoal();
+  };
+
+  const handleInputChange = (value) => {
+    setGoal(value);
+  };
+
+  const handleCheckboxPress = async () => {
+    setChecked(!checked);
+    if (user && userGoalToUpdate) {
+      try {
         const userId = user.uid;
         const userGoalCollectionRef = collection(
           db,
           `users/${userId}/${currentYear}/${currentMonth}/goals`,
         );
-
-        await setDoc(
-          doc(userGoalCollectionRef, userGoalToUpdate.id),
-          { name: goal, index: index },
-          { merge: true },
-        );
-
-        console.log("Cel zaktualizowany");
-        dispatch(updateGoal({ index, name: goal }));
-      }
-      if (user && userGoalToUpdate && userGoalToUpdate.id) {
-      } else {
-        console.error(
-          "Błąd: userGoalToUpdate lub userGoalToUpdate.id jest niezdefiniowany lub pusty.",
-        );
-      }
-    } catch (error) {
-      console.error(
-        "Błąd podczas aktualizowania celu użytkownika:",
-        error.message,
-      );
-    }
-  };
-  const handleFABPress = async () => {
-    if (userGoalToUpdate) {
-      await updateExistingUserGoal();
-    } else {
-      await addNewUserGoal();
-    }
-  };
-
-  useEffect(() => {
-    if (initialValue) {
-      setGoal(initialValue);
-    } else {
-      fetchData();
-    }
-  }, [initialValue]);
-
-  const handleInputChange = (value) => {
-    setGoal(value);
-
-    if (!goalAdded && value.trim() !== "") {
-      const updatedGoal = userGoals.find(
-        (userGoal) => userGoal.index === index,
-      );
-      if (updatedGoal) {
-        dispatch(updateGoal({ index, name: value }));
+  
+        const goalDocRef = doc(userGoalCollectionRef, userGoalToUpdate.id);
+  
+        await setDoc(goalDocRef, { state: !userGoalToUpdate.state }, { merge: true });
+        console.log("State of the goal updated in Firebase");
+      } catch (error) {
+        console.error("Error updating state of the goal in Firebase:", error.message);
       }
     }
-
-    console.log("Checked in handleInputChange:", checked);
   };
-
-  const handleCheckboxPress = async () => {
-    setChecked(!checked);
-
-    if (user && userGoalToUpdate) {
-      const userId = user.uid;
-      const userGoalCollectionRef = collection(
-        db,
-        `users/${userId}/${currentYear}/${currentMonth}/goals`,
-      );
-
-      await setDoc(
-        doc(userGoalCollectionRef, userGoalToUpdate.id),
-        { state: !userGoalToUpdate.state },
-        { merge: true },
-      );
-
-      console.log("Stan celu zaktualizowany");
-      dispatch(toggleGoalState(index));
-      setChecked(!userGoalToUpdate.state);
-    }
-  };
-
   return (
     <View style={tw`w-full flex-row justify-between items-center`}>
       <View style={tw`rounded-lg`}>
@@ -220,15 +162,11 @@ const CustomTextInput = ({ initialValue = "", index }) => {
       <FAB
         style={tw`bg-fuchsia-700 rounded-full m-2`}
         size="small"
-        icon={
-          goal.trim() === "" && (!initialValue || initialValue.trim() === "")
-            ? "plus" // Jeżeli input jest pusty zarówno w interfejsie, jak i w bazie danych
-            : "pencil" // W pozostałych przypadkach, gdy input ma zawartość lub checkbox jest zaznaczony
-        }
+        icon={userGoalToUpdate && userGoalToUpdate.state ? "pencil" : "plus"}
         color="#FFFFFF"
         onPress={handleFABPress}
         mode="elevated"
-        disabled={checked}
+        disabled={userGoalToUpdate && userGoalToUpdate.state}
       />
     </View>
   );

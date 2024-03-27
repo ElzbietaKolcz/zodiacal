@@ -4,6 +4,14 @@ import configureStore from 'redux-mock-store';
 import { render, fireEvent, waitFor } from '@testing-library/react-native'; 
 import Header from '../screens/Header';
 import { logout } from '../features/userSlice';
+import { auth } from '../firebase';
+
+jest.mock('../firebase', () => ({
+  auth: {
+    onAuthStateChanged: jest.fn(),
+    signOut: jest.fn()
+  }
+}));
 
 const mockStore = configureStore([]);
 
@@ -35,4 +43,21 @@ describe('Header component', () => {
       expect(actions).toEqual([{ type: logout.type }]);
     });
   });
+
+  it('displays username correctly when user is logged in', async () => {
+    auth.onAuthStateChanged.mockImplementation((callback) => callback({ displayName: 'JohnDoe' }));
+    
+    const { getByTestId, findByTestId } = render(
+      <Provider store={store}>
+        <Header />
+      </Provider>,
+    );
+  
+    await findByTestId('header-welcome-text');
+  
+    const headerWelcomeText = getByTestId('header-welcome-text');
+    const welcomeMessage = headerWelcomeText.props.children.join('');
+    expect(welcomeMessage).toEqual('Welcome back JohnDoe!');
+  });
+  
 });

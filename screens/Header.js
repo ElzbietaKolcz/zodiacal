@@ -36,8 +36,9 @@ function Header() {
       <Text
         variant="headlineSmall"
         style={tw`p-2 mt-1 text-black font-medium`}
+        testID="header-welcome-text"
       >
-        Welcome back {displayName ? displayName : "Guest"}!
+        Welcome back {displayName}!
       </Text>
       <View style={tw`flex-row items-center justify-end `}>
         <Button

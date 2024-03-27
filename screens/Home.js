@@ -10,17 +10,13 @@ import {
   collection,
   query,
   orderBy,
-  doc,
   getDocs,
-  getDoc
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
 
-
 const Home = () => {
-
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const user = auth.currentUser;
@@ -28,14 +24,17 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const birthdays = useSelector((state) => state.birthdays);
-  const userName = useSelector((state) => state.user.user ? state.user.user.username : "");
-
-
+  const userName = useSelector((state) =>
+    state.user.user ? state.user.user.username : "",
+  );
 
   useEffect(() => {
     if (user) {
       const userId = user.uid;
-      const userBirthdaysCollectionRef = collection(db, `users/${userId}/birthday`);
+      const userBirthdaysCollectionRef = collection(
+        db,
+        `users/${userId}/birthday`,
+      );
       fetchData(userBirthdaysCollectionRef);
     }
   }, []);
@@ -68,14 +67,19 @@ const Home = () => {
         />
       </View>
       <View style={tw`my-2 mx-4 `}>
-        <Text variant="headlineSmall" style={tw`text-black font-bold mb-4`}>
+        <Text
+          variant="headlineSmall"
+          style={tw`text-black font-bold mb-4`}
+        >
           Goals for this month
         </Text>
-        {/* <View>
-          {[0, 1, 2].map((index) => (
-            <CustomTextInput key={index} index={index} />
-          ))}
-        </View> */}
+        <View>
+          <View>
+            <CustomTextInput index={0} />
+            <CustomTextInput index={1} />
+            <CustomTextInput index={2} />
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
