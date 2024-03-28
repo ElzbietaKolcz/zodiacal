@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import tw from "twrnc";
-import { auth } from "../firebase";
-import { useDispatch } from 'react-redux';
-import { logout } from '../features/userSlice';
+import { auth } from "../../firebase";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/userSlice";
 
 function Header() {
   const dispatch = useDispatch();
@@ -23,13 +23,12 @@ function Header() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      console.log('User successfully logged out');
-      dispatch(logout()); 
+      console.log("User successfully logged out");
+      dispatch(logout());
     } catch (error) {
       console.error("Error logging out:", error.message);
     }
   };
-  
 
   return (
     <View style={tw`w-full flex-row justify-between items-center p-4`}>
@@ -46,7 +45,7 @@ function Header() {
           mode="contained"
           textColor="#FFFFFF"
           onPress={handleLogout}
-          testID="button" 
+          testID="button"
         >
           Logout
         </Button>

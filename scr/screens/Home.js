@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, StatusBar, ScrollView } from "react-native";
 import { Text } from "react-native-paper";
 import tw from "twrnc";
-import Header from "./Header";
-import MonthCalendar from "./MonthCalendar";
-import CustomTextInput from "./CustomTextInput";
+import Header from "../components/Header";
+import MonthCalendar from "../components/MonthCalendar";
+import CustomTextInput from "../components/CustomTextInput";
 
 import {
   collection,
@@ -12,7 +12,7 @@ import {
   orderBy,
   getDocs,
 } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { db, auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
 

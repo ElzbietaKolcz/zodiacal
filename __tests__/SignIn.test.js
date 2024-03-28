@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
-import SignIn from "../screens/SignIn";
+import SignIn from "../scr/screens/SignIn";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { signInWithEmailAndPassword } from "firebase/auth";

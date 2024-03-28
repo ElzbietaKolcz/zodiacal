@@ -11,7 +11,7 @@ import {
   updateGoal,
 } from "../features/goalSlice";
 
-import { db, auth } from "../firebase";
+import { db, auth } from "../../firebase";
 import {
   query,
   collection,

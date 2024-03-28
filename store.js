@@ -1,10 +1,10 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { astrologyApi } from "./services/astrologyApi";
-import userReducer from "./features/userSlice";
-import birthdayReducer  from './features/birthdaySlice';
-import taskReducer from "./features/taskSlice";
-import goalReducer from "./features/goalSlice";
-import cosmeticSlice from "./features/cosmeticSlice";
+import { astrologyApi } from "./scr/services/astrologyApi";
+import userReducer from "./scr/features/userSlice";
+import birthdayReducer  from './scr/features/birthdaySlice';
+import taskReducer from "./scr/features/taskSlice";
+import goalReducer from "./scr/features/goalSlice";
+import cosmeticSlice from "./scr/features/cosmeticSlice";
 
 export const store = configureStore({
   reducer: {

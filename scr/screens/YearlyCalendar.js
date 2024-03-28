@@ -18,12 +18,12 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { db, auth } from "../../firebase";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
-import MonthCalendar from "./MonthCalendar";
+import MonthCalendar from "../components/MonthCalendar";
 import EditBirthdays from "./EditBirthdays";
 
 import { useDispatch, useSelector } from "react-redux";

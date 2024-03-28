@@ -6,7 +6,7 @@ import {
   Pressable,
   Text,
 } from "react-native";
-import images from "../images";
+import images from "../../assets/images";
 import { TextInput } from "react-native-paper";
 import tw from "twrnc";
 
@@ -15,10 +15,10 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 import { useDispatch } from "react-redux";
-import { app } from "../firebase";
+import { app } from "../../firebase";
 import { login } from "../features/userSlice";
 
 import { Formik } from "formik";

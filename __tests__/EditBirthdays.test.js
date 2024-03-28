@@ -1,13 +1,13 @@
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import EditBirthdays from "../screens/EditBirthdays";
+import EditBirthdays from "../scr/screens/EditBirthdays";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
-import { removeBirthday } from "../features/birthdaySlice";
+import { removeBirthday } from "../scr/features/birthdaySlice";
 
 const mockStore = configureStore([]);
 
-jest.mock("../features/birthdaySlice", () => ({
-  ...jest.requireActual("../features/birthdaySlice"),
+jest.mock("../scr/features/birthdaySlice", () => ({
+  ...jest.requireActual("../scr/features/birthdaySlice"),
   removeBirthday: jest.fn(),
 }));
 

@@ -3,17 +3,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import Home from "./screens/Home";
-import Horoscope from "./screens/Horoscope";
-import SignIn from "./screens/SignIn";
-import SignUp from "./screens/SignUp";
-import YearlyCalendar from "./screens/YearlyCalendar";
-import EditBirthdays from "./screens/EditBirthdays";
-import SkinCare from "./screens/SkinCare";
-import DayCalendar from "./screens/DayCalendar";
+import Home from "./scr/screens/Home";
+import Horoscope from "./scr/screens/Horoscope";
+import SignIn from "./scr/screens/SignIn";
+import SignUp from "./scr/screens/SignUp";
+import YearlyCalendar from "./scr/screens/YearlyCalendar";
+import EditBirthdays from "./scr/screens/EditBirthdays";
+import SkinCare from "./scr/screens/SkinCare";
+import DayCalendar from "./scr/screens/DayCalendar";
 
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout, selectUser } from "./features/userSlice";
+import { login, logout, selectUser } from "./scr/features/userSlice";
 import { auth } from "./firebase";
 
 const Stack = createNativeStackNavigator();

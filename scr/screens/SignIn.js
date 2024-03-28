@@ -6,12 +6,12 @@ import {
   Pressable,
   Text,
 } from "react-native";
-import images from "../images";
+import images from "../../assets/images";
 import { TextInput, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "twrnc";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import {  auth } from "../firebase";
+import {  auth } from "../../firebase";
 
 import { useDispatch } from "react-redux";
 import { login } from "../features/userSlice";

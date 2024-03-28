@@ -2,8 +2,8 @@ import React from "react";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import Header from "../screens/Header";
-import { logout } from "../features/userSlice";
+import Header from "../scr/components/Header";
+import { logout } from "../scr/features/userSlice";
 import { auth } from "../firebase";
 
 jest.mock("../firebase", () => ({

@@ -1,8 +1,8 @@
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import configureStore from "redux-mock-store";
 import { Provider } from "react-redux";
-import CustomTextInput from "../screens/CustomTextInput";
-import { updateGoal, addGoal } from "../features/goalSlice";
+import CustomTextInput from "../scr/components/CustomTextInput";
+import { updateGoal, addGoal } from "../scr/features/goalSlice";
 
 const mockStore = configureStore([]);
 

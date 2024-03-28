@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import MonthCalendar from "../screens/MonthCalendar";
+import MonthCalendar from "../scr/components/MonthCalendar";
 
 describe("MonthCalendar component", () => {
   const markedDates = [
