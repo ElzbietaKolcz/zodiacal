@@ -67,27 +67,26 @@ const SignUp = ({ navigation }) => {
               setDoc(userDocRef, {
                 username: values.username,
                 email: values.email,
-              })
-              .then(() => {
+                sign: "", 
+              }).then(() => {
                 dispatch(
-                    login({
-                        email: userAuth.user.email,
-                        uid: userAuth.user.uid,
-                        displayName: values.username,
-                    }),
-                );
-                console.log("Dane użytkownika zapisane w Reduxie:", {
+                  login({
                     email: userAuth.user.email,
                     uid: userAuth.user.uid,
                     displayName: values.username,
+                  })
+                );
+                console.log("Dane użytkownika zapisane w Reduxie:", {
+                  email: userAuth.user.email,
+                  uid: userAuth.user.uid,
+                  displayName: values.username,
                 });
-            })
-                .catch((error) => {
-                  console.error(
-                    "Błąd podczas zapisywania danych użytkownika:",
-                    error,
-                  );
-                });
+              }).catch((error) => {
+                console.error(
+                  "Błąd podczas zapisywania danych użytkownika:",
+                  error,
+                );
+              });
             });
           })
           .catch((error) => {

@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Home from "./scr/screens/Home";
 import Horoscope from "./scr/screens/Horoscope";
+import HoroscopeForm from "./scr/screens/HoroscopeForm";
 import SignIn from "./scr/screens/SignIn";
 import SignUp from "./scr/screens/SignUp";
 import YearlyCalendar from "./scr/screens/YearlyCalendar";
@@ -24,12 +25,13 @@ export default function StackNavigator() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(userAuth => {
+    const unsubscribe = auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
         dispatch(
           login({
             email: userAuth.email,
             uid: userAuth.uid,
+            sign: "",
           }),
         );
       } else {
@@ -49,23 +51,41 @@ export default function StackNavigator() {
 
     return (
       <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: '#7e22ce',
-      }}>
-        <Tab.Screen
-          name="Horoscope"
-          component={Horoscope}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="zodiac-aquarius"
-                color={color}
-                size={size}
-              />
-            ),
-            headerShown: false,
-          }}
-        />
+        screenOptions={{
+          tabBarActiveTintColor: "#7e22ce",
+        }}
+      >
+        {user.sign === "" ? (
+          <Tab.Screen
+            name="Horoscope"
+            component={HoroscopeForm}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="zodiac-aquarius"
+                  color={color}
+                  size={size}
+                />
+              ),
+              headerShown: false,
+            }}
+          />
+        ) : (
+          <Tab.Screen
+            name="Horoscope"
+            component={Horoscope}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="zodiac-aquarius"
+                  color={color}
+                  size={size}
+                />
+              ),
+              headerShown: false,
+            }}
+          />
+        )}
 
         <Tab.Screen
           name="YearlyCalendar"
@@ -155,11 +175,19 @@ export default function StackNavigator() {
             component={HomeTabs}
           />
 
-          <Stack.Screen
-            name="Horoscope"
-            options={{ headerShown: true }}
-            component={Horoscope}
-          />
+          {user.sign === "" ? (
+            <Stack.Screen
+              name="HoroscopeForm"
+              options={{ headerShown: true }}
+              component={HoroscopeForm}
+            />
+          ) : (
+            <Stack.Screen
+              name="Horoscope"
+              options={{ headerShown: true }}
+              component={Horoscope}
+            />
+          )}
 
           <Stack.Screen
             name="YearlyCalendar"

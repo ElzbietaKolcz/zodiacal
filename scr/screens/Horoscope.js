@@ -3,14 +3,15 @@ import { View, Text, Image } from "react-native";
 import { useGetHoroscopeQuery } from "../services/astrologyApi";
 import images from "../../assets/images";
 import tw from "twrnc";
-const { getISOWeek } = require('date-fns');
+import { useSelector } from "react-redux";
+const { getISOWeek } = require("date-fns");
 
 export default function Horoscope() {
-  const sign = "aquarius";
+  const sign = useSelector((state) => state.user.user.sign);
   const now = new Date();
   const currentWeek = getISOWeek(now);
-  
-  console.log('Bieżący tydzień:', currentWeek);
+
+  console.log("Bieżący tydzień:", currentWeek);
   const {
     data: horoscopeData,
     isError,
@@ -38,11 +39,13 @@ export default function Horoscope() {
 
   if (isSuccess) {
     const horoscope = horoscopeData.horoscope;
+    const signImage = images[sign]; 
+
     return (
       <View style={tw`flex-1 bg-white justify-center items-center`}>
         <Image
           style={tw`w-full h-60 `}
-          source={images.aquarius}
+          source={signImage} 
           resizeMode="contain"
         />
         <View style={tw`items-center justify-center mt-5`}>

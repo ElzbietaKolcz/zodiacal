@@ -11,7 +11,7 @@ import { TextInput, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "twrnc";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import {  auth } from "../../firebase";
+import { auth, db } from "../../firebase"; // Importujesz również bazę danych Firebase
 
 import { useDispatch } from "react-redux";
 import { login } from "../features/userSlice";
@@ -35,24 +35,27 @@ const SignIn = ({ navigation }) => {
 
   return (
     <Formik
-      initialValues={{ email: "", password: "" }}
-      validationSchema={validationSchema}
-      onSubmit={(values) => {
+    initialValues={{ email: "", password: "" }}
+    validationSchema={validationSchema}
+    onSubmit={(values) => {
+      signInWithEmailAndPassword(auth, values.email, values.password)
+        .then(async (userAuth) => {
+          const userDoc = await db.collection("users").doc(userAuth.user.uid).get();
+          const sign = userDoc.data().sign;
+          console.log("Pobrana wartość 'sign' z Firebase:", sign); // Dodaj log
 
-        signInWithEmailAndPassword(auth, values.email, values.password)
-          .then((userAuth) => {
-            dispatch(
-              login({
-                email: userAuth.user.email,
-                uid: userAuth.user.uid,
-              }),
-            );
-          })
-          .catch((error) => {
-            setError("Invalid email or password");
-          });
-      }}
-    >
+          dispatch(
+            login({
+              email: userAuth.user.email,
+              uid: userAuth.user.uid,
+            }),
+          );
+        })
+        .catch((error) => {
+          setError("Invalid email or password");
+        });
+    }}
+  >
       {({ values, handleSubmit, handleChange, isValid, errors }) => (
         <KeyboardAvoidingView style={tw`flex-1`}>
           <View style={tw`bg-white h-full w-full`}>

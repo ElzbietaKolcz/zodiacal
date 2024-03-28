@@ -8,9 +8,42 @@ const images = {
   logo: {
     uri: process.env.FIREBASE_STORAGE_LOGO,
   },
-  aquarius:{
-    uri: "https://firebasestorage.googleapis.com/v0/b/zodaical.appspot.com/o/signs%2Faquarius.png?alt=media&token=fa739035-46d4-4575-ba9a-fc6d70efde91"
-  }
+  aquarius: {
+    uri: process.env.FIREBASE_STORAGE_AQUARIUS,
+  },
+  pisces: {
+    uri: process.env.FIREBASE_STORAGE_PISCES,
+  },
+  aries: {
+    uri: process.env.FIREBASE_STORAGE_ARIES,
+  },
+  taurus: {
+    uri: process.env.FIREBASE_STORAGE_TAURUS,
+  },
+  gemini: {
+    uri: process.env.FIREBASE_STORAGE_GEMINI,
+  },
+  cancer: {
+    uri: process.env.FIREBASE_STORAGE_CANCER,
+  },
+  leo: {
+    uri: process.env.FIREBASE_STORAGE_LEO,
+  },
+  virgo: {
+    uri: process.env.FIREBASE_STORAGE_VIRGO,
+  },
+  libra: {
+    uri: process.env.FIREBASE_STORAGE_LIBRA,
+  },
+  scorpio: {
+    uri: process.env.FIREBASE_STORAGE_SCORPIO,
+  },
+  sagittarius: {
+    uri: process.env.FIREBASE_STORAGE_SAGITTARIUS,
+  },
+  capricorn: {
+    uri: process.env.FIREBASE_STORAGE_CAPRICORN,
+  },
 };
 
 export default images;
