@@ -163,6 +163,7 @@ const YearlyCalendar = () => {
                 visible={visible}
                 onDismiss={hideModal}
                 contentContainerStyle={containerStyle}
+                
               >
                 <EditBirthdays />
               </Modal>
@@ -186,6 +187,7 @@ const YearlyCalendar = () => {
                   icon="pencil"
                   color="#FFFFFF"
                   mode="elevated"
+                  testID="edit-birthdays-modal"
                 />
               </View>
 
@@ -197,6 +199,7 @@ const YearlyCalendar = () => {
                     value={values.day}
                     onChangeText={handleChange("day")}
                     activeUnderlineColor="#a21caf"
+                    accessibilityLabel="Day"
                   />
                   <HelperText
                     type="error"
@@ -213,6 +216,7 @@ const YearlyCalendar = () => {
                     value={values.month}
                     onChangeText={handleChange("month")}
                     activeUnderlineColor="#a21caf"
+                    accessibilityLabel="Month"
                   />
                   <HelperText
                     type="error"
@@ -229,6 +233,7 @@ const YearlyCalendar = () => {
                     value={values.name}
                     onChangeText={handleChange("name")}
                     activeUnderlineColor="#a21caf"
+                    accessibilityLabel="Name"
                   />
                   <HelperText
                     type="error"
@@ -250,6 +255,7 @@ const YearlyCalendar = () => {
                     icon="plus"
                     color="#FFFFFF"
                     mode="elevated"
+                    accessibilityLabel="FAB"
                   />
                 </View>
               </View>
