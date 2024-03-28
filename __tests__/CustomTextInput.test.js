@@ -1,9 +1,10 @@
-import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import configureStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import CustomTextInput from "../screens/CustomTextInput";
 import { updateGoal, addGoal } from "../features/goalSlice";
+
+const mockStore = configureStore([]);
 
 jest.mock("../firebase", () => ({
   auth: {
@@ -15,8 +16,6 @@ jest.mock("../firebase", () => ({
   db: {},
 }));
 
-const mockStore = configureStore([]);
-
 describe("CustomTextInput component", () => {
   let store;
 
@@ -25,7 +24,8 @@ describe("CustomTextInput component", () => {
       goals: [{ index: 1, name: "Existing Goal", state: false }],
     });
   });
-  test("renders correctly", () => {
+
+  it("renders correctly", () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <CustomTextInput index={1} />
@@ -34,7 +34,7 @@ describe("CustomTextInput component", () => {
     expect(getByTestId("Goals")).toBeTruthy();
   });
 
-  test("handles input change correctly", () => {
+  it("handles input change correctly", () => {
     const { getByLabelText } = render(
       <Provider store={store}>
         <CustomTextInput index={1} />
@@ -45,7 +45,7 @@ describe("CustomTextInput component", () => {
     expect(input.props.value).toBe("New Goal");
   });
 
-  test("handles checkbox press correctly", () => {
+  it("handles checkbox press correctly", () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <CustomTextInput index={1} />
@@ -58,7 +58,7 @@ describe("CustomTextInput component", () => {
     ).toBeTruthy();
   });
 
-  test("handles FAB press correctly for adding goal", async () => {
+  it("handles FAB press correctly for adding goal", async () => {
     const { getByLabelText } = render(
       <Provider store={store}>
         <CustomTextInput index={1} />
@@ -76,7 +76,7 @@ describe("CustomTextInput component", () => {
     );
   });
 
-  test("handles FAB press correctly for updating goal", async () => {
+  it("handles FAB press correctly for updating goal", async () => {
     const { getByLabelText } = render(
       <Provider store={store}>
         <CustomTextInput index={1} />

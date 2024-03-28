@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  render,
-  fireEvent,
-  waitFor,
-  screen,
-  act 
-} from "@testing-library/react-native";
+import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import SignIn from "../screens/SignIn";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
@@ -48,7 +42,7 @@ describe("SignIn Component", () => {
         new Error("Invalid credentials"),
       );
 
-      const { getByTestId, getByLabelText } = render(
+      const { getByTestId, getByLabelText, queryByText } = render(
         <Provider store={store}>
           <SignIn />
         </Provider>,
@@ -63,7 +57,7 @@ describe("SignIn Component", () => {
       await act(async () => {
         fireEvent.press(signInButton);
         await waitFor(() => {
-          expect(screen.queryByText("Invalid email or password")).not.toBeNull();
+          expect(queryByText("Invalid email or password")).not.toBeNull();
         });
       });
     });
@@ -72,7 +66,7 @@ describe("SignIn Component", () => {
       signInWithEmailAndPassword.mockResolvedValue({
         user: { email: "test@example.com", uid: "123" },
       });
-    
+
       const { getByTestId, getByLabelText } = render(
         <Provider store={store}>
           <SignIn />
@@ -81,14 +75,14 @@ describe("SignIn Component", () => {
       const emailInput = getByLabelText("Email");
       const passwordInput = getByLabelText("Password");
       const signInButton = getByTestId("sign-in-button");
-    
+
       fireEvent.changeText(emailInput, "test@example.com");
       fireEvent.changeText(passwordInput, "testPassword");
-    
-      await act(async () => { 
-        await fireEvent.press(signInButton); 
+
+      await act(async () => {
+        await fireEvent.press(signInButton);
       });
-    
+
       await waitFor(() => {
         expect(store.getActions()).toContainEqual({
           type: "user/login",
@@ -96,22 +90,21 @@ describe("SignIn Component", () => {
         });
       });
     });
-    
 
     it("navigates to SignUp screen when 'Sign up' button is pressed", () => {
       const navigation = {
-        navigate: jest.fn(), 
+        navigate: jest.fn(),
       };
-    
+
       const { getByText } = render(
         <Provider store={store}>
           <SignIn navigation={navigation} />
-        </Provider>
+        </Provider>,
       );
-    
+
       const signUpButton = getByText("Sign up");
       fireEvent.press(signUpButton);
-    
+
       expect(navigation.navigate).toHaveBeenCalledWith("SignUp");
     });
   });

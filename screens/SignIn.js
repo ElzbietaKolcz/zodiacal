@@ -10,8 +10,8 @@ import images from "../images";
 import { TextInput, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "twrnc";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import {  auth } from "../firebase";
 
 import { useDispatch } from "react-redux";
 import { login } from "../features/userSlice";
@@ -38,7 +38,6 @@ const SignIn = ({ navigation }) => {
       initialValues={{ email: "", password: "" }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        const auth = getAuth(app);
 
         signInWithEmailAndPassword(auth, values.email, values.password)
           .then((userAuth) => {

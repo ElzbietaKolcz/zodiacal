@@ -73,7 +73,7 @@ describe("EditBirthdays component", () => {
     expect(getByText("Jane")).toBeTruthy();
   });
 
-  test("deletes birthday", async () => {
+  it("deletes birthday", async () => {
     const initialState = {
       birthdays: [
         { id: "1", name: "John", day: 1, month: 7 },
