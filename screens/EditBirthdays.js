@@ -4,7 +4,6 @@ import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
 
 import {
-  getFirestore,
   collection,
   getDocs,
   query,
@@ -12,7 +11,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { db, auth,} from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { removeBirthday } from "../features/birthdaySlice";
 
@@ -21,8 +20,6 @@ const EditBirthdays = () => {
   const userBirthdays = useSelector((state) => state.birthdays);
   const [userBirthday, setUserBirthdaysData] = useState([]);
 
-  const db = getFirestore();
-  const auth = getAuth();
   const user = auth.currentUser;
 
   const fetchData = async (collectionRef, setData) => {
@@ -76,6 +73,7 @@ const EditBirthdays = () => {
       <Text
         style={tw`m-4 text-black`}
         variant="titleLarge"
+        testID="title"
       >
         List of birthday
       </Text>
@@ -89,7 +87,7 @@ const EditBirthdays = () => {
             <DataTable.Title style={tw`text-black`}>Delete</DataTable.Title>
           </DataTable.Header>
 
-          {userBirthdays.map((birthday) => {
+          {userBirthdays && userBirthdays.map((birthday)  => {
             const formattedDay =
               birthday.day < 10 ? `0${birthday.day}` : birthday.day;
             const formattedMonth =
@@ -99,6 +97,7 @@ const EditBirthdays = () => {
               <DataTable.Row
                 key={birthday.id}
                 style={tw`border-t border-gray-300`}
+                testID="birthday-row"
               >
                 <DataTable.Cell>
                   <Text
@@ -129,6 +128,7 @@ const EditBirthdays = () => {
                   <IconButton
                     icon="delete"
                     onPress={() => handleDelete(birthday.id)}
+                    testID={`delete-button-${birthday.id}`}
                   />
                 </DataTable.Cell>
               </DataTable.Row>
