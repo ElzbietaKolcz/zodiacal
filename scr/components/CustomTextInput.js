@@ -96,10 +96,18 @@ const CustomTextInput = ({ index }) => {
             { merge: true },
           );
           dispatch(updateGoal({ index, name: goal }));
+
+          const updatedGoals = userGoals.map((userGoal) =>
+            userGoal.index === index ? { ...userGoal, name: goal } : userGoal,
+          );
+          dispatch(setGoals(updatedGoals));
         } else {
           const docRef = await addDoc(userGoalCollectionRef, newGoalData);
           console.log("New goal added:", docRef.id);
           dispatch(addGoal(newGoalData));
+
+          const updatedGoals = [...userGoals, newGoalData];
+          dispatch(setGoals(updatedGoals));
         }
       }
     } catch (error) {
@@ -108,9 +116,9 @@ const CustomTextInput = ({ index }) => {
   };
 
   const handleFABPress = async () => {
-    console.log("handleFABPress called");
     await addOrUpdateGoal();
   };
+
   const handleInputChange = (value) => {
     setGoal(value);
   };
@@ -132,6 +140,14 @@ const CustomTextInput = ({ index }) => {
           { state: !userGoalToUpdate.state },
           { merge: true },
         );
+
+        const updatedGoals = userGoals.map((userGoal) =>
+          userGoal.index === index
+            ? { ...userGoal, state: !userGoalToUpdate.state }
+            : userGoal,
+        );
+        dispatch(setGoals(updatedGoals));
+
         console.log("State of the goal updated in Firebase");
       } catch (error) {
         console.error(
@@ -175,11 +191,16 @@ const CustomTextInput = ({ index }) => {
       <FAB
         style={tw`bg-fuchsia-700 rounded-full m-2`}
         size="small"
-        icon={userGoalToUpdate && userGoalToUpdate.state ? "pencil" : "plus"}
+        icon={
+          (!userGoalToUpdate && !goalAdded) ||
+          (userGoalToUpdate && userGoalToUpdate.state)
+            ? "plus"
+            : "pencil"
+        }
         color="#FFFFFF"
         onPress={handleFABPress}
         mode="elevated"
-        disabled={userGoalToUpdate && userGoalToUpdate.state}
+        disabled={checked || (userGoalToUpdate && userGoalToUpdate.state)}
         accessibilityLabel="FAB"
       />
     </View>
