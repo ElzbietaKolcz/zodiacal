@@ -37,7 +37,7 @@ function Header() {
         style={tw`p-2 mt-1 text-black font-medium`}
         testID="header-welcome-text"
       >
-        Welcome back {displayName}!
+        Welcome {displayName}!
       </Text>
       <View style={tw`flex-row items-center justify-end `}>
         <Button

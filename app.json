@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "zodiacal",
+    "scheme": "zodiacal",
     "slug": "zodiacal",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -19,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.elk13.zodiacal"
     },
     "web": {
       "favicon": "./assets/favicon.png"

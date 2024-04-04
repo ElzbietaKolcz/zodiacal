@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   Image,
@@ -10,59 +10,91 @@ import images from "../../assets/images";
 import { TextInput, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "twrnc";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../../firebase"; // Importujesz również bazę danych Firebase
-
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { login } from "../features/userSlice";
 import { Formik } from "formik";
 import * as yup from "yup";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google"
+
+WebBrowser.maybeCompleteAuthSession();
 
 const SignIn = ({ navigation }) => {
   const [error, setError] = useState(null);
-  const dispatch = useDispatch(); 
-
+  const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: process.env.IOS,
+    androidClientId: process.env.ANDROID,
+    webClientId: process.env.WEBID
+
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+      console.log("Authentication data:", authentication);
+      handleGoogleSignIn(authentication);
+    }
+  }, [response]);
 
   const validationSchema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required(),
   });
 
+  const handleGoogleSignIn = async (authentication) => {
+    const credential = GoogleAuthProvider.credential(authentication.idToken);
+    try {
+      const result = await signInWithCredential(auth, credential);
+      const user = result.user;
+      const userDoc = await db.collection("users").doc(user.uid).get();
+      const sign = userDoc.data().sign;
+      dispatch(
+        login({
+          email: user.email,
+          uid: user.uid,
+        }),
+      );
+    } catch (error) {
+      setError("Failed to sign in with Google");
+    }
+  };
+
   return (
     <Formik
-    initialValues={{ email: "", password: "" }}
-    validationSchema={validationSchema}
-    onSubmit={(values) => {
-      signInWithEmailAndPassword(auth, values.email, values.password)
-        .then(async (userAuth) => {
-          const userDoc = await db.collection("users").doc(userAuth.user.uid).get();
-          const sign = userDoc.data().sign;
-          console.log("Pobrana wartość 'sign' z Firebase:", sign); // Dodaj log
-
-          dispatch(
-            login({
-              email: userAuth.user.email,
-              uid: userAuth.user.uid,
-            }),
-          );
-        })
-        .catch((error) => {
-          setError("Invalid email or password");
-        });
-    }}
-  >
+      initialValues={{ email: "", password: "" }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        signInWithEmailAndPassword(auth, values.email, values.password)
+          .then(async (userAuth) => {
+            const userDoc = await db.collection("users").doc(userAuth.user.uid).get();
+            const sign = userDoc.data().sign;
+            console.log("Pobrana wartość 'sign' z Firebase:", sign);
+            dispatch(
+              login({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+              }),
+            );
+          })
+          .catch((error) => {
+            setError("Invalid email or password");
+          });
+      }}
+    >
       {({ values, handleSubmit, handleChange, isValid, errors }) => (
-        <KeyboardAvoidingView style={tw`flex-1`}>
-          <View style={tw`bg-white h-full w-full`}>
+        <KeyboardAvoidingView behavior="height" style={tw`flex-1 overflow-hidden`}>
+          <View style={tw`bg-white h-full w-full `}>
             <Image
-              style={tw`h-full w-full absolute`}
+              style={tw`h-full w-full  absolute`}
               source={images.bgSignIn}
-              resizeMode="cover"
             ></Image>
 
             <View style={tw`flex-row justify-around w-full absolute`}>
@@ -74,10 +106,9 @@ const SignIn = ({ navigation }) => {
 
             <View style={tw`h-full w-full flex justify-around mt-30 absolute`}>
               <View style={tw`flex items-center mx-8 `}>
-                {/* Emali input */}
                 <View style={tw`w-full`}>
                   <TextInput
-                    style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
+                    style={tw`bg-fuchsia-100/90 text-black rounded-lg my-2`}
                     label="Email"
                     value={values.email}
                     onChangeText={handleChange("email")}
@@ -86,7 +117,6 @@ const SignIn = ({ navigation }) => {
                   />
                 </View>
 
-                {/* Password input */}
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
@@ -105,7 +135,6 @@ const SignIn = ({ navigation }) => {
                   />
                 </View>
 
-                {/* Button Sign In */}
                 <View style={tw`w-full`}>
                   <Pressable
                     onPress={handleSubmit}
@@ -122,7 +151,6 @@ const SignIn = ({ navigation }) => {
                   </Pressable>
                   <View>
                     <Text
-
                       style={[tw`text-red-500 text-center my-2`]}
                     >
                       {error}
@@ -136,7 +164,6 @@ const SignIn = ({ navigation }) => {
                     - Or sign in with -{" "}
                   </Text>
 
-                  {/* Button Google*/}
                   <View style={tw`flex-row my-3 mb-6 `}>
                     <Button
                       style={tw`flex-row rounded-full mx-2 bg-white p-2 mb-3 mt-5`}
@@ -146,23 +173,22 @@ const SignIn = ({ navigation }) => {
                           size={36}
                         />
                       )}
+                      onPress={() => promptAsync()}
                     >
                       <Text style={tw`p-2 text-lg text-black `}>Google</Text>
                     </Button>
 
-                    {/* Button Apple*/}
                     <Button
                       disabled={true}
-                      style={tw`flex-row rounded-full mx-2 bg-gray-200 p-2 mb-3 mt-5`}
+                      style={tw`flex-row rounded-full mx-2 bg-white p-2 mb-3 mt-5`}
                       icon={() => (
                         <Icon
                           name="apple"
                           size={36}
-                          color="#888"
                         />
                       )}
                     >
-                      <Text style={tw`p-2 text-lg`}>Apple</Text>
+                      <Text style={tw`p-2 text-lg text-black`}>Apple</Text>
                     </Button>
                   </View>
 
@@ -171,8 +197,6 @@ const SignIn = ({ navigation }) => {
                       {" "}
                       Don't have an account?
                     </Text>
-
-                    {/* Button Sign Up*/}
                     <Pressable onPress={() => navigation.navigate("SignUp")}>
                       <Text
                         style={tw`text-center text-lg font-semibold px-2 text-[#9C27B0]`}

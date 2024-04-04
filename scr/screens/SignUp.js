@@ -109,7 +109,7 @@ const SignUp = ({ navigation }) => {
         errors,
         isSubmitting,
       }) => (
-        <KeyboardAvoidingView style={tw`flex-1`}>
+        <KeyboardAvoidingView style={tw`flex-1 overflow-hidden`}>
           <View style={tw`bg-white h-full w-full`}>
             <Image
               style={tw`h-full w-full absolute`}
