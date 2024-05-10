@@ -44,8 +44,7 @@ export default function Horoscope() {
     } else {
       try {
         if (user) {
-          const userId = user.uid;
-          const userDocRef = doc(db, "users", userId);
+          const userDocRef = doc(db, "users", user.uid);
           const userDocSnapshot = await getDoc(userDocRef);
           const userData = userDocSnapshot.data();
 
@@ -56,13 +55,11 @@ export default function Horoscope() {
           console.log("Selected Zodiac Sign:", updatedSign);
           setSign(updatedSign);
 
-          await updateDoc(userDocRef, { sign: updatedSign });
+          // await updateDoc(userDocRef, { sign: updatedSign });
 
-          console.log("Selected Zodiac Sign:", updatedSign);
-          setSign(updatedSign);
+          // console.log("Selected Zodiac Sign:", updatedSign);
+          // setSign(updatedSign);
           dispatch(updateSign(updatedSign));
-          setError("");
-
           setError("");
         } else {
           console.error("No user is currently logged in.");
