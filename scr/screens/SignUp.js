@@ -11,14 +11,13 @@ import { TextInput } from "react-native-paper";
 import tw from "twrnc";
 
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 import { useDispatch } from "react-redux";
-import { app } from "../../firebase";
+import { auth, app, db } from "../../firebase";
 import { login } from "../features/userSlice";
 
 import { Formik } from "formik";
@@ -36,54 +35,54 @@ const SignUp = ({ navigation }) => {
   };
 
   const validationSchema = yup.object().shape({
-    username: yup.string().required("Username is required."),
+    username: yup
+      .string()
+      .required("Username is required.")
+      .min(2, "Username must be at least 2 characters.")
+      .max(32, "Username cannot contain more than 32 characters."),
     email: yup
       .string()
       .email("Please enter a valid email.")
-      .required("Email address is required."),
+      .required("Email address is required.")
+      .min(5, "Email must be at least 5 characters.")
+      .max(256, "Email cannot contain more than 256 characters."),
     password: yup
       .string()
-      .min(6, "Password must be at least 6 characters.")
-      .max(24)
-      .required("Minimum 6 characters required."),
+      .matches(
+        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+])/, 
+        "Password must contain at least one uppercase letter and one special character."
+      )
+      .min(8, "Password must be at least 8 characters.")
+      .max(256,"Password cannot contain more than 256 characters.")
+      .required("Minimum 8 characters required."),
   });
+  
 
   return (
     <Formik
       initialValues={{ username: "", email: "", password: "" }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
-        const auth = getAuth(app);
         createUserWithEmailAndPassword(auth, values.email, values.password)
           .then((userAuth) => {
             updateProfile(userAuth.user, {
               displayName: values.username,
             }).then(() => {
-              const db = getFirestore(app);
               const userId = userAuth.user.uid;
-
               const userDocRef = doc(db, "users", userId);
-
               setDoc(userDocRef, {
                 username: values.username,
-                email: values.email,
                 sign: "", 
               }).then(() => {
                 dispatch(
                   login({
-                    email: userAuth.user.email,
                     uid: userAuth.user.uid,
                     displayName: values.username,
                   })
                 );
-                console.log("Dane użytkownika zapisane w Reduxie:", {
-                  email: userAuth.user.email,
-                  uid: userAuth.user.uid,
-                  displayName: values.username,
-                });
               }).catch((error) => {
                 console.error(
-                  "Błąd podczas zapisywania danych użytkownika:",
+                  "Error occurred while saving user data.",
                   error,
                 );
               });
@@ -94,8 +93,6 @@ const SignUp = ({ navigation }) => {
               setError(
                 "This email is already in use. Please use a different email.",
               );
-            } else {
-              console.error("Login error", error.message);
             }
             setSubmitting(false);
           });
