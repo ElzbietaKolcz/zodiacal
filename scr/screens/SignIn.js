@@ -22,9 +22,13 @@ import * as Google from "expo-auth-session/providers/google"
 WebBrowser.maybeCompleteAuthSession();
 
 const SignIn = ({ navigation }) => {
+  const MAX_LOGIN_ATTEMPTS = 6;
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [disableLoginButton, setDisableLoginButton] = useState(false); 
+  const [loginAttempts, setLoginAttempts] = useState(0); 
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -33,32 +37,22 @@ const SignIn = ({ navigation }) => {
     iosClientId: process.env.IOS,
     androidClientId: process.env.ANDROID,
     webClientId: process.env.WEBID
-
   });
 
   useEffect(() => {
     if (response?.type === 'success') {
       const { authentication } = response;
-      console.log("Authentication data:", authentication);
       handleGoogleSignIn(authentication);
     }
   }, [response]);
-
-  const validationSchema = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-  });
 
   const handleGoogleSignIn = async (authentication) => {
     const credential = GoogleAuthProvider.credential(authentication.idToken);
     try {
       const result = await signInWithCredential(auth, credential);
       const user = result.user;
-      const userDoc = await db.collection("users").doc(user.uid).get();
-      const sign = userDoc.data().sign;
       dispatch(
         login({
-          email: user.email,
           uid: user.uid,
         }),
       );
@@ -67,25 +61,39 @@ const SignIn = ({ navigation }) => {
     }
   };
 
+
+  const validationSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    password: yup.string().required(),
+  });
+
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
+        if (disableLoginButton) return; 
         signInWithEmailAndPassword(auth, values.email, values.password)
-          .then(async (userAuth) => {
-            const userDoc = await db.collection("users").doc(userAuth.user.uid).get();
-            const sign = userDoc.data().sign;
-            console.log("Pobrana wartość 'sign' z Firebase:", sign);
+          .then((userAuth) => {
             dispatch(
               login({
-                email: userAuth.user.email,
                 uid: userAuth.user.uid,
               }),
             );
           })
-          .catch((error) => {
-            setError("Invalid email or password");
+          .catch(() => {
+            setLoginAttempts(prevAttempts => prevAttempts + 1); 
+            if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+              setError("Too many unsuccessful login attempts. \nPlease try again later.");
+              setDisableLoginButton(true); 
+              setTimeout(() => {
+                setDisableLoginButton(false); 
+                setLoginAttempts(0); 
+                setError(null); 
+              }, 180000); 
+            } else {
+              setError("Invalid email or password");
+            }
           });
       }}
     >
@@ -138,10 +146,10 @@ const SignIn = ({ navigation }) => {
                 <View style={tw`w-full`}>
                   <Pressable
                     onPress={handleSubmit}
-                    disabled={!isValid}
+                    disabled={!isValid || disableLoginButton} 
                     style={[
                       tw`rounded-full p-4 mb-3 mt-8`,
-                      isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`,
+                      disableLoginButton ? tw`bg-gray-500` : (isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`), 
                     ]}
                     testID="sign-in-button"
                   >

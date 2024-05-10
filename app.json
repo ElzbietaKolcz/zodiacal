@@ -27,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0aa8f328-d386-494c-bafd-27981dbeaefc"
+      }
+    },
+    "owner": "elk13"
   }
 }

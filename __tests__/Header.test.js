@@ -59,6 +59,6 @@ describe("Header component", () => {
 
     const headerWelcomeText = getByTestId("header-welcome-text");
     const welcomeMessage = headerWelcomeText.props.children.join("");
-    expect(welcomeMessage).toEqual("Welcome back JohnDoe!");
+    expect(welcomeMessage).toEqual("Welcome JohnDoe!");
   });
 });

@@ -159,7 +159,6 @@ export default function StackNavigator() {
             options={{ headerShown: false }}
             component={SignIn}
           />
-
           <Stack.Screen
             name="SignUp"
             options={{ headerShown: false }}
@@ -174,7 +173,6 @@ export default function StackNavigator() {
             initialParams={{ initialScreen: true }}
             component={HomeTabs}
           />
-
           {user.sign === "" ? (
             <Stack.Screen
               name="HoroscopeForm"
