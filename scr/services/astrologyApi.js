@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const astrologyApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.SUPABASE_URL,
+    baseUrl: process.env.HOROSCOPE_URL,
   }),
   endpoints: (builder) => ({
     getHoroscope: builder.query({
