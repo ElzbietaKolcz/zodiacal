@@ -1,94 +1,74 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from 'react-native';
-import { Agenda } from 'react-native-calendars';
-import { Card } from 'react-native-paper';
+import React, { useState, useEffect } from "react";
+import { View, ScrollView } from "react-native";
 
-const timeToString = (time) => {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-}
+import tw from "twrnc";
+import InputGoalWeek from "../components/InputGoalWeek";
+import CustomAgenda from "../components/CustomAgenda";
+import EditBirthdays from "./EditBirthdays";
 
-const App = () => {
-    const [items, setItems] = React.useState({});
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1; 
-  
+import { FAB, Text, Modal, Portal, PaperProvider } from "react-native-paper";
 
-    const loadItems = (day) => {
+const DayCalendar = () => {
+  const [visible, setVisible] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = tw`bg-white mx-8 my-10 rounded-lg`;
 
-        setTimeout(() => {
-            for (let i = -15; i < 85; i++) {
-                const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-                const strTime = timeToString(time);
+  return (
+    <ScrollView style={tw` bg-white h-full w-full`}>
+      <PaperProvider>
+        <View>
+          <CustomAgenda />
 
-                if (!items[strTime]) {
-                    items[strTime] = [];
+          <Portal>
+            <Modal
+              visible={visible}
+              onDismiss={hideModal}
+              contentContainerStyle={containerStyle}
+            >
+              <EditBirthdays />
+            </Modal>
+          </Portal>
+          <View style={tw` mt-2`}>
+            <View style={tw`mt-2 w-full flex-row justify-between items-center`}>
+              <Text
+                style={tw`ml-4 text-black`}
+                variant="titleLarge"
+              >
+                Add new task / event{" "}
+              </Text>
+              <FAB
+                title="EditBirthdays"
+                onPress={showModal}
+                style={tw`bg-fuchsia-700 rounded-full mr-4`}
+                size="small"
+                icon="plus"
+                color="#FFFFFF"
+                mode="elevated"
+                testID="edit-birthdays-modal"
+              />
+            </View>
+          </View>
+          <View style={tw`my-2 mx-4 `}>
+            <Text
+              variant="headlineSmall"
+              style={tw`text-black font-bold mt-6 text-2xl`}
+            >
+              Goals for this weekend
+            </Text>
 
-                    const numItems = Math.floor(Math.random() * 3 + 1);
-                    for (let j = 0; j < numItems; j++) {
-                        items[strTime].push({
-                            name: 'Item for ' + strTime + ' #' + j,
-                            height: Math.max(10, Math.floor(Math.random() * 150)),
-                            day: strTime
-                        });
-                    }
-                }
-            }
-            const newItems = {};
-            Object.keys(items).forEach(key => {
-                newItems[key] = items[key];
-            });
-            setItems(newItems);
-        }, 1000);
-    }
-
-    const renderItem = (item) => {
-        return (
-            <TouchableOpacity style={styles.item}>
-                <Card>
-                    <Card.Content>
-                        <View>
-                            <Text>{item.name}</Text>
-                        </View>
-                    </Card.Content>
-                </Card>
-            </TouchableOpacity>
-        );
-    }
-
-    return (
-        <View style={styles.container}>
-            <Agenda
-                items={items}
-                loadItemsForMonth={loadItems}
-                selected={`${currentYear}-${currentMonth
-                  .toString()
-                  .padStart(2, "0")}-17`}
-                current={`${currentYear}-${currentMonth
-                  .toString()
-                  .padStart(2, "0")}-17`}
-                firstDay={1}
-                refreshControl={null}
-                showClosingKnob={true}
-                refreshing={false}
-                renderItem={renderItem}
-            />
-            <StatusBar />
+            <View>
+              <View>
+                <InputGoalWeek index={0} />
+                <InputGoalWeek index={1} />
+                <InputGoalWeek index={2} />
+              </View>
+            </View>
+          </View>
         </View>
-    );
-}
+      </PaperProvider>
+    </ScrollView>
+  );
+};
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    item: {
-        flex: 1,
-        borderRadius: 5,
-        padding: 10,
-        marginRight: 10,
-        marginTop: 17
-    },
-});
-
-export default App;
+export default DayCalendar;

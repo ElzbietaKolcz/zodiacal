@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 import tw from "twrnc";
 import Header from "../components/Header";
 import MonthCalendar from "../components/MonthCalendar";
-import CustomTextInput from "../components/CustomTextInput";
+import InputGoalMonth from "../components/InputGoalMonth";
 
 import {
   collection,
@@ -75,9 +75,9 @@ const Home = () => {
         </Text>
         <View>
           <View>
-            <CustomTextInput index={0} />
-            <CustomTextInput index={1} />
-            <CustomTextInput index={2} />
+            <InputGoalMonth index={0} />
+            <InputGoalMonth index={1} />
+            <InputGoalMonth index={2} />
           </View>
         </View>
       </View>

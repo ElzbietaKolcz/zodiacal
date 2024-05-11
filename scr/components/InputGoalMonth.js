@@ -21,7 +21,7 @@ import {
   doc,
 } from "@firebase/firestore";
 
-const CustomTextInput = ({ index }) => {
+const InputGoalMonth = ({ index }) => {
   const [goal, setGoal] = useState("");
   const [checked, setChecked] = useState(false);
 
@@ -207,4 +207,4 @@ const CustomTextInput = ({ index }) => {
   );
 };
 
-export default CustomTextInput;
+export default InputGoalMonth;
