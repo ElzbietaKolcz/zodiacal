@@ -4,7 +4,7 @@ import { View, ScrollView } from "react-native";
 import tw from "twrnc";
 import InputGoalWeek from "../components/InputGoalWeek";
 import CustomAgenda from "../components/CustomAgenda";
-import EditBirthdays from "./EditBirthdays";
+import EditTaskEvent from "./EditTaskEvent";
 
 import { FAB, Text, Modal, Portal, PaperProvider } from "react-native-paper";
 
@@ -26,7 +26,7 @@ const DayCalendar = () => {
               onDismiss={hideModal}
               contentContainerStyle={containerStyle}
             >
-              <EditBirthdays />
+              <EditTaskEvent />
             </Modal>
           </Portal>
           <View style={tw` mt-2`}>
@@ -38,7 +38,7 @@ const DayCalendar = () => {
                 Add new task / event{" "}
               </Text>
               <FAB
-                title="EditBirthdays"
+                title="EditTaskEvent"
                 onPress={showModal}
                 style={tw`bg-fuchsia-700 rounded-full mr-4`}
                 size="small"
