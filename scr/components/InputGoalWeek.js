@@ -10,9 +10,8 @@ import {
   addGoal,
   updateGoal,
 } from "../features/goalSlice";
-import { getISOWeek } from "date-fns";
 
-import { db, auth } from "../../firebase";
+import { db } from "../../firebase";
 import {
   query,
   collection,
@@ -21,6 +20,8 @@ import {
   setDoc,
   doc,
 } from "@firebase/firestore";
+import { currentYear, currentMonth, user } from "../../variables"; 
+
 const InputGoalWeek = ({ index }) => {
   const [goal, setGoal] = useState("");
   const [checked, setChecked] = useState(false);
@@ -32,12 +33,6 @@ const InputGoalWeek = ({ index }) => {
   );
 
   const goalAdded = useSelector(selectGoalAdded);
-
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const currentWeek = getISOWeek(new Date());
-
-  const user = auth.currentUser;
 
   useEffect(() => {
     fetchData();

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
-import { useSelector, useDispatch } from "react-redux";
-import { removeEvent, setEvents } from "../features/eventSlice"; // Adjust imports
-import { getISOWeek } from "date-fns";
-import { db, auth } from "../../firebase";
+import {  useDispatch } from "react-redux";
+import { removeEvent } from "../features/eventSlice"; // Adjust imports
+import { db} from "../../firebase";
 import {
   collection,
   deleteDoc,
@@ -14,16 +13,14 @@ import {
   orderBy,
   doc,
 } from "firebase/firestore";
+import { currentYear, currentMonth, currentWeek, user } from "../../variables"; 
 
 const TableEvent = () => { // Change component name
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]); // Change state variable name
 
-  const user = auth.currentUser;
   const userId = user?.uid;
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const currentWeek = getISOWeek(new Date());
+
 
   const fetchData = async () => {
     try {
@@ -79,7 +76,7 @@ const TableEvent = () => { // Change component name
             <DataTable.Title style={tw`text-black`}>Day</DataTable.Title>
             <DataTable.Title style={tw`text-black`}>Name</DataTable.Title>
             <DataTable.Title style={tw`text-black`}>State</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Edit</DataTable.Title>
+            <DataTable.Title style={tw`text-black`}>Delete</DataTable.Title>
           </DataTable.Header>
 
           {events &&

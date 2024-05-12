@@ -14,10 +14,10 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 import { useDispatch } from "react-redux";
-import { auth, app, db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { login } from "../features/userSlice";
 
 import { Formik } from "formik";

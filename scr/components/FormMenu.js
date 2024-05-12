@@ -7,6 +7,7 @@ import { updateSign } from "../features/userSlice";
 import tw from "twrnc";
 import { getDoc, updateDoc, doc } from "@firebase/firestore";
 import { useDispatch } from "react-redux";
+import { user } from "../../variables"; 
 
 import { Text, Menu, Button, FAB } from "react-native-paper";
 
@@ -26,7 +27,6 @@ const ZodiacSigns = [
 ];
 
 const FormMenu = () => {
-  const user = auth.currentUser;
 
   const dispatch = useDispatch();
 

@@ -2,23 +2,20 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
-import { db, auth } from "../../firebase";
+import { db } from "../../firebase";
 import { Text, TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import tw from "twrnc";
+import { currentYear, currentMonth, currentDay, user } from "../../variables"; 
 
 const CustomAgenda = () => {
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const currentDay = new Date().getDate();
-  const user = auth.currentUser;
-
   const dispatch = useDispatch();
   const birthdays = useSelector((state) => state.birthdays);
 
   useEffect(() => {
     if (user) {
       const userId = user.uid;
+      console.log(userId, user)
       const userBirthdaysCollectionRef = collection(
         db,
         `users/${userId}/birthday`,
@@ -85,6 +82,7 @@ const CustomAgenda = () => {
       markedDates={markedDates}
       firstDay={1}
       theme={{
+        background: "purple",
         todayTextColor: "purple",
         textMonthFontWeight: "semibold",
         selectedDayBackgroundColor: "purple",

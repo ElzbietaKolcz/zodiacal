@@ -4,7 +4,7 @@ import { useGetHoroscopeQuery } from "../services/astrologyApi";
 import images from "../../assets/images";
 import tw from "twrnc";
 import { useSelector } from "react-redux";
-// import {  getISOWeek } from "date-fns";
+
 
 export default function Horoscope() {
   const sign = useSelector((state) => state.user.user.sign);

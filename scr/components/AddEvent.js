@@ -10,24 +10,18 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db, auth } from "../../firebase";
+import { db } from "../../firebase";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../features/eventSlice";
-import { getISOWeek } from "date-fns";
+import { currentYear, currentMonth, currentWeek, user } from "../../variables"; 
 
 
 
 const AddEvent = () => {
-  const user = auth.currentUser;
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const currentWeek = getISOWeek(new Date());
-  const currentDay = new Date().getDate();
-
   const [inputday, setInputDay] = useState("");
 
   const [inputName, setInputName] = useState("");

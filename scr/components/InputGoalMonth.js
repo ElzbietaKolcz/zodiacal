@@ -21,6 +21,8 @@ import {
   doc,
 } from "@firebase/firestore";
 
+import { currentYear, currentMonth, user } from "../../variables"; 
+
 const InputGoalMonth = ({ index }) => {
   const [goal, setGoal] = useState("");
   const [checked, setChecked] = useState(false);
@@ -33,9 +35,6 @@ const InputGoalMonth = ({ index }) => {
 
   const goalAdded = useSelector(selectGoalAdded);
 
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const user = auth.currentUser;
 
   useEffect(() => {
     fetchData();

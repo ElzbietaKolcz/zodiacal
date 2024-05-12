@@ -28,12 +28,9 @@ import EditBirthdays from "./EditBirthdays";
 
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
+import { currentYear, user } from "../../variables"; 
 
 const YearlyCalendar = () => {
-  const currentYear = new Date().getFullYear();
-
-  const user = auth.currentUser;
-
   const [inputday, setInputDay] = useState("");
   const [inputMonth, setInputMonth] = useState("");
   const [inputName, setInputName] = useState("");

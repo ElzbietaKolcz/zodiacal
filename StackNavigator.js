@@ -12,6 +12,9 @@ import YearlyCalendar from "./scr/screens/YearlyCalendar";
 import EditBirthdays from "./scr/screens/EditBirthdays";
 import SkinCare from "./scr/screens/SkinCare";
 import DayCalendar from "./scr/screens/DayCalendar";
+import Summary from "./scr/screens/Summary";
+import Routines from "./scr/screens/Routines";
+
 
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, selectUser } from "./scr/features/userSlice";
@@ -209,6 +212,18 @@ export default function StackNavigator() {
             name="DayCalendar"
             options={{ headerShown: true }}
             component={DayCalendar}
+          />
+
+          <Stack.Screen
+            name="Summary"
+            options={{ headerShown: true }}
+            component={Summary}
+          />
+
+          <Stack.Screen
+            name="Routines"
+            options={{ headerShown: true }}
+            component={Routines}
           />
         </>
       )}
