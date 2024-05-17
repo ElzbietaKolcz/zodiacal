@@ -4,7 +4,7 @@ import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
 import {  useDispatch } from "react-redux";
 import { removeEvent } from "../features/eventSlice"; // Adjust imports
-import { db} from "../../firebase";
+import { db, auth} from "../../firebase";
 import {
   collection,
   deleteDoc,
@@ -13,11 +13,12 @@ import {
   orderBy,
   doc,
 } from "firebase/firestore";
-import { currentYear, currentMonth, currentWeek, user } from "../../variables"; 
+import { currentYear, currentMonth, currentWeek, } from "../../variables"; 
 
 const TableEvent = () => { // Change component name
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]); // Change state variable name
+  const user = auth.currentUser;
 
   const userId = user?.uid;
 

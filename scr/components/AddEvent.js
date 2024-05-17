@@ -10,14 +10,14 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../features/eventSlice";
-import { currentYear, currentMonth, currentWeek, user } from "../../variables"; 
+import { currentYear, currentMonth, currentWeek } from "../../variables"; 
 
 
 
@@ -27,6 +27,7 @@ const AddEvent = () => {
   const [inputName, setInputName] = useState("");
   const [checked, setChecked] = useState(false);
   const currentMonthTask = useSelector((state) => state.currentMonth);
+  const user = auth.currentUser;
 
   const [eventsUser, setEvents] = useState([]);
 

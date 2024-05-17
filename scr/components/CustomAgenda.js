@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import { Text, TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import tw from "twrnc";
-import { currentYear, currentMonth, currentDay, user } from "../../variables"; 
+import { currentYear, currentMonth, currentDay } from "../../variables"; 
 
 const CustomAgenda = () => {
   const dispatch = useDispatch();
   const birthdays = useSelector((state) => state.birthdays);
+  const user = auth.currentUser;
 
   useEffect(() => {
     if (user) {
@@ -65,7 +66,7 @@ const CustomAgenda = () => {
         .toString()
         .padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`}
       items={{
-        "2024-05-07": [
+        "2024-05-17": [
           { name: "Cycling" },
           { name: "Walking" },
           { name: "Running" },

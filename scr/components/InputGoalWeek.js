@@ -11,7 +11,7 @@ import {
   updateGoal,
 } from "../features/goalSlice";
 
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import {
   query,
   collection,
@@ -20,11 +20,12 @@ import {
   setDoc,
   doc,
 } from "@firebase/firestore";
-import { currentYear, currentMonth, user } from "../../variables"; 
+import { currentYear, currentWeek, currentMonth} from "../../variables"; 
 
 const InputGoalWeek = ({ index }) => {
   const [goal, setGoal] = useState("");
   const [checked, setChecked] = useState(false);
+  const user = auth.currentUser;
 
   const dispatch = useDispatch();
   const userGoals = useSelector(selectGoals);

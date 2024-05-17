@@ -8,10 +8,11 @@ import { getDoc, updateDoc, doc } from "@firebase/firestore";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { user } from "../../variables"; 
+
 
 const FormDate = () => {
   const dispatch = useDispatch();
+  const user = auth.currentUser;
 
   const findZodiacSign = (day, month) => {
     const ZodiacSigns = [

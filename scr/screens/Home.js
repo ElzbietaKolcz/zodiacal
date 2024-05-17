@@ -12,14 +12,15 @@ import {
   orderBy,
   getDocs,
 } from "firebase/firestore";
-import { db,  } from "../../firebase";
+import { db, auth  } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
-import { currentYear, currentMonth, user } from "../../variables"; 
+import { currentYear, currentMonth } from "../../variables"; 
 
 const Home = () => {
 
   const dispatch = useDispatch();
+  const user = auth.currentUser;
 
   const birthdays = useSelector((state) => state.birthdays);
   const userName = useSelector((state) =>

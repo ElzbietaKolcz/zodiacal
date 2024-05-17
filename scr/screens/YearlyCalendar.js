@@ -28,17 +28,17 @@ import EditBirthdays from "./EditBirthdays";
 
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
-import { currentYear, user } from "../../variables"; 
+import { currentYear } from "../../variables"; 
 
 const YearlyCalendar = () => {
   const [inputday, setInputDay] = useState("");
   const [inputMonth, setInputMonth] = useState("");
   const [inputName, setInputName] = useState("");
+  const user = auth.currentUser;
 
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = tw`bg-white mx-8 my-10 rounded-lg`;
 
   const validationSchema = yup.object().shape({
     day: yup
@@ -159,7 +159,7 @@ const YearlyCalendar = () => {
               <Modal
                 visible={visible}
                 onDismiss={hideModal}
-                contentContainerStyle={containerStyle}
+                contentContainerStyle={tw`bg-white mx-8 my-10 rounded-lg`}
                 
               >
                 <EditBirthdays />

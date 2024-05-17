@@ -11,15 +11,16 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { removeBirthday } from "../features/birthdaySlice";
-import {  user } from "../../variables"; 
+
 
 const EditBirthdays = () => {
   const dispatch = useDispatch();
   const userBirthdays = useSelector((state) => state.birthdays);
   const [userBirthday, setUserBirthdaysData] = useState([]);
+  const user = auth.currentUser;
 
 
   const fetchData = async (collectionRef, setData) => {

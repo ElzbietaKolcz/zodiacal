@@ -10,14 +10,14 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../features/taskSlice";
-import { currentYear, currentMonth, currentWeek, user } from "../../variables"; 
+import { currentYear, currentMonth, currentWeek } from "../../variables"; 
 
 const AddTask = () => {
 
@@ -30,6 +30,7 @@ const AddTask = () => {
   const [tasksUser, setTasks] = useState([]);
 
   const dispatch = useDispatch();
+  const user = auth.currentUser;
 
   const validationSchema = yup.object().shape({
     day: yup

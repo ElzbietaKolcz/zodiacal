@@ -4,7 +4,7 @@ import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
 import { useDispatch } from "react-redux";
 import { removeTask } from "../features/taskSlice";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import {
   collection,
   deleteDoc,
@@ -13,7 +13,7 @@ import {
   orderBy,
   doc,
 } from "firebase/firestore";
-import { currentYear, currentMonth, currentWeek, user } from "../../variables"; 
+import { currentYear, currentMonth, currentWeek } from "../../variables"; 
 
 
 const TableTask = () => {
@@ -21,6 +21,7 @@ const TableTask = () => {
   const [tasks, setTasks] = useState([]);
 
   const userId = user?.uid;
+  const user = auth.currentUser;
 
   const fetchData = async () => {
     try {
