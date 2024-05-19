@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Image, Text } from "react-native";
-import images from "../../assets/images";
+import images from "../../../assets/images";
 import tw from "twrnc";
-import FormMenu from "./../components/FormMenu";
-import FormDate from "./../components/FormDate";
+import FormMenu from "../../components/horoscop/FormMenu";
+import FormDate from "../../components/horoscop/FormDate";
 
 const Horoscope = () => {
   return (

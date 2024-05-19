@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
-import { useGetHoroscopeQuery } from "../services/astrologyApi";
-import images from "../../assets/images";
+import { useGetHoroscopeQuery } from "../../services/astrologyApi";
+import images from "../../../assets/images";
 import tw from "twrnc";
 import { useSelector } from "react-redux";
 

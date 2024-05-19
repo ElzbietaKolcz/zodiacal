@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, ScrollView } from "react-native";
 
 import tw from "twrnc";
-import InputGoalWeek from "../components/InputGoalWeek";
-import CustomAgenda from "../components/CustomAgenda";
+import InputGoalWeek from "../../components/InputGoalWeek";
+import CustomAgenda from "../../components/CustomAgenda";
 import EditTaskEvent from "./EditTaskEvent";
 
 import { FAB, Text, Modal, Portal, PaperProvider } from "react-native-paper";

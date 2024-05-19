@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { db, auth } from "../../firebase";
-import { updateSign } from "../features/userSlice";
+import { db, auth } from "../../../firebase";
+import { updateSign } from "../../features/userSlice";
 
 import tw from "twrnc";
 import { getDoc, updateDoc, doc } from "@firebase/firestore";

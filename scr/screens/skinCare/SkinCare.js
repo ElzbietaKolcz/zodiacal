@@ -2,7 +2,7 @@ import React from "react";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import tw from "twrnc";
 import { useNavigation } from "@react-navigation/native";
-import { currentYear, currentMonth, currentDay } from "../../variables";
+import { currentYear, currentMonth, currentDay } from "../../../variables";
 import { Agenda } from "react-native-calendars";
 import { Text, Button } from "react-native-paper";
 

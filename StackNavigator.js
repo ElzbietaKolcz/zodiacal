@@ -4,16 +4,16 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Home from "./scr/screens/Home";
-import Horoscope from "./scr/screens/Horoscope";
-import HoroscopeForm from "./scr/screens/HoroscopeForm";
+import Horoscope from "./scr/screens/horoscop/Horoscope";
+import HoroscopeForm from "./scr/screens/horoscop/HoroscopeForm";
 import SignIn from "./scr/screens/SignIn";
 import SignUp from "./scr/screens/SignUp";
-import YearlyCalendar from "./scr/screens/YearlyCalendar";
-import EditBirthdays from "./scr/screens/EditBirthdays";
-import SkinCare from "./scr/screens/SkinCare";
-import DayCalendar from "./scr/screens/DayCalendar";
-import Summary from "./scr/screens/Summary";
-import Routines from "./scr/screens/Routines";
+import YearlyCalendar from "./scr/screens/yearlyCalendar/YearlyCalendar";
+import EditBirthdays from "./scr/screens/yearlyCalendar/EditBirthdays";
+import SkinCare from "./scr/screens/skinCare/SkinCare";
+import DayCalendar from "./scr/screens/dayCalendar/DayCalendar";
+import Summary from "./scr/screens/skinCare/Summary";
+import Routines from "./scr/screens/skinCare/Routines";
 
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, selectUser } from "./scr/features/userSlice";

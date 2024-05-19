@@ -11,9 +11,9 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { db, auth } from "../../firebase";
+import { db, auth } from "../../../firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { removeBirthday } from "../features/birthdaySlice";
+import { removeBirthday } from "../../features/birthdaySlice";
 
 const EditBirthdays = () => {
   const dispatch = useDispatch();

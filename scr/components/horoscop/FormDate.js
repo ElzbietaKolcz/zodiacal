@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { TextInput, HelperText, FAB, Text } from "react-native-paper";
-import { db, auth } from "../../firebase";
-import { updateSign } from "../features/userSlice";
+import { db, auth } from "../../../firebase";
+import { updateSign } from "../../features/userSlice";
 import tw from "twrnc";
 import { getDoc, updateDoc, doc } from "@firebase/firestore";
 import { useDispatch } from "react-redux";
