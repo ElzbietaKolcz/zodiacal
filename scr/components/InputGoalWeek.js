@@ -45,7 +45,7 @@ const InputGoalWeek = ({ index }) => {
         const userId = user.uid;
         const userGoalCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/goals/goalsWeek/${currentWeek}/`,
+          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/goalsWeek/`,
         );
 
         const q = query(userGoalCollectionRef);
@@ -78,7 +78,7 @@ const InputGoalWeek = ({ index }) => {
         const userId = user.uid;
         const userGoalCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/goals/goalsWeek/${currentWeek}/`,
+          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/goalsWeek/`,
         );
 
         const newGoalData = {

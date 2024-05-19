@@ -10,26 +10,26 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db, auth } from "../../firebase";
+import { db, auth } from "../../../firebase";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
-import { addTask } from "../features/taskSlice";
-import { currentYear, currentMonth, currentWeek } from "../../variables";
+import { addEvent } from "../../features/eventSlice";
+import { currentYear, currentMonth, currentWeek } from "../../../variables";
 
-const AddTask = () => {
+const AddEvent = () => {
   const [inputday, setInputDay] = useState("");
 
   const [inputName, setInputName] = useState("");
   const [checked, setChecked] = useState(false);
   const currentMonthTask = useSelector((state) => state.currentMonth);
+  const user = auth.currentUser;
 
-  const [tasksUser, setTasks] = useState([]);
+  const [eventsUser, setEvents] = useState([]);
 
   const dispatch = useDispatch();
-  const user = auth.currentUser;
 
   const validationSchema = yup.object().shape({
     day: yup
@@ -46,20 +46,20 @@ const AddTask = () => {
       .required("Required"),
   });
 
-  const addNewUserTask = async (day, name) => {
+  const addNewUserEvent = async (day, name) => {
     try {
       if (user) {
         const userId = user.uid;
-        const userTasksCollectionRef = collection(
+        const userEventsCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`,
+          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events`,
         );
 
-        const newUserTaskData = {
+        const newUserEventData = {
           name: name,
           day: parseInt(day, 10),
           state: checked,
-          tag: "task",
+          tag: "event",
           month: currentMonth,
         };
 
@@ -67,14 +67,13 @@ const AddTask = () => {
           newUserTaskData.month = currentMonthTask;
         }
 
-        dispatch(addTask(newUserTaskData));
-        const docRef = await addDoc(userTasksCollectionRef, newUserTaskData);
+        dispatch(addEvent(newUserEventData));
+        const docRef = await addDoc(userEventsCollectionRef, newUserEventData);
 
         setInputName("");
         setInputDay("");
 
-        fetchData(userTasksCollectionRef);
-        setTasks([...tasksUser, newUserTaskData]);
+        fetchData(userEventsCollectionRef);
       }
     } catch (error) {
       console.error(
@@ -94,7 +93,7 @@ const AddTask = () => {
         id: doc.id,
       }));
 
-      setTasks(data);
+      setEvents(data);
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
     }
@@ -103,20 +102,20 @@ const AddTask = () => {
   useEffect(() => {
     if (user) {
       const userId = user.uid;
-      const userTasksCollectionRef = collection(
+      const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events`,
       );
 
-      fetchData(userTasksCollectionRef);
+      fetchData(userEventsCollectionRef);
     }
-  }, [tasksUser]);
+  }, [eventsUser]);
   return (
     <Formik
       initialValues={{ day: "", name: "" }}
       onSubmit={async (values, actions) => {
         try {
-          await addNewUserTask(values.day, values.name);
+          await addNewUserEvent(values.day, values.name);
           actions.resetForm();
         } catch (error) {
           console.error(
@@ -143,7 +142,7 @@ const AddTask = () => {
             variant="titleLarge"
             testID="title"
           >
-            Add task{" "}
+            Add event{" "}
           </Text>
           <View style={tw`flex-row flex-wrap mt-2`}>
             <View style={tw`w-22 mb-2 ml-2`}>
@@ -208,4 +207,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default AddEvent;

@@ -3,10 +3,10 @@ import { View, ScrollView } from "react-native";
 
 import tw from "twrnc";
 
-import AddTask from "./../components/AddTask";
-import AddEvent from "./../components/AddEvent";
-import TableTask from "./../components/TableTask";
-import TableEvent from "../components/TableEvent";
+import AddTask from "../components/tasksEvents/AddTask";
+import AddEvent from "../components/tasksEvents/AddEvent";
+import TableTask from "../components/tasksEvents/TableTask";
+import TableEvent from "../components/tasksEvents/TableEvent";
 
 const EditTaskEvent = () => {
   return (

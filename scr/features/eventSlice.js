@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const eventSlice = createSlice({
+export const eventSlice = createSlice({
   name: "event",
   initialState: [],
   reducers: {
@@ -8,13 +8,18 @@ const eventSlice = createSlice({
       state.push(action.payload);
     },
     removeEvent: (state, action) => {
-      return state.filter((task) => task.id !== action.payload);
+      return state.filter((event) => event.id !== action.payload);
     },
-    setEvent: (state, action) => {
-      return [...action.payload];
+    setEvents: (state, action) => {
+      return action.payload;
     },
   },
 });
 
-export const { addEvent, removeEvent, setEvent } = eventSlice.actions;
+export const { addEvent, removeEvent } = eventSlice.actions;
+export const setevents = (events) => ({
+  type: "events/setEvent",
+  payload: events,
+});
+
 export default eventSlice.reducer;

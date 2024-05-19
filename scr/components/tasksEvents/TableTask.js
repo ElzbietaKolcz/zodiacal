@@ -3,8 +3,8 @@ import { View } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
 import { useDispatch } from "react-redux";
-import { removeTask } from "../features/taskSlice";
-import { db, auth } from "../../firebase";
+import { removeTask } from "../../features/taskSlice";
+import { db, auth } from "../../../firebase";
 import {
   collection,
   deleteDoc,
@@ -13,20 +13,20 @@ import {
   orderBy,
   doc,
 } from "firebase/firestore";
-import { currentYear, currentMonth, currentWeek } from "../../variables";
+import { currentYear, currentMonth, currentWeek } from "../../../variables";
 
 const TableTask = () => {
   const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
 
-  const userId = user?.uid;
   const user = auth.currentUser;
+  const userId = user?.uid;
 
   const fetchData = async () => {
     try {
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks`,
       );
       const q = query(userTasksCollectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
@@ -34,7 +34,7 @@ const TableTask = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      dispatch(setTasks(data));
+      setTasks(data);
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
     }
@@ -42,22 +42,18 @@ const TableTask = () => {
 
   useEffect(() => {
     fetchData();
-  }, [dispatch]);
+  }, []);
 
   const handleDelete = async (taskId) => {
     try {
       dispatch(removeTask(taskId));
-
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks`,
       );
-
       await deleteDoc(doc(userTasksCollectionRef, taskId));
-
       const updatedTasks = tasks.filter((task) => task.id !== taskId);
       setTasks(updatedTasks);
-
       console.log(`Task with ID ${taskId} deleted successfully.`);
     } catch (error) {
       console.error("Error deleting task:", error.message);
@@ -91,58 +87,38 @@ const TableTask = () => {
             </DataTable.Title>
           </DataTable.Header>
 
-          {tasks &&
-            tasks.map((task) => {
-              const formattedDay = task.day < 10 ? `0${task.day}` : task.day;
+          {tasks.map((task) => {
+            const formattedDay = task.day < 10 ? `0${task.day}` : task.day;
+            return (
+              <DataTable.Row
+                key={task.id}
+                style={tw`border-t border-gray-300`}
+                testID="task-row"
+              >
+                <DataTable.Cell textStyle={tw`text-black text-center`}>
+                  {formattedDay}
+                </DataTable.Cell>
 
-              return (
-                <DataTable.Row
-                  key={task.id}
-                  style={tw`border-t border-gray-300`}
-                  testID="task-row"
-                >
-                  <DataTable.Cell>
-                    <Text
-                      variant="bodyLarge"
-                      style={tw`justify-center`}
-                      textStyle={tw`text-black text-center`}
-                    >
-                      {formattedDay}
-                    </Text>
-                  </DataTable.Cell>
+                <DataTable.Cell textStyle={tw`text-black text-center`}>
+                  {task.name}
+                </DataTable.Cell>
 
-                  <DataTable.Cell>
-                    <Text
-                      variant="bodyLarge"
-                      style={tw`justify-center`}
-                      textStyle={tw`text-black text-center`}
-                    >
-                      {task.name}
-                    </Text>
-                  </DataTable.Cell>
+                <DataTable.Cell textStyle={tw`text-black text-center`}>
+                  {task.state ? "done" : "undone"}
+                </DataTable.Cell>
 
-                  <DataTable.Cell>
-                    <Text
-                      variant="bodyLarge"
-                      style={tw`justify-center`}
-                      textStyle={tw`text-black text-center`}
-                    >
-                      {task.state ? "done" : "undone"}
-                    </Text>
-                  </DataTable.Cell>
-
-                  <DataTable.Cell>
-                    <IconButton
-                      icon="delete"
-                      iconColor="red"
-                      style={tw`justify-center`}
-                      onPress={() => handleDelete(task.id)}
-                      testID={`delete-button-${task.id}`}
-                    />
-                  </DataTable.Cell>
-                </DataTable.Row>
-              );
-            })}
+                <DataTable.Cell>
+                  <IconButton
+                    icon="delete"
+                    iconColor="red"
+                    style={tw`justify-center`}
+                    onPress={() => handleDelete(task.id)}
+                    testID={`delete-button-${task.id}`}
+                  />
+                </DataTable.Cell>
+              </DataTable.Row>
+            );
+          })}
         </DataTable>
       </View>
     </View>
