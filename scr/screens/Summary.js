@@ -37,16 +37,11 @@ const Summary = () => {
     },
   ];
 
-  
-  // Funkcja obliczająca sumę wartości
   const totalAmount = data.reduce((sum, item) => sum + item.amount, 0);
 
-  // Funkcja obliczająca procentowy udział każdej wartości
   const calculatePercentage = (amount) => {
     return (amount / totalAmount) * 100;
   };
-
-  // Generowanie danych z obliczonymi procentami
   const dataWithPercentage = data.map((item) => ({
     ...item,
     percentage: calculatePercentage(item.amount),
@@ -87,7 +82,7 @@ const Summary = () => {
         <PieChart
           style={{ height: 280 }}
           valueAccessor={({ item }) => item.amount}
-          data={dataWithPercentage} // Używamy danych z obliczonymi procentami
+          data={dataWithPercentage} 
           spacing={0}
           outerRadius={"95%"}
         >
@@ -118,7 +113,12 @@ const Summary = () => {
                 />
                 {item.name}
               </DataTable.Cell>
-              <DataTable.Cell style={tw`justify-center`} textStyle={tw`text-black text-center`}>{item.amount}</DataTable.Cell>
+              <DataTable.Cell
+                style={tw`justify-center`}
+                textStyle={tw`text-black text-center`}
+              >
+                {item.amount}
+              </DataTable.Cell>
             </DataTable.Row>
           ))}
         </DataTable>

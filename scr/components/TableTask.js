@@ -13,8 +13,7 @@ import {
   orderBy,
   doc,
 } from "firebase/firestore";
-import { currentYear, currentMonth, currentWeek } from "../../variables"; 
-
+import { currentYear, currentMonth, currentWeek } from "../../variables";
 
 const TableTask = () => {
   const dispatch = useDispatch();
@@ -27,7 +26,7 @@ const TableTask = () => {
     try {
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`,
       );
       const q = query(userTasksCollectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
@@ -35,14 +34,14 @@ const TableTask = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      dispatch(setTasks(data)); // Update state using setTasks
+      dispatch(setTasks(data));
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
     }
   };
 
   useEffect(() => {
-    fetchData(); // Fetch data on initial render
+    fetchData();
   }, [dispatch]);
 
   const handleDelete = async (taskId) => {
@@ -51,12 +50,11 @@ const TableTask = () => {
 
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/task`,
       );
 
       await deleteDoc(doc(userTasksCollectionRef, taskId));
 
-      // Remove the deleted task from the local state
       const updatedTasks = tasks.filter((task) => task.id !== taskId);
       setTasks(updatedTasks);
 
@@ -68,7 +66,11 @@ const TableTask = () => {
 
   return (
     <View style={tw`bg-white h-full mb-8 mt-2`}>
-      <Text style={tw`m-4 text-black`} variant="titleLarge" testID="title">
+      <Text
+        style={tw`m-4 text-black`}
+        variant="titleLarge"
+        testID="title"
+      >
         List of Tasks
       </Text>
 
@@ -83,8 +85,7 @@ const TableTask = () => {
 
           {tasks &&
             tasks.map((task) => {
-              const formattedDay =
-                task.day < 10 ? `0${task.day}` : task.day;
+              const formattedDay = task.day < 10 ? `0${task.day}` : task.day;
 
               return (
                 <DataTable.Row
@@ -93,19 +94,28 @@ const TableTask = () => {
                   testID="task-row"
                 >
                   <DataTable.Cell>
-                    <Text variant="bodyLarge" style={tw`text-black`}>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
                       {formattedDay}
                     </Text>
                   </DataTable.Cell>
 
                   <DataTable.Cell>
-                    <Text variant="bodyLarge" style={tw`text-black`}>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
                       {task.name}
                     </Text>
                   </DataTable.Cell>
 
                   <DataTable.Cell>
-                    <Text variant="bodyLarge" style={tw`text-black`}>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
                       {task.state ? "done" : "undone"}
                     </Text>
                   </DataTable.Cell>

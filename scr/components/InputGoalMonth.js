@@ -21,7 +21,7 @@ import {
   doc,
 } from "@firebase/firestore";
 
-import { currentYear, currentMonth } from "../../variables"; 
+import { currentYear, currentMonth } from "../../variables";
 
 const InputGoalMonth = ({ index }) => {
   const [goal, setGoal] = useState("");
@@ -35,7 +35,6 @@ const InputGoalMonth = ({ index }) => {
 
   const goalAdded = useSelector(selectGoalAdded);
   const user = auth.currentUser;
-
 
   useEffect(() => {
     fetchData();

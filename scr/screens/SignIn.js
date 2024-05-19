@@ -10,14 +10,18 @@ import images from "../../assets/images";
 import { TextInput, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "twrnc";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { login } from "../features/userSlice";
 import { Formik } from "formik";
 import * as yup from "yup";
 import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google"
+import * as Google from "expo-auth-session/providers/google";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -26,8 +30,8 @@ const SignIn = ({ navigation }) => {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [disableLoginButton, setDisableLoginButton] = useState(false); 
-  const [loginAttempts, setLoginAttempts] = useState(0); 
+  const [disableLoginButton, setDisableLoginButton] = useState(false);
+  const [loginAttempts, setLoginAttempts] = useState(0);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -36,11 +40,11 @@ const SignIn = ({ navigation }) => {
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: process.env.IOS,
     androidClientId: process.env.ANDROID,
-    webClientId: process.env.WEBID
+    webClientId: process.env.WEBID,
   });
 
   useEffect(() => {
-    if (response?.type === 'success') {
+    if (response?.type === "success") {
       const { authentication } = response;
       handleGoogleSignIn(authentication);
     }
@@ -61,7 +65,6 @@ const SignIn = ({ navigation }) => {
     }
   };
 
-
   const validationSchema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required(),
@@ -72,7 +75,7 @@ const SignIn = ({ navigation }) => {
       initialValues={{ email: "", password: "" }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        if (disableLoginButton) return; 
+        if (disableLoginButton) return;
         signInWithEmailAndPassword(auth, values.email, values.password)
           .then((userAuth) => {
             dispatch(
@@ -82,15 +85,17 @@ const SignIn = ({ navigation }) => {
             );
           })
           .catch(() => {
-            setLoginAttempts(prevAttempts => prevAttempts + 1); 
+            setLoginAttempts((prevAttempts) => prevAttempts + 1);
             if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-              setError("Too many unsuccessful login attempts. \nPlease try again later.");
-              setDisableLoginButton(true); 
+              setError(
+                "Too many unsuccessful login attempts. \nPlease try again later.",
+              );
+              setDisableLoginButton(true);
               setTimeout(() => {
-                setDisableLoginButton(false); 
-                setLoginAttempts(0); 
-                setError(null); 
-              }, 180000); 
+                setDisableLoginButton(false);
+                setLoginAttempts(0);
+                setError(null);
+              }, 180000);
             } else {
               setError("Invalid email or password");
             }
@@ -98,7 +103,10 @@ const SignIn = ({ navigation }) => {
       }}
     >
       {({ values, handleSubmit, handleChange, isValid, errors }) => (
-        <KeyboardAvoidingView behavior="height" style={tw`flex-1 overflow-hidden`}>
+        <KeyboardAvoidingView
+          behavior="height"
+          style={tw`flex-1 overflow-hidden`}
+        >
           <View style={tw`bg-white h-full w-full `}>
             <Image
               style={tw`h-full w-full  absolute`}
@@ -146,10 +154,14 @@ const SignIn = ({ navigation }) => {
                 <View style={tw`w-full`}>
                   <Pressable
                     onPress={handleSubmit}
-                    disabled={!isValid || disableLoginButton} 
+                    disabled={!isValid || disableLoginButton}
                     style={[
                       tw`rounded-full p-4 mb-3 mt-8`,
-                      disableLoginButton ? tw`bg-gray-500` : (isValid ? tw`bg-[#9C27B0]` : tw`bg-gray-500`), 
+                      disableLoginButton
+                        ? tw`bg-gray-500`
+                        : isValid
+                        ? tw`bg-[#9C27B0]`
+                        : tw`bg-gray-500`,
                     ]}
                     testID="sign-in-button"
                   >
@@ -158,9 +170,7 @@ const SignIn = ({ navigation }) => {
                     </Text>
                   </Pressable>
                   <View>
-                    <Text
-                      style={[tw`text-red-500 text-center my-2`]}
-                    >
+                    <Text style={[tw`text-red-500 text-center my-2`]}>
                       {error}
                     </Text>
                   </View>

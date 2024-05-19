@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import { Button, Provider } from 'react-native-paper';
+import React, { useState } from "react";
+import { View, Text, ScrollView } from "react-native";
+import { Button, Provider } from "react-native-paper";
 
-const Options = ({ options, onSelect}) => {
+const Options = ({ options, onSelect }) => {
   const [visible, setVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
-  
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-    onSelect(option); // Wywołanie funkcji przekazanej jako props
+    onSelect(option);
     closeMenu();
   };
 

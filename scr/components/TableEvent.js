@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
-import {  useDispatch } from "react-redux";
-import { removeEvent } from "../features/eventSlice"; // Adjust imports
-import { db, auth} from "../../firebase";
+import { useDispatch } from "react-redux";
+import { removeEvent } from "../features/eventSlice"; 
+import { db, auth } from "../../firebase";
 import {
   collection,
   deleteDoc,
@@ -13,21 +13,20 @@ import {
   orderBy,
   doc,
 } from "firebase/firestore";
-import { currentYear, currentMonth, currentWeek, } from "../../variables"; 
+import { currentYear, currentMonth, currentWeek } from "../../variables";
 
-const TableEvent = () => { // Change component name
+const TableEvent = () => {
   const dispatch = useDispatch();
-  const [events, setEvents] = useState([]); // Change state variable name
+  const [events, setEvents] = useState([]);
   const user = auth.currentUser;
 
   const userId = user?.uid;
 
-
   const fetchData = async () => {
     try {
-      const userEventsCollectionRef = collection( // Update collection path
+      const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/event`
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/event`,
       );
       const q = query(userEventsCollectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
@@ -35,7 +34,7 @@ const TableEvent = () => { // Change component name
         ...doc.data(),
         id: doc.id,
       }));
-      dispatch(setEvents(data)); // Update action dispatch
+      dispatch(setEvents(data));
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
@@ -45,13 +44,13 @@ const TableEvent = () => { // Change component name
     fetchData();
   }, [dispatch]);
 
-  const handleDeleteEvent = async (eventId) => { // Change function name
+  const handleDeleteEvent = async (eventId) => {
     try {
       dispatch(removeEvent(eventId));
 
-      const userEventsCollectionRef = collection( // Update collection path
+      const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/event`
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/event`,
       );
 
       await deleteDoc(doc(userEventsCollectionRef, eventId));
@@ -67,7 +66,11 @@ const TableEvent = () => { // Change component name
 
   return (
     <View style={tw`bg-white h-full mb-8 mt-2`}>
-      <Text style={tw`m-4 text-black`} variant="titleLarge" testID="title">
+      <Text
+        style={tw`m-4 text-black`}
+        variant="titleLarge"
+        testID="title"
+      >
         List of Events
       </Text>
 
@@ -82,8 +85,7 @@ const TableEvent = () => { // Change component name
 
           {events &&
             events.map((event) => {
-              const formattedDay =
-                event.day < 10 ? `0${event.day}` : event.day;
+              const formattedDay = event.day < 10 ? `0${event.day}` : event.day;
 
               return (
                 <DataTable.Row
@@ -92,19 +94,28 @@ const TableEvent = () => { // Change component name
                   testID="event-row"
                 >
                   <DataTable.Cell>
-                    <Text variant="bodyLarge" style={tw`text-black`}>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
                       {formattedDay}
                     </Text>
                   </DataTable.Cell>
 
                   <DataTable.Cell>
-                    <Text variant="bodyLarge" style={tw`text-black`}>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
                       {event.name}
                     </Text>
                   </DataTable.Cell>
 
                   <DataTable.Cell>
-                    <Text variant="bodyLarge" style={tw`text-black`}>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
                       {event.state ? "done" : "undone"}
                     </Text>
                   </DataTable.Cell>
@@ -112,7 +123,7 @@ const TableEvent = () => { // Change component name
                   <DataTable.Cell>
                     <IconButton
                       icon="delete"
-                      onPress={() => handleDeleteEvent(event.id)} // Change function call
+                      onPress={() => handleDeleteEvent(event.id)}
                       testID={`delete-button-${event.id}`}
                     />
                   </DataTable.Cell>

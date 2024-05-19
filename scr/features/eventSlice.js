@@ -8,7 +8,7 @@ const eventSlice = createSlice({
       state.push(action.payload);
     },
     removeEvent: (state, action) => {
-      return state.filter(task => task.id !== action.payload);
+      return state.filter((task) => task.id !== action.payload);
     },
     setEvent: (state, action) => {
       return [...action.payload];

@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const birthdaySlice = createSlice({
-  name: 'birthdays',
+  name: "birthdays",
   initialState: [],
   reducers: {
     setBirthdays: (state, action) => {
@@ -9,10 +9,11 @@ const birthdaySlice = createSlice({
     },
     addBirthday: (state, action) => [...state, action.payload],
     removeBirthday: (state, action) => {
-      return state.filter(birthday => birthday.id !== action.payload);
+      return state.filter((birthday) => birthday.id !== action.payload);
     },
   },
 });
 
-export const { setBirthdays, addBirthday, removeBirthday } = birthdaySlice.actions;
+export const { setBirthdays, addBirthday, removeBirthday } =
+  birthdaySlice.actions;
 export default birthdaySlice.reducer;

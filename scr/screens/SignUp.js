@@ -10,10 +10,7 @@ import images from "../../assets/images";
 import { TextInput } from "react-native-paper";
 import tw from "twrnc";
 
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 import { useDispatch } from "react-redux";
@@ -24,7 +21,6 @@ import { Formik } from "formik";
 import * as yup from "yup";
 
 const SignUp = ({ navigation }) => {
-
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
 
@@ -49,14 +45,13 @@ const SignUp = ({ navigation }) => {
     password: yup
       .string()
       .matches(
-        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+])/, 
-        "Password must contain at least one uppercase letter and one special character."
+        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+])/,
+        "Password must contain at least one uppercase letter and one special character.",
       )
       .min(8, "Password must be at least 8 characters.")
-      .max(256,"Password cannot contain more than 256 characters.")
+      .max(256, "Password cannot contain more than 256 characters.")
       .required("Minimum 8 characters required."),
   });
-  
 
   return (
     <Formik
@@ -72,20 +67,22 @@ const SignUp = ({ navigation }) => {
               const userDocRef = doc(db, "users", userId);
               setDoc(userDocRef, {
                 username: values.username,
-                sign: "", 
-              }).then(() => {
-                dispatch(
-                  login({
-                    uid: userAuth.user.uid,
-                    displayName: values.username,
-                  })
-                );
-              }).catch((error) => {
-                console.error(
-                  "Error occurred while saving user data.",
-                  error,
-                );
-              });
+                sign: "",
+              })
+                .then(() => {
+                  dispatch(
+                    login({
+                      uid: userAuth.user.uid,
+                      displayName: values.username,
+                    }),
+                  );
+                })
+                .catch((error) => {
+                  console.error(
+                    "Error occurred while saving user data.",
+                    error,
+                  );
+                });
             });
           })
           .catch((error) => {
@@ -147,7 +144,6 @@ const SignUp = ({ navigation }) => {
                     onChangeText={handleChange("email")}
                     left={<TextInput.Icon icon="email-outline" />}
                     accessibilityLabel="Email"
-
                   />
                   {errors.email ? (
                     <Text style={tw`text-red-500`}>{errors.email}</Text>

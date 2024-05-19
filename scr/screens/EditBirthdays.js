@@ -15,13 +15,11 @@ import { db, auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { removeBirthday } from "../features/birthdaySlice";
 
-
 const EditBirthdays = () => {
   const dispatch = useDispatch();
   const userBirthdays = useSelector((state) => state.birthdays);
   const [userBirthday, setUserBirthdaysData] = useState([]);
   const user = auth.currentUser;
-
 
   const fetchData = async (collectionRef, setData) => {
     try {
@@ -88,53 +86,54 @@ const EditBirthdays = () => {
             <DataTable.Title style={tw`text-black`}>Delete</DataTable.Title>
           </DataTable.Header>
 
-          {userBirthdays && userBirthdays.map((birthday)  => {
-            const formattedDay =
-              birthday.day < 10 ? `0${birthday.day}` : birthday.day;
-            const formattedMonth =
-              birthday.month < 10 ? `0${birthday.month}` : birthday.month;
+          {userBirthdays &&
+            userBirthdays.map((birthday) => {
+              const formattedDay =
+                birthday.day < 10 ? `0${birthday.day}` : birthday.day;
+              const formattedMonth =
+                birthday.month < 10 ? `0${birthday.month}` : birthday.month;
 
-            return (
-              <DataTable.Row
-                key={birthday.id}
-                style={tw`border-t border-gray-300`}
-                testID="birthday-row"
-              >
-                <DataTable.Cell>
-                  <Text
-                    variant="bodyLarge"
-                    style={tw`text-black`}
-                  >
-                    {formattedDay}
-                  </Text>
-                </DataTable.Cell>
-                <DataTable.Cell>
-                  <Text
-                    variant="bodyLarge"
-                    style={tw`text-black`}
-                  >
-                    {formattedMonth}
-                  </Text>
-                </DataTable.Cell>
+              return (
+                <DataTable.Row
+                  key={birthday.id}
+                  style={tw`border-t border-gray-300`}
+                  testID="birthday-row"
+                >
+                  <DataTable.Cell>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
+                      {formattedDay}
+                    </Text>
+                  </DataTable.Cell>
+                  <DataTable.Cell>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
+                      {formattedMonth}
+                    </Text>
+                  </DataTable.Cell>
 
-                <DataTable.Cell>
-                  <Text
-                    variant="bodyLarge"
-                    style={tw`text-black`}
-                  >
-                    {birthday.name}
-                  </Text>
-                </DataTable.Cell>
-                <DataTable.Cell>
-                  <IconButton
-                    icon="delete"
-                    onPress={() => handleDelete(birthday.id)}
-                    testID={`delete-button-${birthday.id}`}
-                  />
-                </DataTable.Cell>
-              </DataTable.Row>
-            );
-          })}
+                  <DataTable.Cell>
+                    <Text
+                      variant="bodyLarge"
+                      style={tw`text-black`}
+                    >
+                      {birthday.name}
+                    </Text>
+                  </DataTable.Cell>
+                  <DataTable.Cell>
+                    <IconButton
+                      icon="delete"
+                      onPress={() => handleDelete(birthday.id)}
+                      testID={`delete-button-${birthday.id}`}
+                    />
+                  </DataTable.Cell>
+                </DataTable.Row>
+              );
+            })}
         </DataTable>
       </View>
     </ScrollView>

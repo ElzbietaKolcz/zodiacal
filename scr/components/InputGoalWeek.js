@@ -20,7 +20,7 @@ import {
   setDoc,
   doc,
 } from "@firebase/firestore";
-import { currentYear, currentWeek, currentMonth} from "../../variables"; 
+import { currentYear, currentWeek, currentMonth } from "../../variables";
 
 const InputGoalWeek = ({ index }) => {
   const [goal, setGoal] = useState("");

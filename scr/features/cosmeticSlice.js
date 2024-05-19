@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   data: [],
-  error: null
+  error: null,
 };
 
 const cosmeticSlice = createSlice({
-  name: 'cosmetics',
+  name: "cosmetics",
   initialState,
   reducers: {
     getCosmetics: (state, action) => {
       return state;
-    }
+    },
   },
 });
 

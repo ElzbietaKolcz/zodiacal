@@ -8,18 +8,18 @@ export const taskSlice = createSlice({
       state.push(action.payload);
     },
     removeTask: (state, action) => {
-      return state.filter(task => task.id !== action.payload);
+      return state.filter((task) => task.id !== action.payload);
     },
     setTasks: (state, action) => {
-      return action.payload; // Update the state directly with the payload
+      return action.payload;
     },
   },
 });
 
-export const { addTask, removeTask,  } = taskSlice.actions;
+export const { addTask, removeTask } = taskSlice.actions;
 export const setTasks = (tasks) => ({
-  type: 'tasks/setTasks',
-  payload: tasks
+  type: "tasks/setTasks",
+  payload: tasks,
 });
 
 export default taskSlice.reducer;

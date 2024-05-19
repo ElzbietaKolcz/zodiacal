@@ -28,7 +28,7 @@ import EditBirthdays from "./EditBirthdays";
 
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
-import { currentYear } from "../../variables"; 
+import { currentYear } from "../../variables";
 
 const YearlyCalendar = () => {
   const [inputday, setInputDay] = useState("");
@@ -160,7 +160,6 @@ const YearlyCalendar = () => {
                 visible={visible}
                 onDismiss={hideModal}
                 contentContainerStyle={tw`bg-white mx-8 my-10 rounded-lg`}
-                
               >
                 <EditBirthdays />
               </Modal>

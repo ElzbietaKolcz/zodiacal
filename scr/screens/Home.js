@@ -6,19 +6,13 @@ import Header from "../components/Header";
 import MonthCalendar from "../components/MonthCalendar";
 import InputGoalMonth from "../components/InputGoalMonth";
 
-import {
-  collection,
-  query,
-  orderBy,
-  getDocs,
-} from "firebase/firestore";
-import { db, auth  } from "../../firebase";
+import { collection, query, orderBy, getDocs } from "firebase/firestore";
+import { db, auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
-import { currentYear, currentMonth } from "../../variables"; 
+import { currentYear, currentMonth } from "../../variables";
 
 const Home = () => {
-
   const dispatch = useDispatch();
   const user = auth.currentUser;
 
