@@ -15,7 +15,6 @@ import DayCalendar from "./scr/screens/DayCalendar";
 import Summary from "./scr/screens/Summary";
 import Routines from "./scr/screens/Routines";
 
-
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, selectUser } from "./scr/features/userSlice";
 import { auth } from "./firebase";

@@ -1,13 +1,13 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-import { LogLevel } from '@firebase/logger';
-import { setLogLevel } from '@firebase/logger';
+import { LogLevel } from "@firebase/logger";
+import { setLogLevel } from "@firebase/logger";
 
-setLogLevel(LogLevel.ERROR); 
+setLogLevel(LogLevel.ERROR);
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -20,7 +20,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app); 
+const auth = getAuth(app);
 
 const db = getFirestore(app);
 const storage = getStorage(app);
