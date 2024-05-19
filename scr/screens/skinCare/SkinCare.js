@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { currentYear, currentMonth, currentDay } from "../../../variables";
 import { Agenda } from "react-native-calendars";
 import { Text, Button } from "react-native-paper";
+import SkinCareAgenda from "../../components/skinCare/SkinCareAgenda";
 
 const SkinCare = () => {
   const navigation = useNavigation();
@@ -41,26 +42,7 @@ const SkinCare = () => {
         </Button>
       </View>
 
-      <Agenda
-        current={`${currentYear}-${currentMonth
-          .toString()
-          .padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`}
-        firstDay={1}
-        items={{}}
-        renderItem={(item, isFirst) => (
-          <TouchableOpacity
-            style={tw`bg-fuchsia-50 text-black rounded-lg m-5 flex-1 rounded-lg p-5 mr-4 mt-4`}
-          >
-            <Text>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-        theme={{
-          todayTextColor: "purple",
-          textMonthFontWeight: "semibold",
-          selectedDayBackgroundColor: "purple",
-          agendaTodayColor: "purple",
-        }}
-      />
+      <SkinCareAgenda />
     </ScrollView>
   );
 };

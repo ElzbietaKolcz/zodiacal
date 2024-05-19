@@ -62,7 +62,7 @@ const Morning = () => {
   };
 
   return (
-    <View style={tw`mb-10`}>
+    <View style={tw`mb-6`}>
       <View style={tw`flex-1 p-6 bg-white `}>
         <Text
           variant="headlineSmall"
