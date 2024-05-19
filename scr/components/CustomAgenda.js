@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBirthdays } from "../features/birthdaySlice";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
@@ -6,40 +6,39 @@ import { db, auth } from "../../firebase";
 import { Text, TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import tw from "twrnc";
-import { currentYear, currentMonth, currentDay } from "../../variables"; 
+import { currentYear, currentMonth, currentDay, currentWeek } from "../../variables"; 
 
 const CustomAgenda = () => {
   const dispatch = useDispatch();
   const birthdays = useSelector((state) => state.birthdays);
+
+  const [events, setEvents] = useState([]);
+
   const user = auth.currentUser;
+  const userId = user?.uid;
 
-  useEffect(() => {
-    if (user) {
-      const userId = user.uid;
-      console.log(userId, user)
-      const userBirthdaysCollectionRef = collection(
-        db,
-        `users/${userId}/birthday`,
-      );
-      fetchData(userBirthdaysCollectionRef);
-    }
-  }, []);
-
-  const fetchData = async (collectionRef) => {
+  const fetchData = async () => {
     try {
-      const q = query(collectionRef, orderBy("day"));
+      const userEventsCollectionRef = collection(
+        db,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
+      );
+      const q = query(userEventsCollectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
-
       const data = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-
-      dispatch(setBirthdays(data));
+      setEvents(data);
     } catch (error) {
-      console.error("Error fetching data:", error.message);
+      console.error("Błąd podczas pobierania danych:", error.message);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
 
   const markedDates = generateMarkedDates(birthdays, currentYear, currentMonth);
 
@@ -66,7 +65,7 @@ const CustomAgenda = () => {
         .toString()
         .padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`}
       items={{
-        "2024-05-17": [
+        "2024-05-19": [
           { name: "Cycling" },
           { name: "Walking" },
           { name: "Running" },

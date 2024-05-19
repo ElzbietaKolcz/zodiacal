@@ -1,12 +1,14 @@
 import React from "react";
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, ScrollView } from "react-native";
 import images from "../../../assets/images";
 import tw from "twrnc";
 import FormMenu from "../../components/horoscop/FormMenu";
 import FormDate from "../../components/horoscop/FormDate";
 
 const Horoscope = () => {
+  
   return (
+    <ScrollView>
     <View style={tw`flex-1 bg-white justify-center items-center mt-2`}>
       <Image
         style={tw`w-full h-60`}
@@ -18,7 +20,7 @@ const Horoscope = () => {
           To access daily horoscopes, enter your zodiac sign or date of birth.
         </Text>
 
-        <View style={tw`w-full`}>
+        <View style={tw`w-full items-center justify-center`}>
           <Text
             variant="headlineSmall"
             style={tw`text-black font-bold mt-6 text-2xl`}
@@ -33,7 +35,7 @@ const Horoscope = () => {
           ---- Or ----{" "}
         </Text>
 
-        <View style={tw`w-full`}>
+        <View style={tw`w-full items-center justify-center`}>
           <Text
             variant="headlineSmall"
             style={tw`text-black font-bold mt-6 text-2xl`}
@@ -44,6 +46,7 @@ const Horoscope = () => {
         <FormDate />
       </View>
     </View>
+    </ScrollView>
   );
 };
 export default Horoscope;

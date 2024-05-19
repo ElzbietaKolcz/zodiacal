@@ -1,14 +1,11 @@
-import React from "react";
-import { View } from "react-native";
-
+import React, { useState } from "react";
+import { View, Text, ScrollView } from "react-native";
+import { Button, Provider, FAB } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { getDoc, updateDoc, doc } from "@firebase/firestore";
 import { db, auth } from "../../../firebase";
 import { updateSign } from "../../features/userSlice";
-
 import tw from "twrnc";
-import { getDoc, updateDoc, doc } from "@firebase/firestore";
-import { useDispatch } from "react-redux";
-
-import { Text, Menu, Button, FAB } from "react-native-paper";
 
 const ZodiacSigns = [
   { name: "aquarius", start: [20, 1], end: [18, 2] },
@@ -29,9 +26,9 @@ const FormMenu = () => {
   const dispatch = useDispatch();
   const user = auth.currentUser;
 
-  const [sign, setSign] = React.useState("");
-  const [visible, setVisible] = React.useState(false);
-  const [error, setError] = React.useState("");
+  const [sign, setSign] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSelect = (selectedSign) => {
     setSign(selectedSign);
@@ -64,45 +61,55 @@ const FormMenu = () => {
     }
   };
 
-  return (
-    <View style={tw`flex-row  flex-wrap items-center justify-center mt-5`}>
-      <Menu
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        anchor={
-          <View style={tw`font-bold text-lg mx-1`}>
-            <Button
-              onPress={() => setVisible(true)}
-              style={tw`bg-fuchsia-100 text-left rounded-lg w-77 p-2 text-lg font-bold mx-4  mx-1`}
-            >
-              <Text style={tw`text-lg text-black text-left`}>
-                {sign === "" ? "Select zodiac sign" : sign}
-              </Text>
-            </Button>
-          </View>
-        }
-      >
-        {ZodiacSigns.map((zodiac, index) => (
-          <Menu.Item
-            key={index}
-            onPress={() => handleSelect(zodiac.name)}
-            title={zodiac.name}
-          />
-        ))}
-      </Menu>
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
 
-      <View style={tw`m-3`}>
-        <FAB
-          onPress={handleSubmitMenu}
-          style={[tw`bg-fuchsia-700 rounded-full right-1`]}
-          size="small"
-          icon="plus"
-          color="#FFFFFF"
-          mode="elevated"
-          accessibilityLabel="FAB"
-        />
+  return (
+    <ScrollView>
+    <Provider>
+    
+      <View style={tw`flex-row items-center mt-5 mx-8 my-4`}>
+        <View style={tw`flex-col w-48`}>
+          <Button
+            style={tw`bg-fuchsia-200 rounded-lg text-lg font-bold p-1 mx-1`}
+            labelStyle={tw`text-gray-800 font-bold`}
+            onPress={openMenu}
+          >
+            {sign === "" ? "Select zodiac sign" : sign}
+          </Button>
+          {visible && (
+            <ScrollView style={tw`max-h-30 mt-2`}>
+              {ZodiacSigns.map((zodiac, index) => (
+                <View key={index}>
+                  <Button
+                    labelStyle={tw`text-fuchsia-800 font-bold`}
+                    onPress={() => handleSelect(zodiac.name)}
+                  >
+                    {zodiac.name}
+                  </Button>
+                </View>
+              ))}
+            </ScrollView>
+          )}
+        </View>
+
+        <View style={tw`m-3`}>
+          <FAB
+            onPress={handleSubmitMenu}
+            style={[tw`bg-fuchsia-700 rounded-full right-1`]}
+            size="small"
+            icon="plus"
+            color="#FFFFFF"
+            mode="elevated"
+            accessibilityLabel="FAB"
+          />
+        </View>
+        {error ? <Text style={tw`text-red-500`}>{error}</Text> : null}
       </View>
-    </View>
+     
+    </Provider>
+    </ScrollView>
   );
 };
+
 export default FormMenu;

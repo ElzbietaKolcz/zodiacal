@@ -1,25 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const eventSlice = createSlice({
-  name: "event",
+  name: "events",
   initialState: [],
   reducers: {
+    setEvents: (state, action) => {
+      return action.payload;
+    },
     addEvent: (state, action) => {
       state.push(action.payload);
     },
     removeEvent: (state, action) => {
-      return state.filter((event) => event.id !== action.payload);
-    },
-    setEvents: (state, action) => {
-      return action.payload;
+      return state.filter(event => event.id !== action.payload);
     },
   },
 });
 
-export const { addEvent, removeEvent } = eventSlice.actions;
-export const setevents = (events) => ({
-  type: "events/setEvent",
-  payload: events,
-});
+export const { setEvents, addEvent, removeEvent } = eventSlice.actions;
 
 export default eventSlice.reducer;

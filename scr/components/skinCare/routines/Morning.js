@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import tw from "twrnc";
 import { createClient } from "@supabase/supabase-js";
 import Options from "../Options";
-import { IconButton, DataTable } from "react-native-paper";
+import { IconButton, DataTable, Text } from "react-native-paper";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
@@ -11,14 +11,14 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Morning = () => {
   const [cosmetics, setCosmetics] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedCosmetics, setSelectedCosmetics] = useState([]);
 
   useEffect(() => {
     const fetchCosmetics = async () => {
       try {
         const { data, error } = await supabase
           .from("cosmetics")
-          .select("product_name, brand, expiration_date");
+          .select("id, product_name, brand, expiration_date");
 
         if (error) {
           throw error;
@@ -36,7 +36,13 @@ const Morning = () => {
     const selectedCosmetic = cosmetics.find(
       (cosmetic) => cosmetic.product_name === option,
     );
-    setSelectedOption(selectedCosmetic);
+
+    if (selectedCosmetic) {
+      setSelectedCosmetics((prevSelected) => [
+        ...prevSelected,
+        selectedCosmetic,
+      ]);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -47,106 +53,94 @@ const Morning = () => {
         throw error;
       }
 
-      // Refresh cosmetics after deletion
-      const { data: newData, error: newError } = await supabase
-        .from("cosmetics")
-        .select("product_name, brand, expiration_date");
-
-      if (newError) {
-        throw newError;
-      }
-
-      setCosmetics(newData || []);
+      setSelectedCosmetics((prevSelected) =>
+        prevSelected.filter((cosmetic) => cosmetic.id !== id),
+      );
     } catch (error) {
       console.error("Error deleting cosmetic:", error.message);
     }
   };
 
   return (
-    <View>
+    <View style={tw`mb-10`}>
       <View style={tw`flex-1 p-6 bg-white `}>
-        <Text style={tw` text-xl font-semibold`}>Morning</Text>
+        <Text
+          variant="headlineSmall"
+          style={tw`text-black font-bold text-2xl`}
+        >
+          Morning
+        </Text>
         {cosmetics.length > 0 && (
           <Options
             options={cosmetics.map((cosmetic) => cosmetic.product_name)}
-            onSelect={handleSelectCosmetic} // Przekazanie funkcji do komponentu Options
+            onSelect={handleSelectCosmetic}
           />
         )}
-        {/* Wyświetlenie wybranej opcji w Morning */}
-        {selectedOption && (
-          <View>
-            <Text>Selected Option in Morning:</Text>
-            <Text>Name: {selectedOption.product_name}</Text>
-            <Text>Brand: {selectedOption.brand}</Text>
-            <Text>Expiration Date: {selectedOption.expiration_date}</Text>
-          </View>
-        )}
-        {/* ... */}
       </View>
 
-      <View style={tw`flex items-center justify-center rounded-lg`}>
+      <View style={tw` items-center justify-center rounded-lg`}>
         <DataTable
-          style={tw` border rounded-lg flex-wrap border-black w-11/12`}
+          style={tw` border rounded-lg text-wrap border-black w-11/12`}
         >
           <DataTable.Header>
             <DataTable.Title
-              style={[tw`flex-3`, { flexBasis: 0 }]}
+              style={tw`flex-2`}
               textStyle={tw`text-black text-sm font-bold`}
             >
               Name
             </DataTable.Title>
             <DataTable.Title
-              style={[tw`flex-2`, { flexBasis: 0 }]}
+              style={tw`flex-1`}
               textStyle={tw`text-black text-sm font-bold`}
             >
               Brand
             </DataTable.Title>
             <DataTable.Title
-              style={[tw`flex-2`, { flexBasis: 0 }]}
+              style={tw`flex-1`}
               textStyle={tw`text-black text-sm font-bold`}
             >
-              Expiration
+              Date
             </DataTable.Title>
             <DataTable.Title
-              style={[tw`flex-1`, { flexBasis: 0 }]}
+              style={tw`flex-1`}
               textStyle={tw`text-black text-sm font-bold`}
             >
               Delete
             </DataTable.Title>
           </DataTable.Header>
 
-          <DataTable.Row key={selectedOption ? selectedOption.id : ""}>
-            <DataTable.Cell
-              style={[tw`flex-3`, { flexShrink: 1 }]}
-              textStyle={tw`text-black whitespace-normal break-words text-sm `}
-            >
-              {selectedOption ? selectedOption.product_name : ""}
-            </DataTable.Cell>
-            <DataTable.Cell
-              style={[tw`flex-2 `, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm `}
-            >
-              {selectedOption ? selectedOption.brand : ""}
-            </DataTable.Cell>
-            <DataTable.Cell
-              style={[tw`flex-2`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm `}
-            >
-              {selectedOption ? selectedOption.expiration_date : ""}
-            </DataTable.Cell>
-            <DataTable.Cell
-              style={[tw`flex-1`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm `}
-            >
-              {selectedOption && (
+          {selectedCosmetics.map((cosmetic) => (
+            <DataTable.Row key={cosmetic.id}>
+              <DataTable.Cell
+                style={tw`flex-2`}
+                textStyle={tw`text-black text-sm flex-wrap break-words`}
+              >
+                {cosmetic.product_name}
+              </DataTable.Cell>
+              <DataTable.Cell
+                style={tw`flex-1`}
+                textStyle={tw`text-black text-sm flex-wrap break-words`}
+              >
+                {cosmetic.brand}
+              </DataTable.Cell>
+              <DataTable.Cell
+                style={tw`flex-1`}
+                textStyle={tw`text-black text-sm flex-wrap break-words`}
+              >
+                {cosmetic.expiration_date}
+              </DataTable.Cell>
+              <DataTable.Cell
+                style={tw`flex-1`}
+                textStyle={tw`text-black text-sm flex-wrap break-words`}
+              >
                 <IconButton
                   iconColor="red"
                   icon="delete"
-                  onPress={() => handleDelete(selectedOption.id)}
+                  onPress={() => handleDelete(cosmetic.id)}
                 />
-              )}
-            </DataTable.Cell>
-          </DataTable.Row>
+              </DataTable.Cell>
+            </DataTable.Row>
+          ))}
         </DataTable>
       </View>
     </View>

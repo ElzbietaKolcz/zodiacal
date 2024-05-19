@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
-import { useDispatch } from "react-redux";
-import { removeEvent } from "../../features/eventSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+import { addEvent, removeEvent, setEvents } from "../../features/eventSlice";
 import { db, auth } from "../../../firebase";
 import {
   collection,
@@ -13,20 +14,25 @@ import {
   orderBy,
   doc,
 } from "firebase/firestore";
-import { currentYear, currentMonth, currentWeek } from "../../../variables";
+import {
+  currentYear,
+  currentMonth,
+  currentWeek,
+  currentDay,
+} from "../../../variables";
 
 const TableEvent = () => {
   const dispatch = useDispatch();
-  const [events, setEvents] = useState([]);
-
   const user = auth.currentUser;
   const userId = user?.uid;
+
+  const [userEvents, setUserEvents] = useState([]);
 
   const fetchData = async () => {
     try {
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
       );
       const q = query(userEventsCollectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
@@ -34,61 +40,62 @@ const TableEvent = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      setEvents(data);
+      console.log("Pobrane dane:", data);
+      dispatch(setEvents(data));
+      setUserEvents(data); // ustawiamy dane lokalnie
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const handleDelete = async (eventId) => {
     try {
-      dispatch(removeEvent(eventId));
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
       );
       await deleteDoc(doc(userEventsCollectionRef, eventId));
-      const updatedEvents = events.filter((event) => event.id !== eventId);
-      setEvents(updatedEvents);
+      dispatch(removeEvent(eventId));
       console.log(`Event with ID ${eventId} deleted successfully.`);
     } catch (error) {
       console.error("Error deleting event:", error.message);
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, []);
+
   return (
     <View style={tw`bg-white h-full mb-8 mt-2`}>
-      <Text
-        style={tw`m-4 text-black`}
-        variant="titleLarge"
-        testID="title"
-      >
+      <Text style={tw`m-4 text-black`} variant="titleLarge" testID="title">
         List of Events
       </Text>
 
       <View style={tw`flex items-center justify-center rounded-lg`}>
         <DataTable style={tw`border rounded-lg border-black w-5/6`}>
           <DataTable.Header>
-            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
-              Day
+            <DataTable.Title style={tw`flex-1`}>
+              <Text style={tw`text-black text-sm font-bold`}>Day</Text>
             </DataTable.Title>
-            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
-              Name
+            <DataTable.Title style={tw`flex-2`}>
+              <Text style={tw`text-black text-sm font-bold`}>Name</Text>
             </DataTable.Title>
-            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
-              State
+            <DataTable.Title style={tw`flex-1`}>
+              <Text style={tw`text-black text-sm font-bold`}>State</Text>
             </DataTable.Title>
-            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
-              Delete
+            <DataTable.Title style={tw`flex-1`}>
+              <Text style={tw`text-black text-sm font-bold`}>Delete</Text>
             </DataTable.Title>
           </DataTable.Header>
 
-          {events.map((event) => {
-            const formattedDay = event.day < 10 ? `0${event.day}` : event.day;
+          {userEvents && userEvents.map((event) => {
+            const formattedDay =
+              event.day < 10 ? `0${event.day}` : event.day;
+            const eventName = event.name ? event.name : "";
+            console.log("Events:", event.name);
             return (
               <DataTable.Row
                 key={event.id}
@@ -100,7 +107,7 @@ const TableEvent = () => {
                 </DataTable.Cell>
 
                 <DataTable.Cell textStyle={tw`text-black text-center`}>
-                  {event.name}
+                  {eventName}
                 </DataTable.Cell>
 
                 <DataTable.Cell textStyle={tw`text-black text-center`}>

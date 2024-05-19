@@ -10,7 +10,7 @@ const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
     const markedDates = {};
 
     userBirthdays.forEach((birthday, index) => {
-      const formattedDay = birthday.day.toString().padStart(2, "0");
+      const formattedDay = birthday.day < 10 ? `0${birthday.day}` : birthday.day.toString().padStart(2, "0");
       const formattedMonth = birthday.month.toString().padStart(2, "0");
       const dateKey = `${currentYear}-${formattedMonth}-${formattedDay}`;
 
@@ -40,15 +40,13 @@ const MonthCalendar = ({ currentYear, month, userBirthdays }) => {
       <View style={tw`my-4 flex-row flex-wrap`}>
         {userBirthdays.map((birthday, index) => {
           if (birthday.month === month) {
-            const formattedDay =
-              birthday.day < 10 ? `0${birthday.day}` : birthday.day;
             return (
               <Text
                 variant="bodyLarge"
                 style={tw`ml-7 text-black`}
                 key={`${birthday.id}-${index}`}
               >
-                {formattedDay} {birthday.name}
+                {birthday.day} {birthday.name}
               </Text>
             );
           }

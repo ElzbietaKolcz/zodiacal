@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import tw from "twrnc";
 import { createClient } from "@supabase/supabase-js";
 import Morning from "../../components/skinCare/routines/Morning";
@@ -30,14 +30,16 @@ const Routines = () => {
     };
 
     fetchCosmetics();
-  }, []); 
+  }, []);
 
   return (
     <ScrollView style={tw` bg-white h-full w-full`}>
-      <Morning />
-      <Exfoliation />
-      <Moisturizing />
-      <Reconstruction />
+
+        <Morning />
+        <Exfoliation />
+        <Moisturizing />
+        <Reconstruction />
+
     </ScrollView>
   );
 };

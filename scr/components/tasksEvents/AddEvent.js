@@ -17,19 +17,19 @@ import * as yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../../features/eventSlice";
-import { currentYear, currentMonth, currentWeek } from "../../../variables";
+import { currentYear, currentMonth, currentWeek, currentDay } from "../../../variables";
 
 const AddEvent = () => {
   const [inputday, setInputDay] = useState("");
 
   const [inputName, setInputName] = useState("");
   const [checked, setChecked] = useState(false);
-  const currentMonthTask = useSelector((state) => state.currentMonth);
-  const user = auth.currentUser;
+  const currentMonthEvent = useSelector((state) => state.currentMonth);
 
   const [eventsUser, setEvents] = useState([]);
 
   const dispatch = useDispatch();
+  const user = auth.currentUser;
 
   const validationSchema = yup.object().shape({
     day: yup
@@ -42,7 +42,7 @@ const AddEvent = () => {
     name: yup
       .string()
       .min(2, "Too short")
-      .max(20, "Too long")
+      .max(200, "Too long")
       .required("Required"),
   });
 
@@ -52,27 +52,31 @@ const AddEvent = () => {
         const userId = user.uid;
         const userEventsCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events`,
+          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
         );
-
+  
         const newUserEventData = {
           name: name,
           day: parseInt(day, 10),
           state: checked,
           tag: "event",
-          month: currentMonth,
         };
-
-        if (currentMonthTask) {
-          newUserTaskData.month = currentMonthTask;
+  
+        if (currentMonthEvent) {
+          newUserEventData.month = currentMonthEvent;
         }
-
+  
+        // Dispatch the addEvent action
         dispatch(addEvent(newUserEventData));
+  
+        // Save to the database
         const docRef = await addDoc(userEventsCollectionRef, newUserEventData);
-
+  
         setInputName("");
         setInputDay("");
-
+  
+        // No need to update local state here
+  
         fetchData(userEventsCollectionRef);
       }
     } catch (error) {
@@ -82,6 +86,7 @@ const AddEvent = () => {
       );
     }
   };
+  
 
   const fetchData = async (collectionRef) => {
     try {
@@ -104,7 +109,7 @@ const AddEvent = () => {
       const userId = user.uid;
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
       );
 
       fetchData(userEventsCollectionRef);

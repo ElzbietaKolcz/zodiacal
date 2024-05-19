@@ -17,7 +17,7 @@ import * as yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../../features/taskSlice";
-import { currentYear, currentMonth, currentWeek } from "../../../variables";
+import { currentYear, currentMonth, currentWeek, currentDay } from "../../../variables";
 
 const AddTask = () => {
   const [inputday, setInputDay] = useState("");
@@ -42,7 +42,7 @@ const AddTask = () => {
     name: yup
       .string()
       .min(2, "Too short")
-      .max(20, "Too long")
+      .max(200, "Too long")
       .required("Required"),
   });
 
@@ -52,29 +52,32 @@ const AddTask = () => {
         const userId = user.uid;
         const userTasksCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks`,
+          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks/${currentDay}`,
         );
-
+  
         const newUserTaskData = {
           name: name,
           day: parseInt(day, 10),
           state: checked,
           tag: "task",
-          month: currentMonth,
         };
-
+  
         if (currentMonthTask) {
           newUserTaskData.month = currentMonthTask;
         }
-
+  
+        // Dispatch the addTask action
         dispatch(addTask(newUserTaskData));
+  
+        // Save to the database
         const docRef = await addDoc(userTasksCollectionRef, newUserTaskData);
-
+  
         setInputName("");
         setInputDay("");
-
+  
+        // No need to update local state here
+  
         fetchData(userTasksCollectionRef);
-        setTasks([...tasksUser, newUserTaskData]);
       }
     } catch (error) {
       console.error(
@@ -83,6 +86,7 @@ const AddTask = () => {
       );
     }
   };
+  
 
   const fetchData = async (collectionRef) => {
     try {
@@ -105,7 +109,7 @@ const AddTask = () => {
       const userId = user.uid;
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks/${currentDay}`,
       );
 
       fetchData(userTasksCollectionRef);
