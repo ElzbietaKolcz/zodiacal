@@ -23,6 +23,7 @@ import * as yup from "yup";
 const SignUp = ({ navigation }) => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -124,50 +125,87 @@ const SignUp = ({ navigation }) => {
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
+                    textColor="#535353"
+                    underlineColor="#535353"
+                    activeUnderlineColor="#a21caf"
                     label="Username"
                     value={values.username}
                     onChangeText={handleChange("username")}
-                    left={<TextInput.Icon icon="account-outline" />}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    left={
+                      <TextInput.Icon
+                        icon="account-outline"
+                        color={isFocused ? "#a21caf" : "#535353"}
+                      />
+                    }
                     accessibilityLabel="Username"
                   />
                   {errors.username ? (
-                    <Text style={tw`text-red-500`}>{errors.username}</Text>
+                    <Text style={tw`text-red-500 font-semibold`}>
+                      {errors.username}
+                    </Text>
                   ) : null}
                 </View>
 
                 {/* Email input */}
                 <View style={tw`w-full`}>
                   <TextInput
-                    style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
+                    style={tw`bg-fuchsia-100/90 rounded-lg my-2`}
+                    textColor="#535353"
+                    underlineColor="#535353"
+                    activeUnderlineColor="#a21caf"
                     label="Email"
                     value={values.email}
                     onChangeText={handleChange("email")}
-                    left={<TextInput.Icon icon="email-outline" />}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    left={
+                      <TextInput.Icon
+                        icon="email-outline"
+                        color={isFocused ? "#a21caf" : "#535353"}
+                      />
+                    }
                     accessibilityLabel="Email"
                   />
                   {errors.email ? (
-                    <Text style={tw`text-red-500`}>{errors.email}</Text>
+                    <Text style={tw`text-red-500 font-semibold`}>
+                      {errors.email}
+                    </Text>
                   ) : null}
                 </View>
                 <View style={tw`w-full`}>
                   {/* Password input */}
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
+                    textColor="#535353"
+                    underlineColor="#535353"
+                    activeUnderlineColor="#a21caf"
                     label="Password"
                     value={values.password}
                     onChangeText={handleChange("password")}
                     secureTextEntry={!isPasswordVisible}
-                    left={<TextInput.Icon icon="lock-outline" />}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    left={
+                      <TextInput.Icon
+                        icon="lock-outline"
+                        color={isFocused ? "#a21caf" : "#535353"}
+                      />
+                    }
                     right={
                       <TextInput.Icon
                         icon={isPasswordVisible ? "eye-off" : "eye"}
                         onPress={togglePasswordVisibility}
+                        color={isFocused ? "#a21caf" : "#535353"}
                       />
                     }
                     accessibilityLabel="Password"
                   />
                   {errors.password ? (
-                    <Text style={tw`text-red-500`}>{errors.password}</Text>
+                    <Text style={tw`text-red-500 font-semibold`}>
+                      {errors.password}
+                    </Text>
                   ) : null}
                 </View>
 

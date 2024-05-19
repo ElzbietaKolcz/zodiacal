@@ -159,6 +159,8 @@ const InputGoalWeek = ({ index }) => {
       <View style={tw`rounded-lg`}>
         <Checkbox
           status={checked ? "checked" : "unchecked"}
+          uncheckedColor="#535353"
+          color="#8D03A5"
           onPress={handleCheckboxPress}
           testID="checkbox"
         />
@@ -174,10 +176,12 @@ const InputGoalWeek = ({ index }) => {
           </Text>
         ) : (
           <TextInput
-            style={tw`bg-fuchsia-50 text-black rounded-lg mx-1`}
+            style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+            textColor="#535353"
+            underlineColor="black"
+            activeUnderlineColor="#a21caf"
             onChangeText={handleInputChange}
             value={goal}
-            activeUnderlineColor="#a21caf"
             label="Goals"
             editable={true}
             testID="Goals"

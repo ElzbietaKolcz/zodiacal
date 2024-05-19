@@ -161,6 +161,8 @@ const InputGoalMonth = ({ index }) => {
       <View style={tw`rounded-lg`}>
         <Checkbox
           status={checked ? "checked" : "unchecked"}
+          uncheckedColor="#535353"
+          color="#8D03A5"
           onPress={handleCheckboxPress}
           testID="checkbox"
         />
@@ -168,18 +170,18 @@ const InputGoalMonth = ({ index }) => {
       <View style={tw`flex-grow m-1 ml-2`}>
         {checked ? (
           <Text
-            style={[
-              tw`bg-fuchsia-50 text-black rounded-lg mx-1 text-base line-through p-4`,
-            ]}
+            style={[tw` text-black rounded-lg mx-1 text-base line-through p-4`]}
           >
             {goal}
           </Text>
         ) : (
           <TextInput
-            style={tw`bg-fuchsia-50 text-black rounded-lg mx-1`}
+            style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+            textColor="#535353"
+            underlineColor="black"
+            activeUnderlineColor="#a21caf"
             onChangeText={handleInputChange}
             value={goal}
-            activeUnderlineColor="#a21caf"
             label="Goals"
             editable={true}
             testID="Goals"

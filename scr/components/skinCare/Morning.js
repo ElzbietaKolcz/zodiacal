@@ -86,30 +86,30 @@ const Morning = () => {
 
       <View style={tw`flex items-center justify-center rounded-lg`}>
         <DataTable
-          style={tw` border rounded-lg flex-wrap border-gray-300 w-11/12`}
+          style={tw` border rounded-lg flex-wrap border-black w-11/12`}
         >
           <DataTable.Header>
             <DataTable.Title
               style={[tw`flex-3`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm bold`}
+              textStyle={tw`text-black text-sm font-bold`}
             >
               Name
             </DataTable.Title>
             <DataTable.Title
               style={[tw`flex-2`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm bold`}
+              textStyle={tw`text-black text-sm font-bold`}
             >
               Brand
             </DataTable.Title>
             <DataTable.Title
               style={[tw`flex-2`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm bold`}
+              textStyle={tw`text-black text-sm font-bold`}
             >
               Expiration
             </DataTable.Title>
             <DataTable.Title
               style={[tw`flex-1`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm bold`}
+              textStyle={tw`text-black text-sm font-bold`}
             >
               Delete
             </DataTable.Title>
@@ -118,28 +118,29 @@ const Morning = () => {
           <DataTable.Row key={selectedOption ? selectedOption.id : ""}>
             <DataTable.Cell
               style={[tw`flex-3`, { flexShrink: 1 }]}
-              textStyle={tw`text-black whitespace-normal break-words text-sm bold`}
+              textStyle={tw`text-black whitespace-normal break-words text-sm `}
             >
               {selectedOption ? selectedOption.product_name : ""}
             </DataTable.Cell>
             <DataTable.Cell
               style={[tw`flex-2 `, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm bold`}
+              textStyle={tw`text-black text-sm `}
             >
               {selectedOption ? selectedOption.brand : ""}
             </DataTable.Cell>
             <DataTable.Cell
               style={[tw`flex-2`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm bold`}
+              textStyle={tw`text-black text-sm `}
             >
               {selectedOption ? selectedOption.expiration_date : ""}
             </DataTable.Cell>
             <DataTable.Cell
               style={[tw`flex-1`, { flexBasis: 0 }]}
-              textStyle={tw`text-black text-sm bold`}
+              textStyle={tw`text-black text-sm `}
             >
               {selectedOption && (
                 <IconButton
+                  iconColor="red"
                   icon="delete"
                   onPress={() => handleDelete(selectedOption.id)}
                 />

@@ -75,12 +75,20 @@ const TableTask = () => {
       </Text>
 
       <View style={tw`flex items-center justify-center rounded-lg`}>
-        <DataTable style={tw`border rounded-lg border-gray-300 w-5/6`}>
+        <DataTable style={tw`border rounded-lg border-black w-5/6`}>
           <DataTable.Header>
-            <DataTable.Title style={tw`text-black`}>Day</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Name</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>State</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Delete</DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Day
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Name
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              State
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Delete
+            </DataTable.Title>
           </DataTable.Header>
 
           {tasks &&
@@ -96,7 +104,8 @@ const TableTask = () => {
                   <DataTable.Cell>
                     <Text
                       variant="bodyLarge"
-                      style={tw`text-black`}
+                      style={tw`justify-center`}
+                      textStyle={tw`text-black text-center`}
                     >
                       {formattedDay}
                     </Text>
@@ -105,7 +114,8 @@ const TableTask = () => {
                   <DataTable.Cell>
                     <Text
                       variant="bodyLarge"
-                      style={tw`text-black`}
+                      style={tw`justify-center`}
+                      textStyle={tw`text-black text-center`}
                     >
                       {task.name}
                     </Text>
@@ -114,7 +124,8 @@ const TableTask = () => {
                   <DataTable.Cell>
                     <Text
                       variant="bodyLarge"
-                      style={tw`text-black`}
+                      style={tw`justify-center`}
+                      textStyle={tw`text-black text-center`}
                     >
                       {task.state ? "done" : "undone"}
                     </Text>
@@ -123,6 +134,8 @@ const TableTask = () => {
                   <DataTable.Cell>
                     <IconButton
                       icon="delete"
+                      iconColor="red"
+                      style={tw`justify-center`}
                       onPress={() => handleDelete(task.id)}
                       testID={`delete-button-${task.id}`}
                     />

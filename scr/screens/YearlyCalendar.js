@@ -190,14 +190,17 @@ const YearlyCalendar = () => {
               <View style={tw`flex-row flex-wrap mt-6`}>
                 <View style={tw`flex-grow mb-2 ml-2`}>
                   <TextInput
-                    style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                    style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+                    textColor="#535353"
+                    underlineColor="black"
+                    activeUnderlineColor="#a21caf"
                     label="Day"
                     value={values.day}
                     onChangeText={handleChange("day")}
-                    activeUnderlineColor="#a21caf"
                     accessibilityLabel="Day"
                   />
                   <HelperText
+                    style={tw`text-red-500 font-semibold`}
                     type="error"
                     visible={errors.day ? true : false}
                   >
@@ -207,14 +210,17 @@ const YearlyCalendar = () => {
 
                 <View style={tw`flex-grow mb-2`}>
                   <TextInput
-                    style={tw`bg-fuchsia-50 rounded-lg mx-1  `}
+                    style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+                    textColor="#535353"
+                    underlineColor="black"
+                    activeUnderlineColor="#a21caf"
                     label="Month"
                     value={values.month}
                     onChangeText={handleChange("month")}
-                    activeUnderlineColor="#a21caf"
                     accessibilityLabel="Month"
                   />
                   <HelperText
+                    style={tw`text-red-500 font-semibold`}
                     type="error"
                     visible={errors.month ? true : false}
                   >
@@ -224,14 +230,17 @@ const YearlyCalendar = () => {
 
                 <View style={tw`flex-grow mb-2`}>
                   <TextInput
-                    style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                    style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+                    textColor="#535353"
+                    underlineColor="black"
+                    activeUnderlineColor="#a21caf"
                     label="Name"
                     value={values.name}
                     onChangeText={handleChange("name")}
-                    activeUnderlineColor="#a21caf"
                     accessibilityLabel="Name"
                   />
                   <HelperText
+                    style={tw`text-red-500 font-semibold`}
                     type="error"
                     visible={errors.name ? true : false}
                   >

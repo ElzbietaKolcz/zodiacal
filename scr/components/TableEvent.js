@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
 import { useDispatch } from "react-redux";
-import { removeEvent } from "../features/eventSlice"; 
+import { removeEvent } from "../features/eventSlice";
 import { db, auth } from "../../firebase";
 import {
   collection,
@@ -75,12 +75,20 @@ const TableEvent = () => {
       </Text>
 
       <View style={tw`flex items-center justify-center rounded-lg`}>
-        <DataTable style={tw`border rounded-lg border-gray-300 w-5/6`}>
+        <DataTable style={tw`border rounded-lg border-black w-5/6`}>
           <DataTable.Header>
-            <DataTable.Title style={tw`text-black`}>Day</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Name</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>State</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Delete</DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Day
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Name
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              State
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Delete
+            </DataTable.Title>
           </DataTable.Header>
 
           {events &&
@@ -96,7 +104,8 @@ const TableEvent = () => {
                   <DataTable.Cell>
                     <Text
                       variant="bodyLarge"
-                      style={tw`text-black`}
+                      style={tw`justify-center`}
+                      textStyle={tw`text-black text-center`}
                     >
                       {formattedDay}
                     </Text>
@@ -105,7 +114,8 @@ const TableEvent = () => {
                   <DataTable.Cell>
                     <Text
                       variant="bodyLarge"
-                      style={tw`text-black`}
+                      style={tw`justify-center`}
+                      textStyle={tw`text-black text-center`}
                     >
                       {event.name}
                     </Text>
@@ -114,7 +124,8 @@ const TableEvent = () => {
                   <DataTable.Cell>
                     <Text
                       variant="bodyLarge"
-                      style={tw`text-black`}
+                      style={tw`justify-center`}
+                      textStyle={tw`text-black text-center`}
                     >
                       {event.state ? "done" : "undone"}
                     </Text>
@@ -123,6 +134,8 @@ const TableEvent = () => {
                   <DataTable.Cell>
                     <IconButton
                       icon="delete"
+                      iconColor="red"
+                      style={tw`justify-center`}
                       onPress={() => handleDeleteEvent(event.id)}
                       testID={`delete-button-${event.id}`}
                     />

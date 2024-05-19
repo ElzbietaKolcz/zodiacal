@@ -32,6 +32,7 @@ const SignIn = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [disableLoginButton, setDisableLoginButton] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
+  const [isFocused, setIsFocused] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -124,11 +125,21 @@ const SignIn = ({ navigation }) => {
               <View style={tw`flex items-center mx-8 `}>
                 <View style={tw`w-full`}>
                   <TextInput
-                    style={tw`bg-fuchsia-100/90 text-black rounded-lg my-2`}
+                    style={tw`bg-fuchsia-100/90 rounded-lg my-2`}
+                    textColor="#535353"
+                    underlineColor="#535353"
+                    activeUnderlineColor="#a21caf"
                     label="Email"
                     value={values.email}
                     onChangeText={handleChange("email")}
-                    left={<TextInput.Icon icon="email-outline" />}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    left={
+                      <TextInput.Icon
+                        icon="email-outline"
+                        color={isFocused ? "#a21caf" : "#535353"}
+                      />
+                    }
                     accessibilityLabel="Email"
                   />
                 </View>
@@ -136,15 +147,26 @@ const SignIn = ({ navigation }) => {
                 <View style={tw`w-full`}>
                   <TextInput
                     style={tw`bg-fuchsia-100/80 rounded-lg my-2`}
+                    textColor="#535353"
+                    underlineColor="#535353"
+                    activeUnderlineColor="#a21caf"
                     label="Password"
                     value={values.password}
                     onChangeText={handleChange("password")}
                     secureTextEntry={!isPasswordVisible}
-                    left={<TextInput.Icon icon="lock-outline" />}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    left={
+                      <TextInput.Icon
+                        icon="lock-outline"
+                        color={isFocused ? "#a21caf" : "#535353"}
+                      />
+                    }
                     right={
                       <TextInput.Icon
                         icon={isPasswordVisible ? "eye-off" : "eye"}
                         onPress={togglePasswordVisibility}
+                        color={isFocused ? "#a21caf" : "#535353"}
                       />
                     }
                     accessibilityLabel="Password"
@@ -170,7 +192,9 @@ const SignIn = ({ navigation }) => {
                     </Text>
                   </Pressable>
                   <View>
-                    <Text style={[tw`text-red-500 text-center my-2`]}>
+                    <Text
+                      style={[tw`text-red-500 text-center my-2 font-semibold`]}
+                    >
                       {error}
                     </Text>
                   </View>

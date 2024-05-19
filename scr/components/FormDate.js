@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-
 const FormDate = () => {
   const dispatch = useDispatch();
   const user = auth.currentUser;
@@ -85,7 +84,9 @@ const FormDate = () => {
 
     return (
       <View style={tw`w-full items-center justify-center`}>
-        <Text style={tw`text center `}>Zodiac sign: {sign}</Text>
+        <Text style={tw`text center text-black text-base`}>
+          Zodiac sign: {sign}
+        </Text>
       </View>
     );
   };
@@ -108,14 +109,17 @@ const FormDate = () => {
           <View style={tw`flex-row flex-wrap mt-5`}>
             <View style={tw`mb-4 w-40`}>
               <TextInput
-                style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+                textColor="#535353"
+                underlineColor="black"
+                activeUnderlineColor="#a21caf"
                 label="Day"
                 value={values.day}
                 onChangeText={handleChange("day")}
-                activeUnderlineColor="#a21caf"
                 accessibilityLabel="Day"
               />
               <HelperText
+                style={tw`text-red-500 font-semibold`}
                 type="error"
                 visible={errors.day ? true : false}
               >
@@ -125,14 +129,17 @@ const FormDate = () => {
 
             <View style={tw`mb-4 w-40`}>
               <TextInput
-                style={tw`bg-fuchsia-50 rounded-lg mx-1  `}
+                style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+                textColor="#535353"
+                underlineColor="black"
+                activeUnderlineColor="#a21caf"
                 label="Month"
                 value={values.month}
                 onChangeText={handleChange("month")}
-                activeUnderlineColor="#a21caf"
                 accessibilityLabel="Month"
               />
               <HelperText
+                style={tw`text-red-500 font-semibold`}
                 type="error"
                 visible={errors.month ? true : false}
               >

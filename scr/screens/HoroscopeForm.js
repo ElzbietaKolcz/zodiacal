@@ -28,7 +28,10 @@ const Horoscope = () => {
         </View>
 
         <FormMenu />
-        <Text style={tw`text-lg text-black mt-4 `}> ---- Or ---- </Text>
+        <Text style={tw`text-lg text-black font-semibold mt-4 `}>
+          {" "}
+          ---- Or ----{" "}
+        </Text>
 
         <View style={tw`w-full`}>
           <Text

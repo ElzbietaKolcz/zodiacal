@@ -70,7 +70,7 @@ const EditBirthdays = () => {
   return (
     <ScrollView style={tw`bg-white h-full mb-8 mt-2`}>
       <Text
-        style={tw`m-4 text-black`}
+        style={tw`m-5 text-black `}
         variant="titleLarge"
         testID="title"
       >
@@ -78,12 +78,20 @@ const EditBirthdays = () => {
       </Text>
 
       <View style={tw`flex items-center justify-center rounded-lg`}>
-        <DataTable style={tw`border rounded-lg border-gray-300 w-5/6`}>
+        <DataTable style={tw`border rounded-lg border-black w-5/6`}>
           <DataTable.Header>
-            <DataTable.Title style={tw`text-black`}>Day</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Month</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Name</DataTable.Title>
-            <DataTable.Title style={tw`text-black`}>Delete</DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Day
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Month
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Name
+            </DataTable.Title>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
+              Delete
+            </DataTable.Title>
           </DataTable.Header>
 
           {userBirthdays &&
@@ -96,37 +104,25 @@ const EditBirthdays = () => {
               return (
                 <DataTable.Row
                   key={birthday.id}
-                  style={tw`border-t border-gray-300`}
+                  style={tw`border-t border-black`}
                   testID="birthday-row"
                 >
-                  <DataTable.Cell>
-                    <Text
-                      variant="bodyLarge"
-                      style={tw`text-black`}
-                    >
-                      {formattedDay}
-                    </Text>
+                  <DataTable.Cell textStyle={tw`text-black text-sm `}>
+                    {formattedDay}
                   </DataTable.Cell>
-                  <DataTable.Cell>
-                    <Text
-                      variant="bodyLarge"
-                      style={tw`text-black`}
-                    >
-                      {formattedMonth}
-                    </Text>
+
+                  <DataTable.Cell textStyle={tw`text-black text-sm `}>
+                    {formattedMonth}
+                  </DataTable.Cell>
+
+                  <DataTable.Cell textStyle={tw`text-black text-sm `}>
+                    {birthday.name}
                   </DataTable.Cell>
 
                   <DataTable.Cell>
-                    <Text
-                      variant="bodyLarge"
-                      style={tw`text-black`}
-                    >
-                      {birthday.name}
-                    </Text>
-                  </DataTable.Cell>
-                  <DataTable.Cell>
                     <IconButton
                       icon="delete"
+                      iconColor="red"
                       onPress={() => handleDelete(birthday.id)}
                       testID={`delete-button-${birthday.id}`}
                     />

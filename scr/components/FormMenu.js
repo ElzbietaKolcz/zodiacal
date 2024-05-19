@@ -8,7 +8,6 @@ import tw from "twrnc";
 import { getDoc, updateDoc, doc } from "@firebase/firestore";
 import { useDispatch } from "react-redux";
 
-
 import { Text, Menu, Button, FAB } from "react-native-paper";
 
 const ZodiacSigns = [
@@ -27,7 +26,6 @@ const ZodiacSigns = [
 ];
 
 const FormMenu = () => {
-
   const dispatch = useDispatch();
   const user = auth.currentUser;
 
@@ -72,12 +70,12 @@ const FormMenu = () => {
         visible={visible}
         onDismiss={() => setVisible(false)}
         anchor={
-          <View style={tw`font-bold text-black text-lg mx-1`}>
+          <View style={tw`font-bold text-lg mx-1`}>
             <Button
               onPress={() => setVisible(true)}
-              style={tw`bg-fuchsia-50 text-left text-black rounded-lg w-77 p-2 text-lg font-bold mx-4  mx-1`}
+              style={tw`bg-fuchsia-100 text-left rounded-lg w-77 p-2 text-lg font-bold mx-4  mx-1`}
             >
-              <Text style={tw`text-lg text-left`}>
+              <Text style={tw`text-lg text-black text-left`}>
                 {sign === "" ? "Select zodiac sign" : sign}
               </Text>
             </Button>

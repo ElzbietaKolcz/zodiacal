@@ -82,7 +82,7 @@ const Summary = () => {
         <PieChart
           style={{ height: 280 }}
           valueAccessor={({ item }) => item.amount}
-          data={dataWithPercentage} 
+          data={dataWithPercentage}
           spacing={0}
           outerRadius={"95%"}
         >
@@ -91,12 +91,12 @@ const Summary = () => {
       </View>
 
       <View style={tw`flex p-8  items-center justify-center rounded-lg`}>
-        <DataTable style={tw`border rounded-lg border-gray-300 w-5/6`}>
+        <DataTable style={tw`border rounded-lg border-black w-5/6`}>
           <DataTable.Header>
-            <DataTable.Title textStyle={tw`text-black text-sm bold`}>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
               Type of care
             </DataTable.Title>
-            <DataTable.Title textStyle={tw`text-black text-sm bold`}>
+            <DataTable.Title textStyle={tw`text-black text-sm font-bold`}>
               Number of occurrences
             </DataTable.Title>
           </DataTable.Header>

@@ -17,10 +17,9 @@ import * as yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../features/taskSlice";
-import { currentYear, currentMonth, currentWeek } from "../../variables"; 
+import { currentYear, currentMonth, currentWeek } from "../../variables";
 
 const AddTask = () => {
-
   const [inputday, setInputDay] = useState("");
 
   const [inputName, setInputName] = useState("");
@@ -149,14 +148,17 @@ const AddTask = () => {
           <View style={tw`flex-row flex-wrap mt-2`}>
             <View style={tw`w-22 mb-2 ml-2`}>
               <TextInput
-                style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+                textColor="#535353"
+                underlineColor="black"
+                activeUnderlineColor="#a21caf"
                 label="Day"
                 value={values.day}
                 onChangeText={handleChange("day")}
-                activeUnderlineColor="#a21caf"
                 accessibilityLabel="Day"
               />
               <HelperText
+                style={tw`text-red-500 font-semibold`}
                 type="error"
                 visible={errors.day ? true : false}
               >
@@ -166,14 +168,17 @@ const AddTask = () => {
 
             <View style={tw` w-55 mb-2`}>
               <TextInput
-                style={tw`bg-fuchsia-50 rounded-lg mx-1 `}
+                style={tw`bg-fuchsia-50 rounded-lg mx-1`}
+                textColor="#535353"
+                underlineColor="black"
+                activeUnderlineColor="#a21caf"
                 label="Name"
                 value={values.name}
                 onChangeText={handleChange("name")}
-                activeUnderlineColor="#a21caf"
                 accessibilityLabel="Name"
               />
               <HelperText
+                style={tw`text-red-500 font-semibold`}
                 type="error"
                 visible={errors.name ? true : false}
               >
