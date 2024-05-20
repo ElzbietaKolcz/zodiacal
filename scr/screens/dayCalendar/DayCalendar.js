@@ -12,12 +12,12 @@ const DayCalendar = () => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = tw`bg-white mx-8 my-10 rounded-lg`;
+  const containerStyle = tw`bg-white mx-8 my-10 h-full rounded-lg`;
 
   return (
     <ScrollView style={tw` bg-white h-full w-full`}>
       <PaperProvider>
-        <View>
+        <View  style={tw` mb-8`}>
           <CustomAgenda />
 
           <Portal>
@@ -26,10 +26,11 @@ const DayCalendar = () => {
               onDismiss={hideModal}
               contentContainerStyle={containerStyle}
             >
+              
               <EditTaskEvent />
             </Modal>
           </Portal>
-          <View style={tw` mt-2`}>
+          <View style={tw` mt-6`}>
             <View style={tw`mt-2 w-full flex-row justify-between items-center`}>
               <Text
                 style={tw`ml-4 text-black`}

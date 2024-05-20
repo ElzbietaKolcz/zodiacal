@@ -3,13 +3,12 @@ import { View } from "react-native";
 import { IconButton, Text, DataTable } from "react-native-paper";
 import tw from "twrnc";
 import { useDispatch, useSelector } from "react-redux";
-
 import { addEvent, removeEvent, setEvents } from "../../features/eventSlice";
 import { db, auth } from "../../../firebase";
 import {
   collection,
   deleteDoc,
-  getDocs,
+  onSnapshot,
   query,
   orderBy,
   doc,
@@ -28,33 +27,38 @@ const TableEvent = () => {
 
   const [userEvents, setUserEvents] = useState([]);
 
-  const fetchData = async () => {
-    try {
+  useEffect(() => {
+    if (user) {
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`,
+
       );
       const q = query(userEventsCollectionRef, orderBy("day"));
-      const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      console.log("Pobrane dane:", data);
-      dispatch(setEvents(data));
-      setUserEvents(data); // ustawiamy dane lokalnie
-    } catch (error) {
-      console.error("Błąd podczas pobierania danych:", error.message);
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        dispatch(setEvents(data));
+        setUserEvents(data);
+      });
+
+      // Cleanup subscription on unmount
+      return () => unsubscribe();
     }
-  };
+  }, [user, dispatch]);
 
   const handleDelete = async (eventId) => {
     try {
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`,
+
       );
       await deleteDoc(doc(userEventsCollectionRef, eventId));
+      // Aktualizujemy stan Redux, Firestore zaktualizuje stan lokalny automatycznie przez onSnapshot
       dispatch(removeEvent(eventId));
       console.log(`Event with ID ${eventId} deleted successfully.`);
     } catch (error) {
@@ -62,14 +66,8 @@ const TableEvent = () => {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, []);
-
   return (
-    <View style={tw`bg-white h-full mb-8 mt-2`}>
+    <View style={tw`bg-white mb-2 mt-2`}>
       <Text style={tw`m-4 text-black`} variant="titleLarge" testID="title">
         List of Events
       </Text>
@@ -95,7 +93,6 @@ const TableEvent = () => {
             const formattedDay =
               event.day < 10 ? `0${event.day}` : event.day;
             const eventName = event.name ? event.name : "";
-            console.log("Events:", event.name);
             return (
               <DataTable.Row
                 key={event.id}

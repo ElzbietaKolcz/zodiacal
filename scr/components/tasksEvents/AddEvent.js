@@ -52,7 +52,7 @@ const AddEvent = () => {
         const userId = user.uid;
         const userEventsCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
+          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`,
         );
   
         const newUserEventData = {
@@ -109,7 +109,7 @@ const AddEvent = () => {
       const userId = user.uid;
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/events/${currentDay}`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`,
       );
 
       fetchData(userEventsCollectionRef);

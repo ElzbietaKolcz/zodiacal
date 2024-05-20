@@ -8,7 +8,7 @@ import { db, auth } from "../../../firebase";
 import {
   collection,
   deleteDoc,
-  getDocs,
+  onSnapshot,
   query,
   orderBy,
   doc,
@@ -27,48 +27,47 @@ const TableTask = () => {
 
   const [userTasks, setUserTasks] = useState([]);
 
-  const fetchData = async () => {
-    try {
+  useEffect(() => {
+    if (user) {
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks/${currentDay}`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
+
       );
       const q = query(userTasksCollectionRef, orderBy("day"));
-      const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      dispatch(setTasks(data));
-      setUserTasks(data);
-    } catch (error) {
-      console.error("Błąd podczas pobierania danych:", error.message);
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        dispatch(setTasks(data));
+        setUserTasks(data);
+      });
+
+      // Cleanup subscription on unmount
+      return () => unsubscribe();
     }
-  };
+  }, [user, dispatch]);
 
   const handleDelete = async (taskId) => {
     try {
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks/${currentDay}`,
+        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
+
       );
       await deleteDoc(doc(userTasksCollectionRef, taskId));
+      // Aktualizujemy stan Redux, Firestore zaktualizuje stan lokalny automatycznie przez onSnapshot
       dispatch(removeTask(taskId));
-      setUserTasks(userTasks.filter(task => task.id !== taskId)); // Aktualizujemy stan lokalny usuwając zadanie
       console.log(`Task with ID ${taskId} deleted successfully.`);
     } catch (error) {
       console.error("Error deleting task:", error.message);
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, []);
-
   return (
-    <View style={tw`bg-white h-full mb-8 mt-2`}>
+    <View style={tw`bg-white mb-2 mt-2`}>
       <Text style={tw`m-4 text-black`} variant="titleLarge" testID="title">
         List of Tasks
       </Text>
