@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
-import { IconButton, Text, DataTable } from "react-native-paper";
+import { IconButton, Text, DataTable,DefaultTheme } from "react-native-paper";
 import tw from "twrnc";
 import { useDispatch, useSelector } from "react-redux";
 import { addEvent, removeEvent, setEvents } from "../../features/eventSlice";
@@ -25,8 +25,19 @@ const TableEvent = () => {
   const user = auth.currentUser;
   const userId = user?.uid;
 
-  const [userEvents, setUserEvents] = useState([]);
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: 'black', // kolor przycisków
+      text: 'black', // kolor tekstu
+    },
+  };
+  
 
+  const [userEvents, setUserEvents] = useState([]);
+  const [page, setPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
   useEffect(() => {
     if (user) {
       const userEventsCollectionRef = collection(
@@ -68,12 +79,12 @@ const TableEvent = () => {
 
   return (
     <View style={tw`bg-white mb-2 mt-2`}>
-      <Text style={tw`m-4 text-black`} variant="titleLarge" testID="title">
+      <Text style={tw`m-2 text-black`} variant="titleLarge" testID="title">
         List of Events
       </Text>
 
       <View style={tw`flex items-center justify-center rounded-lg`}>
-        <DataTable style={tw`border rounded-lg border-black w-5/6`}>
+        <DataTable style={tw`border rounded-lg border-black w-full`}>
           <DataTable.Header>
             <DataTable.Title style={tw`flex-1`}>
               <Text style={tw`text-black text-sm font-bold`}>Day</Text>
@@ -123,6 +134,22 @@ const TableEvent = () => {
               </DataTable.Row>
             );
           })}
+                    <DataTable.Pagination
+            page={page}
+            numberOfPages={Math.ceil(userEvents.length / itemsPerPage)}
+            onPageChange={(page) => setPage(page)}
+            label={`Showing ${(page * itemsPerPage) + 1}-${Math.min((page + 1) * itemsPerPage, userEvents.length)} of ${userEvents.length}`}
+            numberOfItemsPerPage={itemsPerPage}
+            onItemsPerPageChange={setItemsPerPage}
+            showFastPaginationControls
+            selectPageDropdownLabel={'Rows per page'}
+            dropdownItemRippleColor="red"
+            selectPageDropdownRippleColor="red"
+            theme={theme}
+            
+          
+        
+          />
         </DataTable>
       </View>
     </View>

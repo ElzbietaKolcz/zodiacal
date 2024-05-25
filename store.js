@@ -5,12 +5,14 @@ import birthdayReducer from "./scr/features/birthdaySlice";
 import taskReducer from "./scr/features/taskSlice";
 import goalReducer from "./scr/features/goalSlice";
 import cosmeticSlice from "./scr/features/cosmeticSlice";
+import eventReducer from "./scr/features/eventSlice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     birthdays: birthdayReducer,
     task: taskReducer,
+    event: eventReducer,
     goals: goalReducer,
     cosmetics: cosmeticSlice,
     [astrologyApi.reducerPath]: astrologyApi.reducer,

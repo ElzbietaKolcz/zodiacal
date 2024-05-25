@@ -10,7 +10,7 @@ import TableEvent from "../../components/tasksEvents/TableEvent";
 
 const EditTaskEvent = () => {
   return (
-    <ScrollView style={tw`bg-white h-full mb-8 mt-2`}>
+    <ScrollView style={tw`bg-white h-full mx-7  relative place-content-center rounded-lg`}>
       <AddTask />
       <TableTask />
       <AddEvent />

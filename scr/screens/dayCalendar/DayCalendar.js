@@ -12,31 +12,27 @@ const DayCalendar = () => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = tw`bg-white mx-8 my-10 h-full rounded-lg`;
+
 
   return (
-    <ScrollView style={tw` bg-white h-full w-full`}>
-      <PaperProvider>
-        <View  style={tw` mb-8`}>
+    <ScrollView style={tw`bg-white w-full flex-1`}>
+      <PaperProvider style={tw`h-full w-full flex-1`}>
+        <View style={tw`h-full`}>
           <CustomAgenda />
 
-          <Portal>
+          <Portal >
             <Modal
               visible={visible}
               onDismiss={hideModal}
-              contentContainerStyle={containerStyle}
+              contentContainerStyle={tw`bg-white mx-6 absolute w-11/12 top-10 rounded-lg `}
             >
-              
               <EditTaskEvent />
             </Modal>
           </Portal>
-          <View style={tw` mt-6`}>
+          <View style={tw`mt-6`}>
             <View style={tw`mt-2 w-full flex-row justify-between items-center`}>
-              <Text
-                style={tw`ml-4 text-black`}
-                variant="titleLarge"
-              >
-                Add new task / event{" "}
+              <Text style={tw`ml-4 text-black`} variant="titleLarge">
+                Add new task / event
               </Text>
               <FAB
                 title="EditTaskEvent"
@@ -50,21 +46,18 @@ const DayCalendar = () => {
               />
             </View>
           </View>
-          <View style={tw`my-2 mx-4 `}>
-            <Text
-              variant="headlineSmall"
-              style={tw`text-black font-bold mt-6 text-2xl`}
-            >
+          <View style={tw`my-2 mx-4 content-end`}>
+            <Text variant="headlineSmall" style={tw`text-black font-bold mt-6 text-2xl`}>
               Goals for this weekend
             </Text>
 
-            <View>
+            {/* <View>
               <View>
                 <InputGoalWeek index={0} />
                 <InputGoalWeek index={1} />
                 <InputGoalWeek index={2} />
               </View>
-            </View>
+            </View> */}
           </View>
         </View>
       </PaperProvider>

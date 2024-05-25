@@ -141,16 +141,16 @@ const AddTask = () => {
         errors,
         isSubmitting,
       }) => (
-        <View style={tw` mt-2`}>
+        <View style={tw` mt-6`}>
           <Text
-            style={tw`my-2 mx-4 text-black`}
+            style={tw`my-2 mx-2 text-black`}
             variant="titleLarge"
             testID="title"
           >
             Add task{" "}
           </Text>
           <View style={tw`flex-row flex-wrap mt-2`}>
-            <View style={tw`w-22 mb-2 ml-2`}>
+            <View style={tw`w-22`}>
               <TextInput
                 style={tw`bg-fuchsia-50 rounded-lg mx-1`}
                 textColor="#535353"

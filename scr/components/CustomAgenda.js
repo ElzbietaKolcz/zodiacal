@@ -69,7 +69,7 @@ const CustomAgenda = () => {
     if (item.tag === "task" || item.tag === "event") {
   
       return (
-        <TouchableOpacity style={tw`flex-row flex items-center text-black rounded-lg flex-1`}>
+        <TouchableOpacity style={tw`flex-row h-1/3 flex items-center text-black rounded-lg flex-1`}>
           <View style={[tw`flex-grow m-1 bg-fuchsia-200 rounded-lg p-2 mx-4 mt-2`]}>
             <Text style={[tw`text-base px-2`, item.tag === "event" && tw`text-red-700 font-semibold`]}>
               {item.name}

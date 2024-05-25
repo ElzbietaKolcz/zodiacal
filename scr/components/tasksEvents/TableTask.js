@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
-import { IconButton, Text, DataTable } from "react-native-paper";
+import { IconButton, Text, DataTable,DefaultTheme } from "react-native-paper";
 import tw from "twrnc";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask, removeTask, setTasks } from "../../features/taskSlice";
@@ -26,13 +26,23 @@ const TableTask = () => {
   const userId = user?.uid;
 
   const [userTasks, setUserTasks] = useState([]);
+  const [page, setPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: 'black', // kolor przycisków
+      text: 'black', // kolor tekstu
+    },
+  };
 
   useEffect(() => {
     if (user) {
       const userTasksCollectionRef = collection(
         db,
         `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
-
       );
       const q = query(userTasksCollectionRef, orderBy("day"));
 
@@ -55,7 +65,6 @@ const TableTask = () => {
       const userTasksCollectionRef = collection(
         db,
         `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
-
       );
       await deleteDoc(doc(userTasksCollectionRef, taskId));
       // Aktualizujemy stan Redux, Firestore zaktualizuje stan lokalny automatycznie przez onSnapshot
@@ -68,12 +77,12 @@ const TableTask = () => {
 
   return (
     <View style={tw`bg-white mb-2 mt-2`}>
-      <Text style={tw`m-4 text-black`} variant="titleLarge" testID="title">
+      <Text style={tw`my-4 text-black`} variant="titleLarge" testID="title">
         List of Tasks
       </Text>
 
-      <View style={tw`flex items-center justify-center rounded-lg`}>
-        <DataTable style={tw`border rounded-lg border-black w-5/6`}>
+      <View style={tw`flex items-center justify-center shrink  rounded-lg `}>
+        <DataTable style={tw`border rounded-lg border-black w-full `}>
           <DataTable.Header>
             <DataTable.Title style={tw`flex-1`}>
               <Text style={tw`text-black text-sm font-bold`}>Day</Text>
@@ -89,40 +98,54 @@ const TableTask = () => {
             </DataTable.Title>
           </DataTable.Header>
 
-          {userTasks && userTasks.map((task) => {
-            const formattedDay =
-              task.day < 10 ? `0${task.day}` : task.day;
-            const taskName = task.name ? task.name : "";
-            return (
-              <DataTable.Row
-                key={task.id}
-                style={tw`border-t border-gray-300`}
-                testID="task-row"
-              >
-                <DataTable.Cell textStyle={tw`text-black text-center`}>
-                  {formattedDay}
-                </DataTable.Cell>
+          {userTasks && userTasks
+            .slice(page * itemsPerPage, (page + 1) * itemsPerPage)
+            .map((task) => {
+              const formattedDay =
+                task.day < 10 ? `0${task.day}` : task.day;
+              const taskName = task.name ? task.name : "";
+              return (
+                <DataTable.Row
+                  key={task.id}
+                  style={tw`border-t border-gray-300`}
+                  testID="task-row"
+                >
+                  <DataTable.Cell textStyle={tw`text-black text-center`}>
+                    {formattedDay}
+                  </DataTable.Cell>
 
-                <DataTable.Cell textStyle={tw`text-black text-center`}>
-                  {taskName}
-                </DataTable.Cell>
+                  <DataTable.Cell textStyle={tw`text-black text-center`}>
+                    {taskName}
+                  </DataTable.Cell>
 
-                <DataTable.Cell textStyle={tw`text-black text-center`}>
-                  {task.state ? "done" : "undone"}
-                </DataTable.Cell>
+                  <DataTable.Cell textStyle={tw`text-black text-center`}>
+                    {task.state ? "done" : "undone"}
+                  </DataTable.Cell>
 
-                <DataTable.Cell>
-                  <IconButton
-                    icon="delete"
-                    iconColor="red"
-                    style={tw`justify-center`}
-                    onPress={() => handleDelete(task.id)}
-                    testID={`delete-button-${task.id}`}
-                  />
-                </DataTable.Cell>
-              </DataTable.Row>
-            );
-          })}
+                  <DataTable.Cell>
+                    <IconButton
+                      icon="delete"
+                      iconColor="red"
+                      style={tw`justify-center`}
+                      onPress={() => handleDelete(task.id)}
+                      testID={`delete-button-${task.id}`}
+                    />
+                  </DataTable.Cell>
+                </DataTable.Row>
+              );
+            })}
+
+          <DataTable.Pagination
+            page={page}
+            numberOfPages={Math.ceil(userTasks.length / itemsPerPage)}
+            onPageChange={(page) => setPage(page)}
+            label={`Showing ${(page * itemsPerPage) + 1}-${Math.min((page + 1) * itemsPerPage, userTasks.length)} of ${userTasks.length}`}
+            numberOfItemsPerPage={itemsPerPage}
+            onItemsPerPageChange={setItemsPerPage}
+            showFastPaginationControls
+            selectPageDropdownLabel={'Rows per page'}
+            theme={theme}
+          />
         </DataTable>
       </View>
     </View>
