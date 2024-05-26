@@ -4,6 +4,9 @@ import tw from "twrnc";
 import { createClient } from "@supabase/supabase-js";
 import Options from "../Options";
 import { IconButton, DataTable, Text } from "react-native-paper";
+import { collection, doc, writeBatch } from "firebase/firestore";
+import { currentYear,currentMonth } from "../../../../variables";
+import { db, auth } from "../../../../firebase";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
@@ -12,6 +15,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const Reconstruction = () => {
   const [cosmetics, setCosmetics] = useState([]);
   const [selectedCosmetics, setSelectedCosmetics] = useState([]);
+  const user = auth.currentUser;
 
   useEffect(() => {
     const fetchCosmetics = async () => {
@@ -61,6 +65,29 @@ const Reconstruction = () => {
     }
   };
 
+  const handleFABPress = async () => {
+    try {
+      if (user) {
+        const userId = user.uid;
+        const skincareCollection = collection(
+          db,
+          `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/reconstruction`,
+        );
+
+        const batch = writeBatch(db);
+
+        selectedCosmetics.forEach((cosmetic) => {
+          const docRef = doc(skincareCollection); // Automatically generates a new document ID
+          batch.set(docRef, cosmetic);
+        });
+
+        await batch.commit();
+      }
+    } catch (error) {
+      console.error("Error saving cosmetics to Firebase:", error.message);
+    }
+  };
+
   return (
     <View style={tw`mb-6`}>
       <View style={tw`flex-1 p-6 bg-white `}>
@@ -74,6 +101,7 @@ const Reconstruction = () => {
           <Options
             options={cosmetics.map((cosmetic) => cosmetic.product_name)}
             onSelect={handleSelectCosmetic}
+            handleFABPress={handleFABPress}
           />
         )}
       </View>

@@ -16,8 +16,12 @@ const transformItemsForAgenda = (items, selectedSubcategory) => {
           isCategory: true,
         });
         if (period === "Evening") {
-          if (selectedSubcategory && items[date][period][selectedSubcategory]) {
-            items[date][period][selectedSubcategory].forEach((item) => {
+          if (
+            selectedSubcategory &&
+            items[date][period]["5"] &&
+            items[date][period]["5"][selectedSubcategory]
+          ) {
+            items[date][period]["5"][selectedSubcategory].forEach((item) => {
               transformedItems[date].push({
                 ...item,
                 period: period,
@@ -39,6 +43,7 @@ const transformItemsForAgenda = (items, selectedSubcategory) => {
   return transformedItems;
 };
 
+
 const SkinCareAgenda = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [checked, setChecked] = useState(false);
@@ -55,7 +60,7 @@ const SkinCareAgenda = () => {
   }, [selectedSubcategory]);
 
   const items = {
-    "2024-05-20": {
+    "2024-05-26": {
       Morning: [
         {
           product_name: "Hydrating Facial Cleanser",
@@ -79,6 +84,7 @@ const SkinCareAgenda = () => {
         },
       ],
       Evening: {
+        "5" : {
         Exfoliation: [
           {
             product_name: "Hydrating Facial Cleanser",
@@ -132,6 +138,7 @@ const SkinCareAgenda = () => {
             expiration_date: "",
           },
         ],
+        },
       },
     },
   };

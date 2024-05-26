@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import { Button, Provider, FAB } from "react-native-paper";
 import tw from "twrnc";
 
-const Options = ({ options, onSelect }) => {
+const Options = ({ options, onSelect, handleFABPress }) => {
   const [visible, setVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -14,10 +14,6 @@ const Options = ({ options, onSelect }) => {
     setSelectedOption(option);
     onSelect(option);
     closeMenu();
-  };
-
-  const handleFABPress = () => {
-    console.log("FAB pressed"); 
   };
 
   return (
@@ -32,7 +28,7 @@ const Options = ({ options, onSelect }) => {
             Select product:
           </Button>
           <FAB
-            style={tw`bg-fuchsia-700 rounded-full  m-2`}
+            style={tw`bg-fuchsia-700 rounded-full m-2`}
             size="small"
             icon="plus"
             color="#FFFFFF"
@@ -46,7 +42,7 @@ const Options = ({ options, onSelect }) => {
             {options.map((option, index) => (
               <View key={index}>
                 <Button
-                  labelStyle={tw`text-fuchsia-800 font-bold `}
+                  labelStyle={tw`text-fuchsia-800 font-bold`}
                   onPress={() => handleOptionSelect(option)}
                 >
                   {option}

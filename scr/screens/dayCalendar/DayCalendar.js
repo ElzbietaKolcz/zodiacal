@@ -51,13 +51,13 @@ const DayCalendar = () => {
               Goals for this weekend
             </Text>
 
-            {/* <View>
+            <View>
               <View>
                 <InputGoalWeek index={0} />
                 <InputGoalWeek index={1} />
                 <InputGoalWeek index={2} />
               </View>
-            </View> */}
+            </View>
           </View>
         </View>
       </PaperProvider>
