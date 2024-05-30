@@ -1,5 +1,3 @@
-// taskSlice.js
-
 import { createSlice } from "@reduxjs/toolkit";
 
 export const taskSlice = createSlice({

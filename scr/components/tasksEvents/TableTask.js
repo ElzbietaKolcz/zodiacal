@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { IconButton, Text, DataTable,DefaultTheme } from "react-native-paper";
 import tw from "twrnc";
-import { useDispatch, useSelector } from "react-redux";
-import { addTask, removeTask, setTasks } from "../../features/taskSlice";
+import { useDispatch } from "react-redux";
+import {  removeTask, setTasks } from "../../features/taskSlice";
 import { db, auth } from "../../../firebase";
 import {
   collection,
@@ -17,7 +17,6 @@ import {
   currentYear,
   currentMonth,
   currentWeek,
-  currentDay,
 } from "../../../variables";
 
 const TableTask = () => {
@@ -33,8 +32,8 @@ const TableTask = () => {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: 'black', // kolor przycisków
-      text: 'black', // kolor tekstu
+      primary: 'black', 
+      text: 'black', 
     },
   };
 
@@ -67,7 +66,6 @@ const TableTask = () => {
         `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
       );
       await deleteDoc(doc(userTasksCollectionRef, taskId));
-      // Aktualizujemy stan Redux, Firestore zaktualizuje stan lokalny automatycznie przez onSnapshot
       dispatch(removeTask(taskId));
       console.log(`Task with ID ${taskId} deleted successfully.`);
     } catch (error) {

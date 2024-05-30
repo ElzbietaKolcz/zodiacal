@@ -1,11 +1,17 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
+import { View, ScrollView } from "react-native";
 import { Button, Provider, FAB } from "react-native-paper";
 import tw from "twrnc";
 
-const Options = ({ options, onSelect, handleFABPress }) => {
+const Options = forwardRef(({ options, onSelect, handleFABPress }, ref) => {
   const [visible, setVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+
+  useImperativeHandle(ref, () => ({
+    reset() {
+      setSelectedOption(null);
+    }
+  }));
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -25,7 +31,7 @@ const Options = ({ options, onSelect, handleFABPress }) => {
             labelStyle={tw`text-black text-left`}
             onPress={openMenu}
           >
-            Select product:
+            {selectedOption ? selectedOption : "Select product:"}
           </Button>
           <FAB
             style={tw`bg-fuchsia-700 rounded-full m-2`}
@@ -54,6 +60,6 @@ const Options = ({ options, onSelect, handleFABPress }) => {
       </View>
     </Provider>
   );
-};
+});
 
 export default Options;
