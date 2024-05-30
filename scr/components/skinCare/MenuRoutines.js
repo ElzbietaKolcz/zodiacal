@@ -6,10 +6,10 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Definicje ikonek dla kategorii
 const subcategoryIcons = {
-  Exfoliation: "eraser",
-  Moisturizing: "water",
-  Reconstruction: "leaf",
-  Break: "coffee",
+  exfoliation: "eraser",
+  moisturizing: "water",
+  reconstruction: "leaf",
+  break: "coffee",
 };
 
 const MenuRoutines = ({ onSelectSubcategory }) => {
@@ -20,10 +20,10 @@ const MenuRoutines = ({ onSelectSubcategory }) => {
   const closeMenu = () => setVisible(false);
 
   const subcategories = [
-    "Exfoliation",
-    "Moisturizing",
-    "Reconstruction",
-    "Break",
+    "exfoliation",
+    "moisturizing",
+    "reconstruction",
+    "break",
   ];
 
   const handleMenuSelect = (subcategory) => {
