@@ -35,6 +35,7 @@ const YearlyCalendar = () => {
   const [inputMonth, setInputMonth] = useState("");
   const [inputName, setInputName] = useState("");
   const user = auth.currentUser;
+  const holidays = useSelector((state) => state.holidays);
 
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
@@ -273,6 +274,7 @@ const YearlyCalendar = () => {
                     currentYear={currentYear}
                     month={month}
                     userBirthdays={birthdays}
+                    userHolidays={holidays}
                   />
                 ))}
               </View>

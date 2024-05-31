@@ -4,7 +4,8 @@ import userReducer from "./scr/features/userSlice";
 import birthdayReducer from "./scr/features/birthdaySlice";
 import taskReducer from "./scr/features/taskSlice";
 import goalReducer from "./scr/features/goalSlice";
-import cosmeticSlice from "./scr/features/cosmeticSlice";
+import cosmeticReducer from "./scr/features/cosmeticSlice";
+import holidaysReducer from "./scr/features/holidaysSlice";
 import eventReducer from "./scr/features/eventSlice";
 
 export const store = configureStore({
@@ -14,7 +15,8 @@ export const store = configureStore({
     task: taskReducer,
     event: eventReducer,
     goals: goalReducer,
-    cosmetics: cosmeticSlice,
+    cosmetics: cosmeticReducer,
+    holidays: holidaysReducer,
     [astrologyApi.reducerPath]: astrologyApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

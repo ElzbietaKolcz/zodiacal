@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { Checkbox } from "react-native-paper";
 import tw from "twrnc";
 import { Agenda } from "react-native-calendars";
 import MenuRoutines from "../../components/skinCare/MenuRoutines";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../../../firebase";
 import { currentYear, currentMonth, currentDay } from "../../../variables";
 
@@ -44,7 +44,6 @@ const transformItemsForAgenda = (items, selectedSubcategory) => {
 
 const SkinCareAgenda = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
-  const [checked, setChecked] = useState(false);
   const [transformedItems, setTransformedItems] = useState({});
   const user = auth.currentUser;
 
@@ -67,7 +66,7 @@ const SkinCareAgenda = () => {
         ),
       );
       morningQuerySnapshot.forEach((doc) => {
-        const { product_name, brand, expiration_date, tag } = doc.data();
+        const { product_name, brand, expiration_date, tag, state } = doc.data();
         const day = currentDay;
         const itemDate = `${currentYear}-${currentMonth
           .toString()
@@ -87,11 +86,11 @@ const SkinCareAgenda = () => {
         itemsFromFirebase[itemDate].morning.push({
           id: doc.id,
           name: product_name,
-          state: false,
+          state: state,
           tag,
           brand,
           expiration_date,
-        }); // Assuming state is initially false for skincare items
+        });
       });
 
       console.log("Morning skincare items:", itemsFromFirebase);
@@ -104,7 +103,7 @@ const SkinCareAgenda = () => {
         ),
       );
       eveningQuerySnapshot.forEach((doc) => {
-        const { product_name, brand, expiration_date, tag } = doc.data();
+        const { product_name, brand, expiration_date, tag, state } = doc.data();
         const day = currentDay;
         const itemDate = `${currentYear}-${currentMonth
           .toString()
@@ -124,7 +123,7 @@ const SkinCareAgenda = () => {
         itemsFromFirebase[itemDate].evening[selectedCategory].push({
           id: doc.id,
           name: product_name,
-          state: false,
+          state: state, // Added state
           tag,
           brand,
           expiration_date,
@@ -143,19 +142,50 @@ const SkinCareAgenda = () => {
     setSelectedSubcategory(subcategory);
   };
 
-  const handleCheckboxPress = () => {
-    setChecked(!checked);
+  const handleCheckbox = async (itemId, currentState, itemType) => {
+    try {
+      const userId = auth.currentUser.uid;
+      let userCollectionRef;
+
+      if (itemType === "morning") {
+        userCollectionRef = collection(
+          db,
+          `users/${userId}/${currentYear}/skincare/morning`,
+        );
+      } else if (itemType === "evening") {
+        const categoryPath = selectedSubcategory
+          ? `evening/${currentMonth}/${selectedSubcategory.toLowerCase()}`
+          : "evening";
+        userCollectionRef = collection(
+          db,
+          `users/${userId}/${currentYear}/skincare/${categoryPath}`,
+        );
+      } else {
+        throw new Error("Invalid item type");
+      }
+
+      await updateDoc(doc(userCollectionRef, itemId), {
+        state: !currentState,
+      });
+
+      setTransformedItems((prevItems) => {
+        const updatedItems = { ...prevItems };
+        for (const date in updatedItems) {
+          updatedItems[date] = updatedItems[date].map((item) =>
+            item.id === itemId ? { ...item, state: !currentState } : item,
+          );
+        }
+        return updatedItems;
+      });
+
+      console.log(`Item with ID ${itemId} state updated successfully.`);
+    } catch (error) {
+      console.error("Error updating item state:", error.message);
+    }
   };
 
-  const renderEmptyDate = () => {
-    return (
-      <View style={tw`flex-grow m-1`}>
-        <Text>No items for this day</Text>
-      </View>
-    );
-  };
-
-  const renderItem = (item) => {
+  const renderItem = (item, index) => {
+    const uniqueCheckboxId = `${item.id}-${index}`;
     if (item.isCategory) {
       return (
         <View style={tw`flex-grow flex-row justify-between flex items-start`}>
@@ -171,28 +201,49 @@ const SkinCareAgenda = () => {
     }
 
     return (
-      <TouchableOpacity
-        style={tw`flex-row flex items-center text-black rounded-lg flex-1`}
+      <View
+        style={tw`flex-row h-1/3 flex items-center text-black rounded-lg flex-1`}
+        key={uniqueCheckboxId}
       >
-        <View style={tw`flex-grow m-1 bg-fuchsia-200 rounded-lg p-2 mx-4 mt-2`}>
-          <Text style={tw`text-base font-semibold px-2`}>{item.name}</Text>
+        <View
+          style={[
+            tw`flex-grow m-1 rounded-lg p-2 mx-4 mt-2`,
+            item.state ? tw`bg-fuchsia-100` : tw`bg-fuchsia-200`,
+          ]}
+        >
+          <Text
+            style={[
+              tw`text-base px-2`,
+              item.state && tw` text-gray-500 line-through`,
+            ]}
+          >
+            {item.name}
+          </Text>
           <View
             style={tw`flex-grow flex-row justify-between flex items-center`}
           >
             <Text style={tw`text-sm px-2`}>{item.brand}</Text>
+
             <Text style={tw`text-sm px-2`}>{item.expiration_date}</Text>
           </View>
         </View>
         <View style={tw`rounded-lg mr-4`}>
           <Checkbox
-            status={checked ? "checked" : "unchecked"}
+            status={item.state ? "checked" : "unchecked"}
+            onPress={() => handleCheckbox(item.id, item.state, item.period)}
             uncheckedColor="#535353"
             color="#8D03A5"
-            onPress={handleCheckboxPress}
-            testID="checkbox"
           />
         </View>
-      </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderEmptyDate = () => {
+    return (
+      <View style={tw`flex-grow m-1`}>
+        <Text>No items for this day</Text>
+      </View>
     );
   };
 

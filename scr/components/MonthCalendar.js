@@ -3,35 +3,72 @@ import { View, Text } from "react-native";
 import { Calendar } from "react-native-calendars";
 import tw from "twrnc";
 
-const MonthCalendar = ({ currentYear, month, userBirthdays, userEvents }) => {
-  const markedDates = generateMarkedDates(userBirthdays, userEvents, currentYear, month);
+const MonthCalendar = ({
+  currentYear,
+  month,
+  userBirthdays,
+  userEvents,
+  userHolidays,
+}) => {
+  const markedDates = generateMarkedDates(
+    userBirthdays,
+    userEvents,
+    userHolidays,
+    currentYear,
+    month,
+  );
 
-  function generateMarkedDates(userBirthdays, userEvents, currentYear, month) {
+  function generateMarkedDates(
+    userBirthdays,
+    userEvents,
+    userHolidays,
+    currentYear,
+    month,
+  ) {
     const markedDates = {};
 
-    // Dodajemy oznaczenia dla urodzin
     userBirthdays.forEach((birthday) => {
-      const formattedDay = birthday.day < 10 ? `0${birthday.day}` : birthday.day.toString().padStart(2, "0");
+      const formattedDay =
+        birthday.day < 10
+          ? `0${birthday.day}`
+          : birthday.day.toString().padStart(2, "0");
       const formattedMonth = birthday.month.toString().padStart(2, "0");
       const dateKey = `${currentYear}-${formattedMonth}-${formattedDay}`;
 
       markedDates[dateKey] = {
         selected: true,
-        selectedColor: "purple",
+        selectedColor: "#701a75",
       };
     });
 
-    // Sprawdzamy, czy userEvents istnieje
     if (userEvents) {
-      // Dodajemy oznaczenia dla wydarzeń
       userEvents.forEach((event) => {
-        const formattedDay = event.day < 10 ? `0${event.day}` : event.day.toString().padStart(2, "0");
+        const formattedDay =
+          event.day < 10
+            ? `0${event.day}`
+            : event.day.toString().padStart(2, "0");
         const formattedMonth = event.month.toString().padStart(2, "0");
         const dateKey = `${currentYear}-${formattedMonth}-${formattedDay}`;
 
         markedDates[dateKey] = {
           selected: true,
-          selectedColor: "red",
+          selectedColor: "#e11d48",
+        };
+      });
+    }
+
+    if (userHolidays) {
+      userHolidays.forEach((holiday) => {
+        const formattedDay =
+          holiday.day < 10
+            ? `0${holiday.day}`
+            : holiday.day.toString().padStart(2, "0");
+        const formattedMonth = holiday.month.toString().padStart(2, "0");
+        const dateKey = `${currentYear}-${formattedMonth}-${formattedDay}`;
+
+        markedDates[dateKey] = {
+          selected: true,
+          selectedColor: "#f59e0b",
         };
       });
     }
@@ -54,13 +91,12 @@ const MonthCalendar = ({ currentYear, month, userBirthdays, userEvents }) => {
         }}
       />
       <View style={tw`my-4 flex-row flex-wrap`}>
-        {/* Wyświetlamy urodziny */}
         {userBirthdays.map((birthday) => {
           if (birthday.month === month) {
             return (
               <Text
                 variant="bodyLarge"
-                style={tw`ml-7 text-black`}
+                style={tw`ml-7 text-[#4a044e] font-semibold`}
                 key={`${birthday.id}`}
               >
                 {birthday.day} {birthday.name}
@@ -69,21 +105,38 @@ const MonthCalendar = ({ currentYear, month, userBirthdays, userEvents }) => {
           }
           return null;
         })}
-        {/* Wyświetlamy wydarzenia */}
-        {userEvents && userEvents.map((event) => {
-          if (event.month === month) {
-            return (
-              <Text
-                variant="bodyLarge"
-                style={tw`ml-7 text-black`}
-                key={`${event.id}`}
-              >
-                {event.day} {event.name}
-              </Text>
-            );
-          }
-          return null;
-        })}
+
+        {userEvents &&
+          userEvents.map((event) => {
+            if (event.month === month) {
+              return (
+                <Text
+                  variant="bodyLarge"
+                  style={tw`ml-7 text-[#e11d48] font-semibold`}
+                  key={`${event.id}`}
+                >
+                  {event.day} {event.name}
+                </Text>
+              );
+            }
+            return null;
+          })}
+
+        {userHolidays &&
+          userHolidays.map((holiday) => {
+            if (holiday.month === month) {
+              return (
+                <Text
+                  variant="bodyLarge"
+                  style={tw`ml-7 text-[#f59e0b] font-semibold`}
+                  key={`${holiday.id}`}
+                >
+                  {holiday.day} {holiday.name}
+                </Text>
+              );
+            }
+            return null;
+          })}
       </View>
     </View>
   );
