@@ -252,20 +252,28 @@ const SkinCareAgenda = () => {
   };
 
   return (
-    <Agenda
-      items={transformedItems}
-      renderItem={renderItem}
-      renderEmptyDate={renderEmptyDate}
-      renderDay={renderDay}
-      firstDay={1}
-      theme={{
-        background: "purple",
-        todayTextColor: "purple",
-        textMonthFontWeight: "semibold",
-        selectedDayBackgroundColor: "purple",
-        agendaTodayColor: "purple",
-      }}
-    />
+    <View style={tw`flex-1`}>
+      {Object.keys(transformedItems).length === 0 ? (
+        <View style={tw`flex-grow justify-center items-center`}>
+          <Text style={tw`text-lg text-gray-500`}>Create Routines</Text>
+        </View>
+      ) : (
+        <Agenda
+          items={transformedItems}
+          renderItem={renderItem}
+          renderEmptyDate={renderEmptyDate}
+          renderDay={renderDay}
+          firstDay={1}
+          theme={{
+            background: "purple",
+            todayTextColor: "purple",
+            textMonthFontWeight: "semibold",
+            selectedDayBackgroundColor: "purple",
+            agendaTodayColor: "purple",
+          }}
+        />
+      )}
+    </View>
   );
 };
 

@@ -156,6 +156,7 @@ const YearlyCalendar = () => {
           isSubmitting,
         }) => (
           <ScrollView style={tw` bg-white h-full w-full`}>
+                <View style={tw`bg-white mt-8`}></View>
             <Portal>
               <Modal
                 visible={visible}

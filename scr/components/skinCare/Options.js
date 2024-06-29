@@ -27,7 +27,7 @@ const Options = forwardRef(({ options, onSelect, handleFABPress }, ref) => {
       <View>
         <View style={tw`flex-grow flex-row justify-between flex items-start`}>
           <Button
-            contentStyle={tw`bg-transparent justify-start border-b-2 w-96 text-lg font-bold mt-3`}
+            contentStyle={tw`bg-transparent justify-start border-b-2 w-60 text-lg font-bold mt-3`}
             labelStyle={tw`text-black text-left`}
             onPress={openMenu}
           >

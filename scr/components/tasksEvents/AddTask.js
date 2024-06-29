@@ -150,7 +150,7 @@ const AddTask = () => {
             Add task{" "}
           </Text>
           <View style={tw`flex-row flex-wrap mt-2`}>
-            <View style={tw`w-22`}>
+            <View style={tw`w-18`}>
               <TextInput
                 style={tw`bg-fuchsia-50 rounded-lg mx-1`}
                 textColor="#535353"
@@ -170,7 +170,7 @@ const AddTask = () => {
               </HelperText>
             </View>
 
-            <View style={tw` w-55 mb-2`}>
+            <View style={tw` w-50 mb-2`}>
               <TextInput
                 style={tw`bg-fuchsia-50 rounded-lg mx-1`}
                 textColor="#535353"
@@ -190,7 +190,7 @@ const AddTask = () => {
               </HelperText>
             </View>
 
-            <View style={tw`m-3`}>
+            <View style={tw`my-3 mx-4`}>
               <FAB
                 onPress={handleSubmit}
                 disabled={!isValid || isSubmitting}

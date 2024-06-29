@@ -17,25 +17,26 @@ const Summary = () => {
     {
       key: 2,
       name: "Exfoliation",
-      amount: 11,
+      amount: 5,
       color: "#FDE3DF",
       svg: { fill: "#FDE3DF" },
     },
     {
       key: 3,
       name: "Reconstruction",
-      amount: 4,
+      amount: 10,
       color: "#E6BFCE",
       svg: { fill: "#E6BFCE" },
     },
     {
       key: 4,
       name: "Break",
-      amount: 8,
+      amount: 7,
       color: "#CA498C",
       svg: { fill: "#CA498C" },
     },
   ];
+  
 
   const totalAmount = data.reduce((sum, item) => sum + item.amount, 0);
 

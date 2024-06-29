@@ -68,7 +68,7 @@ const FormMenu = () => {
     <ScrollView>
     <Provider>
     
-      <View style={tw`flex-row items-center mt-5 mx-8 my-4`}>
+      <View style={tw`flex-row items-center mt-5 mx-8 `}>
         <View style={tw`flex-col w-48`}>
           <Button
             style={tw`bg-fuchsia-200 rounded-lg text-lg font-bold p-1 mx-1`}
@@ -93,7 +93,7 @@ const FormMenu = () => {
           )}
         </View>
 
-        <View style={tw`m-3`}>
+        <View style={tw`my-3 mx-6`}>
           <FAB
             onPress={handleSubmitMenu}
             style={[tw`bg-fuchsia-700 rounded-full right-1`]}

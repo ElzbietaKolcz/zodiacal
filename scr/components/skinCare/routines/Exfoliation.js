@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
 import tw from "twrnc";
+import 'react-native-url-polyfill/auto'
 import { createClient } from "@supabase/supabase-js";
 import Options from "../Options";
 import { Text, DataTable, IconButton, DefaultTheme } from "react-native-paper";
@@ -69,7 +71,7 @@ const Exfoliation = () => {
     if (user) {
       const userCosmeticsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/moisturizing`,
+        `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/exfoliation`,
       );
       const q = query(userCosmeticsCollectionRef, orderBy("product_name"));
 
@@ -103,7 +105,7 @@ const Exfoliation = () => {
     try {
       const userCosmeticsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/moisturizing`,
+        `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/exfoliation`,
       );
       await deleteDoc(doc(userCosmeticsCollectionRef, cosmeticsId));
       dispatch(removeCosmetics(cosmeticsId));
@@ -119,7 +121,7 @@ const Exfoliation = () => {
         const userId = user.uid;
         const skincareCollection = collection(
           db,
-          `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/moisturizing`,
+          `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/exfoliation`,
         );
 
         const batch = writeBatch(db);
@@ -235,6 +237,7 @@ const Exfoliation = () => {
                 showFastPaginationControls
                 selectPageDropdownLabel={"Rows per page"}
                 theme={theme}
+                
               />
             </DataTable>
           </View>

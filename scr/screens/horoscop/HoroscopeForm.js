@@ -8,8 +8,8 @@ import FormDate from "../../components/horoscop/FormDate";
 const Horoscope = () => {
   
   return (
-    <ScrollView>
-    <View style={tw`flex-1 bg-white justify-center items-center mt-2`}>
+    <ScrollView style={tw`bg-white`}>
+    <View style={tw`flex-1 bg-white justify-center items-center mt-2 h-full bg-white mt-20`}>
       <Image
         style={tw`w-full h-60`}
         source={images.logo}

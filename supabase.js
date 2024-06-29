@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { createClient } from "@supabase/supabase-js";
 import { setHolidays } from "../zodiacal/scr/features/holidaysSlice";
 import { store } from "./store";

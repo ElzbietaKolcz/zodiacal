@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
 import tw from "twrnc";
+import 'react-native-url-polyfill/auto'
 import { createClient } from "@supabase/supabase-js";
 import Options from "../Options";
 import { Text, DataTable, IconButton, DefaultTheme } from "react-native-paper";

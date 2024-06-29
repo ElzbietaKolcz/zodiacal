@@ -9,8 +9,8 @@ import { store } from "./store";
 export default function App() {
   return (
     <Provider store={store}>
-      <PaperProvider>
-        <SafeAreaProvider>
+      <PaperProvider > 
+        <SafeAreaProvider >
           <NavigationContainer>
             <StackNavigator testID="stack-navigator" />
           </NavigationContainer>

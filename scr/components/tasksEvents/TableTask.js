@@ -83,6 +83,7 @@ const TableTask = () => {
         <DataTable style={tw`border rounded-lg border-black w-full `}>
           <DataTable.Header>
             <DataTable.Title style={tw`flex-1`}>
+              
               <Text style={tw`text-black text-sm font-bold`}>Day</Text>
             </DataTable.Title>
             <DataTable.Title style={tw`flex-2`}>

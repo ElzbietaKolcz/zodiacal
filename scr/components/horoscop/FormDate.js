@@ -147,7 +147,7 @@ const FormDate = () => {
               </HelperText>
             </View>
 
-            <View style={tw`m-3`}>
+            <View style={tw`my-3 mx-4`}>
               <FAB
                 onPress={handleSubmit}
                 disabled={!isValid || isSubmitting}

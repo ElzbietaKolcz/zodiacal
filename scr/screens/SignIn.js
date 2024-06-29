@@ -59,12 +59,15 @@ const SignIn = ({ navigation }) => {
       dispatch(
         login({
           uid: user.uid,
+          sign: user.sign
         }),
       );
     } catch (error) {
       setError("Failed to sign in with Google");
     }
   };
+
+  
 
   const validationSchema = yup.object().shape({
     email: yup.string().email().required(),
@@ -76,11 +79,15 @@ const SignIn = ({ navigation }) => {
       initialValues={{ email: "", password: "" }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        if (disableLoginButton) return;
         signInWithEmailAndPassword(auth, values.email, values.password)
-          .then((userAuth) => {
+          .then(async (userAuth) => {
+            const userDoc = await db.collection("users").doc(userAuth.user.uid).get();
+            const sign = userDoc.data().sign;
+            console.log("Pobrana wartość 'sign' z Firebase:", sign); // Dodaj log
+  
             dispatch(
               login({
+                email: userAuth.user.email,
                 uid: userAuth.user.uid,
               }),
             );

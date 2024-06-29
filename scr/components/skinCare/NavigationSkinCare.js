@@ -6,7 +6,9 @@ const NavigationSkinCare = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={tw` flex flex-row items-center `}>
+    
+    <View style={tw` flex flex-row mt-8 items-center `}>
+            
       <Button
         title="Summary"
         onPress={() => navigation.navigate("Summary")}

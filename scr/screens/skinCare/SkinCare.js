@@ -10,8 +10,9 @@ import SkinCareAgenda from "../../components/skinCare/SkinCareAgenda";
 const SkinCare = () => {
   const navigation = useNavigation();
   return (
-    <ScrollView style={tw` bg-white h-full w-full`}>
-      <View style={tw`flex-row justify-between w-full`}>
+    <ScrollView style={tw` bg-white h-full  w-full`}>
+      <View style={tw`flex-row justify-between mt-8 w-full`}>
+  
         <Button
           style={tw`py-2 px-6 mt-1`}
           mode="text"

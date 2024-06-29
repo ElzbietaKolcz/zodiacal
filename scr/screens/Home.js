@@ -15,6 +15,7 @@ import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { db, auth } from "../../firebase";
 
 import { currentYear, currentMonth, currentWeek } from "../../variables";
+// import { View } from 'react-native-web';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -101,8 +102,9 @@ const Home = () => {
   };
 
   return (
-    <ScrollView style={tw`bg-white h-full w-full`}>
-      <StatusBar backgroundColor="white" />
+    <ScrollView style={tw`bg-white h-full  w-full`}>
+      {/* <StatusBar backgroundColor="white" /> */}
+      <View style={tw`bg-white mt-8`}></View>
       <Header userName={userName} />
 
       <View style={tw`mt-2`}>

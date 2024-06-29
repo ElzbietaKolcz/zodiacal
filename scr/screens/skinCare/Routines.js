@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import tw from "twrnc";
+import 'react-native-url-polyfill/auto'
 import { createClient } from "@supabase/supabase-js";
 import Morning from "../../components/skinCare/routines/Morning";
 import Exfoliation from "../../components/skinCare/routines/Exfoliation";
