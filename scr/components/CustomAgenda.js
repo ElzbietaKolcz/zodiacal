@@ -35,8 +35,8 @@ const CustomAgenda = () => {
       const userId = auth.currentUser.uid;
       const itemsFromFirebase = {};
 
-      const tasksQuerySnapshot = await getDocs(query(collection(db, `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks`)));
-      const eventsQuerySnapshot = await getDocs(query(collection(db, `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events`)));
+      const tasksQuerySnapshot = await getDocs(query(collection(db, `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks/`)));
+      const eventsQuerySnapshot = await getDocs(query(collection(db, `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events`)));
 
       tasksQuerySnapshot.forEach((doc) => {
         const { day, name, state, tag } = doc.data();
@@ -70,12 +70,12 @@ const CustomAgenda = () => {
       if (itemType === 'tasks') {
         userCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`
+          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events/`
         );
       } else if (itemType === 'events') {
         userCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`
+          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events/`
         );
       } else {
         throw new Error('Invalid item type');

@@ -52,7 +52,7 @@ const AddTask = () => {
         const userId = user.uid;
         const userTasksCollectionRef = collection(
           db,
-          `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
+          `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks/`,
         );
   
         const newUserTaskData = {
@@ -109,7 +109,7 @@ const AddTask = () => {
       const userId = user.uid;
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks/`,
       );
 
       fetchData(userTasksCollectionRef);

@@ -89,6 +89,8 @@ const SignIn = ({ navigation }) => {
               login({
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,
+                displayName: username,
+                sign: "",
               }),
             );
           })

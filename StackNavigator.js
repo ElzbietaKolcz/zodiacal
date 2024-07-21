@@ -14,6 +14,7 @@ import SkinCare from "./scr/screens/skinCare/SkinCare";
 import DayCalendar from "./scr/screens/dayCalendar/DayCalendar";
 import Summary from "./scr/screens/skinCare/Summary";
 import Routines from "./scr/screens/skinCare/Routines";
+import Settings from "./scr/screens/Settings";
 
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, selectUser } from "./scr/features/userSlice";
@@ -175,6 +176,12 @@ export default function StackNavigator() {
             initialParams={{ initialScreen: true }}
             component={HomeTabs}
           />
+            <Stack.Screen
+            name="Settings"
+            options={{ headerShown: true }}
+            component={Settings}
+          />
+
           {user.sign === "" ? (
             <Stack.Screen
               name="HoroscopeForm"

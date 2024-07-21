@@ -26,9 +26,6 @@ const Home = () => {
   const tasks = useSelector((state) => state.tasks);
   const holidays = useSelector((state) => state.holidays);
 
-  const userName = useSelector((state) =>
-    state.user.user ? state.user.user.username : "",
-  );
 
   useEffect(() => {
     if (user) {
@@ -39,11 +36,11 @@ const Home = () => {
       );
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events/`,
       );
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
+        `users/${userId}/${currentYear}/${currentMonth}/tasks&events/weeks/tasks/`,
       );
 
       fetchData();
@@ -105,7 +102,7 @@ const Home = () => {
     <ScrollView style={tw`bg-white h-full  w-full`}>
       {/* <StatusBar backgroundColor="white" /> */}
       <View style={tw`bg-white mt-8`}></View>
-      <Header userName={userName} />
+      <Header />
 
       <View style={tw`mt-2`}>
         <MonthCalendar

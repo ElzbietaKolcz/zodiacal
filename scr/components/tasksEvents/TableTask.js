@@ -41,7 +41,7 @@ const TableTask = () => {
     if (user) {
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks/`,
       );
       const q = query(userTasksCollectionRef, orderBy("day"));
 
@@ -63,7 +63,7 @@ const TableTask = () => {
     try {
       const userTasksCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/tasks/`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/tasks/`,
       );
       await deleteDoc(doc(userTasksCollectionRef, taskId));
       dispatch(removeTask(taskId));

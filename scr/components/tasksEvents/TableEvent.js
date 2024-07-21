@@ -42,7 +42,7 @@ const TableEvent = () => {
     if (user) {
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events/`,
 
       );
       const q = query(userEventsCollectionRef, orderBy("day"));
@@ -65,11 +65,10 @@ const TableEvent = () => {
     try {
       const userEventsCollectionRef = collection(
         db,
-        `users/${userId}/${currentYear}/${currentMonth}/${currentWeek}/tasks&events/events/`,
+        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events/`,
 
       );
       await deleteDoc(doc(userEventsCollectionRef, eventId));
-      // Aktualizujemy stan Redux, Firestore zaktualizuje stan lokalny automatycznie przez onSnapshot
       dispatch(removeEvent(eventId));
       console.log(`Event with ID ${eventId} deleted successfully.`);
     } catch (error) {

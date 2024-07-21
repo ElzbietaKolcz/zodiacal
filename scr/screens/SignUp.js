@@ -75,6 +75,7 @@ const SignUp = ({ navigation }) => {
                     login({
                       uid: userAuth.user.uid,
                       displayName: values.username,
+                      sign: "",
                     }),
                   );
                 })
