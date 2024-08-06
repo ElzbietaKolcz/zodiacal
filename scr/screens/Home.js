@@ -15,58 +15,44 @@ import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { db, auth } from "../../firebase";
 
 import { currentYear, currentMonth, currentWeek } from "../../variables";
-// import { View } from 'react-native-web';
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const user = auth.currentUser;
-
-  const birthdays = useSelector((state) => state.birthdays);
-  const event = useSelector((state) => state.event);
-  const tasks = useSelector((state) => state.tasks);
-  const holidays = useSelector((state) => state.holidays);
-
-
+  let dispatch = useDispatch();
+  let user = auth.currentUser;
+  let birthdays = useSelector((state) => state.birthdays);
+  let event = useSelector((state) => state.event);
+  let tasks = useSelector((state) => state.tasks);
+  let holidays = useSelector((state) => state.holidays);
   useEffect(() => {
     if (user) {
       const userId = user.uid;
       const userBirthdaysCollectionRef = collection(
-        db,
-        `users/${userId}/birthday`,
-      );
+        db, `users/${userId}/birthday`,);
       const userEventsCollectionRef = collection(
-        db,
-        `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events/`,
-      );
+        db, `users/${userId}/${currentYear}/${currentMonth}/weeks/${currentWeek}/events/`,);
       const userTasksCollectionRef = collection(
-        db,
-        `users/${userId}/${currentYear}/${currentMonth}/tasks&events/weeks/tasks/`,
-      );
-
+        db, `users/${userId}/${currentYear}/${currentMonth}/tasks&events/weeks/tasks/`,);
       fetchData();
       fetchUserTasks(userTasksCollectionRef);
       fetchBirthdays(userBirthdaysCollectionRef);
       fetchUserEvents(userEventsCollectionRef);
     }
   }, [user]);
-
-  const fetchBirthdays = async (collectionRef) => {
+  let fetchBirthdays = async (collectionRef) => {
     try {
       const q = query(collectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
-
       const data = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-
       dispatch(setBirthdays(data));
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error.message);
     }
   };
 
-  const fetchUserEvents = async (collectionRef) => {
+  let fetchUserEvents = async (collectionRef) => {
     try {
       const q = query(collectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
@@ -82,7 +68,7 @@ const Home = () => {
     }
   };
 
-  const fetchUserTasks = async (collectionRef) => {
+  let fetchUserTasks = async (collectionRef) => {
     try {
       const q = query(collectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
@@ -100,10 +86,8 @@ const Home = () => {
 
   return (
     <ScrollView style={tw`bg-white h-full  w-full`}>
-      {/* <StatusBar backgroundColor="white" /> */}
       <View style={tw`bg-white mt-8`}></View>
       <Header />
-
       <View style={tw`mt-2`}>
         <MonthCalendar
           currentYear={currentYear}

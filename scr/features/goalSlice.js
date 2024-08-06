@@ -34,3 +34,4 @@ export const { setGoals, addGoal, updateGoal, toggleGoalState } =
 export const selectGoals = (state) => state.goals;
 export const selectGoalAdded = (state) => state.goalAdded;
 export default goalSlice.reducer;
+

@@ -74,7 +74,6 @@ const InputGoalMonth = ({ index }) => {
 
   const addOrUpdateGoal = async () => {
     try {
-      console.log("addOrUpdateGoal called");
       if (user) {
         const userId = user.uid;
         const userGoalCollectionRef = collection(
@@ -102,7 +101,6 @@ const InputGoalMonth = ({ index }) => {
           dispatch(setGoals(updatedGoals));
         } else {
           const docRef = await addDoc(userGoalCollectionRef, newGoalData);
-          console.log("New goal added:", docRef.id);
           dispatch(addGoal(newGoalData));
 
           const updatedGoals = [...userGoals, newGoalData];
@@ -131,23 +129,18 @@ const InputGoalMonth = ({ index }) => {
           db,
           `users/${userId}/${currentYear}/${currentMonth}/goals`,
         );
-
         const goalDocRef = doc(userGoalCollectionRef, userGoalToUpdate.id);
-
         await setDoc(
           goalDocRef,
           { state: !userGoalToUpdate.state },
           { merge: true },
         );
-
         const updatedGoals = userGoals.map((userGoal) =>
           userGoal.index === index
             ? { ...userGoal, state: !userGoalToUpdate.state }
             : userGoal,
         );
         dispatch(setGoals(updatedGoals));
-
-        console.log("State of the goal updated in Firebase");
       } catch (error) {
         console.error(
           "Error updating state of the goal in Firebase:",
@@ -156,6 +149,7 @@ const InputGoalMonth = ({ index }) => {
       }
     }
   };
+
   return (
     <View style={tw`w-full flex-row justify-between items-center`}>
       <View style={tw`rounded-lg`}>
