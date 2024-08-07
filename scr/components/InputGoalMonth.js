@@ -102,9 +102,7 @@ const InputGoalMonth = ({ index }) => {
           dispatch(setGoals(updatedGoals));
         } else {
           const docRef = await addDoc(userGoalCollectionRef, newGoalData);
-          console.log("New goal added:", docRef.id);
           dispatch(addGoal(newGoalData));
-
           const updatedGoals = [...userGoals, newGoalData];
           dispatch(setGoals(updatedGoals));
         }
@@ -146,8 +144,6 @@ const InputGoalMonth = ({ index }) => {
             : userGoal,
         );
         dispatch(setGoals(updatedGoals));
-
-        console.log("State of the goal updated in Firebase");
       } catch (error) {
         console.error(
           "Error updating state of the goal in Firebase:",
