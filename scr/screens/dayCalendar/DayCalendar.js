@@ -19,7 +19,6 @@ const DayCalendar = () => {
       <PaperProvider style={tw`h-full w-full flex-1`}>
         <View style={tw`h-full`}>
           <CustomAgenda />
-
           <Portal >
             <Modal
               visible={visible}
@@ -50,7 +49,6 @@ const DayCalendar = () => {
             <Text variant="headlineSmall" style={tw`text-black font-bold mt-6 text-2xl`}>
               Goals for this weekend
             </Text>
-
             <View>
               <View>
                 <InputGoalWeek index={0} />
