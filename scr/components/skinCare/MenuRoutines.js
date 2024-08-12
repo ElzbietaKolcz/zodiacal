@@ -4,14 +4,6 @@ import { Menu, Button } from "react-native-paper";
 import tw from "twrnc";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-// Definicje ikonek dla kategorii
-const subcategoryIcons = {
-  exfoliation: "eraser",
-  moisturizing: "water",
-  reconstruction: "leaf",
-  break: "coffee",
-};
-
 const MenuRoutines = ({ onSelectSubcategory }) => {
   const [visible, setVisible] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -25,7 +17,13 @@ const MenuRoutines = ({ onSelectSubcategory }) => {
     "reconstruction",
     "break",
   ];
-
+  const subcategoryIcons = {
+  		exfoliation: "eraser",
+  		moisturizing: "water",
+  		reconstruction: "leaf",
+  		break: "coffee",
+	};
+  
   const handleMenuSelect = (subcategory) => {
     setSelectedSubcategory(subcategory);
     onSelectSubcategory(subcategory);
