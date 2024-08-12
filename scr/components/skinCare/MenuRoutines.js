@@ -56,7 +56,6 @@ const MenuRoutines = ({ onSelectSubcategory }) => {
       >
         {subcategories.map((subcategory) => (
           <Menu.Item
-          
             key={subcategory}
             onPress={() => handleMenuSelect(subcategory)}
             title={subcategory}
