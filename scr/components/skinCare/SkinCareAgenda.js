@@ -203,27 +203,22 @@ const SkinCareAgenda = () => {
     return (
       <View
         style={tw`flex-row h-1/3 flex items-center text-black rounded-lg flex-1`}
-        key={uniqueCheckboxId}
-      >
+        key={uniqueCheckboxId}>
         <View
           style={[
             tw`flex-grow m-1 rounded-lg p-2 mx-4 mt-2`,
             item.state ? tw`bg-fuchsia-100` : tw`bg-fuchsia-200`,
-          ]}
-        >
+          ]}>
           <Text
             style={[
               tw`text-base px-2`,
               item.state && tw` text-gray-500 line-through`,
-            ]}
-          >
+            ]}>
             {item.name}
           </Text>
           <View
-            style={tw`flex-grow flex-row justify-between flex items-center`}
-          >
+            style={tw`flex-grow flex-row justify-between flex items-center`}>
             <Text style={tw`text-sm px-2`}>{item.brand}</Text>
-
             <Text style={tw`text-sm px-2`}>{item.expiration_date}</Text>
           </View>
         </View>
