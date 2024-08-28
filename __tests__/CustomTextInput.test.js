@@ -1,7 +1,7 @@
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import configureStore from "redux-mock-store";
 import { Provider } from "react-redux";
-import CustomTextInput from "../scr/components/CustomTextInput";
+import InputGoalWeek from "../scr/components/InputGoalWeek";
 import { updateGoal, addGoal } from "../scr/features/goalSlice";
 
 const mockStore = configureStore([]);
@@ -16,7 +16,7 @@ jest.mock("../firebase", () => ({
   db: {},
 }));
 
-describe("CustomTextInput component", () => {
+describe("InputGoalWeek component", () => {
   let store;
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe("CustomTextInput component", () => {
   it("renders correctly", () => {
     const { getByTestId } = render(
       <Provider store={store}>
-        <CustomTextInput index={1} />
+        <InputGoalWeek index={1} />
       </Provider>,
     );
     expect(getByTestId("Goals")).toBeTruthy();
@@ -37,7 +37,7 @@ describe("CustomTextInput component", () => {
   it("handles input change correctly", () => {
     const { getByLabelText } = render(
       <Provider store={store}>
-        <CustomTextInput index={1} />
+        <InputGoalWeek index={1} />
       </Provider>,
     );
     const input = getByLabelText("Goals");
@@ -48,7 +48,7 @@ describe("CustomTextInput component", () => {
   it("handles checkbox press correctly", () => {
     const { getByTestId } = render(
       <Provider store={store}>
-        <CustomTextInput index={1} />
+        <InputGoalWeek index={1} />
       </Provider>,
     );
     const checkbox = getByTestId("checkbox");
@@ -61,7 +61,7 @@ describe("CustomTextInput component", () => {
   it("handles FAB press correctly for adding goal", async () => {
     const { getByLabelText } = render(
       <Provider store={store}>
-        <CustomTextInput index={1} />
+        <InputGoalWeek index={1} />
       </Provider>,
     );
     const FAB = getByLabelText("FAB");
@@ -79,7 +79,7 @@ describe("CustomTextInput component", () => {
   it("handles FAB press correctly for updating goal", async () => {
     const { getByLabelText } = render(
       <Provider store={store}>
-        <CustomTextInput index={1} />
+        <InputGoalWeek index={1} />
       </Provider>,
     );
     const FAB = getByLabelText("FAB");

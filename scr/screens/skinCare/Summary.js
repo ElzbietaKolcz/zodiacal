@@ -48,6 +48,7 @@ const Summary = () => {
     percentage: calculatePercentage(item.amount),
   }));
 
+  
   const Labels = ({ slices, height, width }) => {
     return slices.map((slice, index) => {
       const { labelCentroid, pieCentroid, data } = slice;

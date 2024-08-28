@@ -123,20 +123,16 @@ const Exfoliation = () => {
           db,
           `users/${userId}/${currentYear}/skincare/evening/${currentMonth}/exfoliation`,
         );
-
         const batch = writeBatch(db);
-
         selectedCosmetics.forEach((cosmetic) => {
           const docRef = doc(skincareCollection);
           batch.set(docRef, cosmetic);
           dispatch(addCosmetics(cosmetic));
         });
-
         await batch.commit();
         console.log(
           "All cosmetics have been saved to Firebase for morning skincare.",
         );
-
         setSelectedCosmetics([]);
         if (optionsRef.current) {
           optionsRef.current.reset();
@@ -237,9 +233,10 @@ const Exfoliation = () => {
                 showFastPaginationControls
                 selectPageDropdownLabel={"Rows per page"}
                 theme={theme}
-                
               />
             </DataTable>
+
+
           </View>
         </View>
       </View>

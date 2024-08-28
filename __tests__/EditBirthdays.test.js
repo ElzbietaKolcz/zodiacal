@@ -1,5 +1,5 @@
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import EditBirthdays from "../scr/screens/EditBirthdays";
+import EditBirthdays from "../scr/screens/yearlyCalendar/EditBirthdays";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { removeBirthday } from "../scr/features/birthdaySlice";

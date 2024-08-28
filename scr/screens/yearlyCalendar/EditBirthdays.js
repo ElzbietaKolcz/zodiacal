@@ -100,7 +100,6 @@ const EditBirthdays = () => {
                 birthday.day < 10 ? `0${birthday.day}` : birthday.day;
               const formattedMonth =
                 birthday.month < 10 ? `0${birthday.month}` : birthday.month;
-
               return (
                 <DataTable.Row
                   key={birthday.id}
@@ -130,6 +129,7 @@ const EditBirthdays = () => {
                 </DataTable.Row>
               );
             })}
+            
         </DataTable>
       </View>
     </ScrollView>

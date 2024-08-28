@@ -5,12 +5,6 @@ import tw from "twrnc";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Definicje ikonek dla kategorii
-const subcategoryIcons = {
-  exfoliation: "eraser",
-  moisturizing: "water",
-  reconstruction: "leaf",
-  break: "coffee",
-};
 
 const MenuRoutines = ({ onSelectSubcategory }) => {
   const [visible, setVisible] = useState(false);
@@ -25,6 +19,12 @@ const MenuRoutines = ({ onSelectSubcategory }) => {
     "reconstruction",
     "break",
   ];
+  const subcategoryIcons = {
+    exfoliation: "eraser",
+    moisturizing: "water",
+    reconstruction: "leaf",
+    break: "coffee",
+  };
 
   const handleMenuSelect = (subcategory) => {
     setSelectedSubcategory(subcategory);
@@ -36,6 +36,7 @@ const MenuRoutines = ({ onSelectSubcategory }) => {
     <View style={tw`m-2`}>
       <View style={tw`flex-row flex flex-row items-center mt-3`}>
         <Text style={tw`text-base font-light `}>
+
           <Text style={tw`font-semibold text-base `}>Type:</Text>{" "}
           {selectedSubcategory ? (
             <>
@@ -56,7 +57,6 @@ const MenuRoutines = ({ onSelectSubcategory }) => {
       >
         {subcategories.map((subcategory) => (
           <Menu.Item
-          
             key={subcategory}
             onPress={() => handleMenuSelect(subcategory)}
             title={subcategory}
@@ -64,6 +64,7 @@ const MenuRoutines = ({ onSelectSubcategory }) => {
           />
         ))}
       </Menu>
+      
     </View>
   );
 };

@@ -59,7 +59,6 @@ const SkinCareAgenda = () => {
         ? `evening/${currentMonth}/${selectedCategory.toLowerCase()}`
         : "evening";
 
-      // Fetch morning skincare items
       const morningQuerySnapshot = await getDocs(
         query(
           collection(db, `users/${userId}/${currentYear}/skincare/morning`),

@@ -66,7 +66,6 @@ const CustomAgenda = () => {
     try {
       const userId = auth.currentUser.uid;
       let userCollectionRef;
-
       if (itemType === 'tasks') {
         userCollectionRef = collection(
           db,
@@ -80,11 +79,9 @@ const CustomAgenda = () => {
       } else {
         throw new Error('Invalid item type');
       }
-
       await updateDoc(doc(userCollectionRef, itemId), {
         state: !currentState
       });
-
       setTransformedItems(prevItems => {
         const updatedItems = { ...prevItems };
         for (const date in updatedItems) {
@@ -93,6 +90,7 @@ const CustomAgenda = () => {
               task.id === itemId ? { ...task, state: !currentState } : task
             );
           }
+          
           if (itemType === 'events' && updatedItems[date].events) {
             updatedItems[date].events = updatedItems[date].events.map(event =>
               event.id === itemId ? { ...event, state: !currentState } : event
@@ -101,8 +99,6 @@ const CustomAgenda = () => {
         }
         return updatedItems;
       });
-
-      console.log(`Item with ID ${itemId} state updated successfully.`);
     } catch (error) {
       console.error("Error updating item state:", error.message);
     }
