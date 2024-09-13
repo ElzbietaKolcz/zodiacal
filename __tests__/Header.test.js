@@ -1,10 +1,9 @@
 import React from "react";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import Header from "../scr/components/Header";
-import { logout } from "../scr/features/userSlice";
-import { NavigationContainer } from "@react-navigation/native"; // Import NavigationContainer
+import { NavigationContainer } from "@react-navigation/native"; 
 import { auth } from "../firebase";
 
 jest.mock("../firebase", () => ({

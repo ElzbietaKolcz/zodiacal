@@ -94,3 +94,4 @@ describe("InputGoalWeek component", () => {
     );
   });
 });
+
