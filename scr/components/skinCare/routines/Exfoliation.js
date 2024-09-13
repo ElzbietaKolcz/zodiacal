@@ -130,12 +130,9 @@ const Exfoliation = () => {
           dispatch(addCosmetics(cosmetic));
         });
         await batch.commit();
-<<<<<<< HEAD
         console.log(
           "All cosmetics have been saved to Firebase for morning skincare.",
         );
-=======
->>>>>>> e586ff069506ca677e0691388660324444fef91f
         setSelectedCosmetics([]);
         if (optionsRef.current) {
           optionsRef.current.reset();
