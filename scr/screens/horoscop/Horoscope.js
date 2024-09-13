@@ -62,7 +62,6 @@ export default function Horoscope() {
       </View>
     );
   }
-
   if (isError) {
     return (
       <View style={tw`flex-1 justify-center items-center`}>
@@ -70,11 +69,9 @@ export default function Horoscope() {
       </View>
     );
   }
-
   if (isSuccess) {
     const horoscope = horoscopeData.horoscope;
     const signImage = images[sign];
-
     return (
       <View style={tw`flex-1 bg-white justify-center items-center`}>
         <Image
@@ -91,6 +88,5 @@ export default function Horoscope() {
       </View>
     );
   }
-
   return null;
 }

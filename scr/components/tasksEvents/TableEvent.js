@@ -133,7 +133,7 @@ const TableEvent = () => {
               </DataTable.Row>
             );
           })}
-                    <DataTable.Pagination
+          <DataTable.Pagination
             page={page}
             numberOfPages={Math.ceil(userEvents.length / itemsPerPage)}
             onPageChange={(page) => setPage(page)}
@@ -145,9 +145,6 @@ const TableEvent = () => {
             dropdownItemRippleColor="red"
             selectPageDropdownRippleColor="red"
             theme={theme}
-            
-          
-        
           />
         </DataTable>
       </View>

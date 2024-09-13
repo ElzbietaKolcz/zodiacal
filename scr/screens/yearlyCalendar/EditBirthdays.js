@@ -93,7 +93,6 @@ const EditBirthdays = () => {
               Delete
             </DataTable.Title>
           </DataTable.Header>
-
           {userBirthdays &&
             userBirthdays.map((birthday) => {
               const formattedDay =
@@ -109,15 +108,12 @@ const EditBirthdays = () => {
                   <DataTable.Cell textStyle={tw`text-black text-sm `}>
                     {formattedDay}
                   </DataTable.Cell>
-
                   <DataTable.Cell textStyle={tw`text-black text-sm `}>
                     {formattedMonth}
                   </DataTable.Cell>
-
                   <DataTable.Cell textStyle={tw`text-black text-sm `}>
                     {birthday.name}
                   </DataTable.Cell>
-
                   <DataTable.Cell>
                     <IconButton
                       icon="delete"

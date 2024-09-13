@@ -102,7 +102,6 @@ const InputGoalMonth = ({ index }) => {
         } else {
           const docRef = await addDoc(userGoalCollectionRef, newGoalData);
           dispatch(addGoal(newGoalData));
-
           const updatedGoals = [...userGoals, newGoalData];
           dispatch(setGoals(updatedGoals));
         }
