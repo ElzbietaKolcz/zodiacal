@@ -84,7 +84,9 @@ const FormDate = () => {
 
     return (
       <View style={tw`w-full items-center justify-center`}>
-        <Text style={tw`text center text-black text-base`}>
+        <Text style={tw`text center text-black text-base`} 
+        testID="sign">
+
           Zodiac sign: {sign}
         </Text>
       </View>
@@ -109,6 +111,7 @@ const FormDate = () => {
           <View style={tw`flex-row flex-wrap mt-5`}>
             <View style={tw`mb-4 w-40`}>
               <TextInput
+                testID="day-input"
                 style={tw`bg-fuchsia-50 rounded-lg mx-1`}
                 textColor="#535353"
                 underlineColor="black"
@@ -122,6 +125,7 @@ const FormDate = () => {
                 style={tw`text-red-500 font-semibold`}
                 type="error"
                 visible={errors.day ? true : false}
+                testID="error-day"
               >
                 {errors.day}
               </HelperText>
@@ -129,6 +133,7 @@ const FormDate = () => {
 
             <View style={tw`mb-4 w-40`}>
               <TextInput
+                testID="month-input"
                 style={tw`bg-fuchsia-50 rounded-lg mx-1`}
                 textColor="#535353"
                 underlineColor="black"
@@ -142,6 +147,7 @@ const FormDate = () => {
                 style={tw`text-red-500 font-semibold`}
                 type="error"
                 visible={errors.month ? true : false}
+                testID="error-month"
               >
                 {errors.month}
               </HelperText>

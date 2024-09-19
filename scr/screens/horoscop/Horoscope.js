@@ -75,6 +75,7 @@ export default function Horoscope() {
     return (
       <View style={tw`flex-1 bg-white justify-center items-center`}>
         <Image
+          testID="horoscope-image"
           style={tw`w-full h-60 `}
           source={signImage}
           resizeMode="contain"
