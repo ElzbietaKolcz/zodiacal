@@ -6,29 +6,39 @@ import { removeBirthday } from "../scr/features/birthdaySlice";
 
 const mockStore = configureStore([]);
 
+// Mockowanie slice'a
 jest.mock("../scr/features/birthdaySlice", () => ({
   ...jest.requireActual("../scr/features/birthdaySlice"),
   removeBirthday: jest.fn(),
 }));
 
+// Helper function to create the store with initial state
+const createStore = (birthdays = [], username = "testUsername", uid = "testUserId") => {
+  return mockStore({
+    birthdays,
+    user: {
+      user: {
+        username,
+        uid,
+      },
+    },
+  });
+};
+
+// Helper function to render component with store
+const renderWithStore = (store) => {
+  return render(
+    <Provider store={store}>
+      <EditBirthdays />
+    </Provider>
+  );
+};
+
 describe("EditBirthdays component", () => {
   it("renders correctly", async () => {
-    const initialState = {
-      birthdays: [],
-      user: {
-        user: {
-          username: "testUsername",
-        },
-      },
-    };
+    const store = createStore();  // Using default initial state
 
-    const store = mockStore(initialState);
-
-    const { getByTestId, queryByText } = render(
-      <Provider store={store}>
-        <EditBirthdays />
-      </Provider>,
-    );
+    const { getByTestId, queryByText } = renderWithStore(store);
 
     const title = getByTestId("title");
     expect(title.props.children).toBe("List of birthday");
@@ -42,26 +52,13 @@ describe("EditBirthdays component", () => {
   });
 
   it("displays data in the table", async () => {
-    const initialState = {
-      birthdays: [
-        { id: "1", name: "John", day: 1, month: 7 },
-        { id: "2", name: "Jane", day: 5, month: 8 },
-      ],
-      user: {
-        user: {
-          username: "testUsername",
-          uid: "testUserId",
-        },
-      },
-    };
+    const birthdays = [
+      { id: "1", name: "John", day: 1, month: 7 },
+      { id: "2", name: "Jane", day: 5, month: 8 },
+    ];
+    const store = createStore(birthdays);
 
-    const store = mockStore(initialState);
-
-    const { getByText } = render(
-      <Provider store={store}>
-        <EditBirthdays />
-      </Provider>,
-    );
+    const { getByText } = renderWithStore(store);
 
     await waitFor(() => {});
 
@@ -74,33 +71,21 @@ describe("EditBirthdays component", () => {
   });
 
   it("deletes birthday", async () => {
-    const initialState = {
-      birthdays: [
-        { id: "1", name: "John", day: 1, month: 7 },
-        { id: "2", name: "Jane", day: 5, month: 8 },
-      ],
-      user: {
-        user: {
-          username: "testUsername",
-          uid: "testUserId",
-        },
-      },
-    };
+    const birthdays = [
+      { id: "1", name: "John", day: 1, month: 7 },
+      { id: "2", name: "Jane", day: 5, month: 8 },
+    ];
+    const store = createStore(birthdays);
 
-    const store = mockStore(initialState);
-
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <EditBirthdays />
-      </Provider>,
-    );
-    await waitFor(() => {});
-
+    const { getByTestId } = renderWithStore(store);
     const deleteButton = getByTestId("delete-button-2");
+
     fireEvent.press(deleteButton);
 
     await waitFor(() => {
       expect(removeBirthday).toHaveBeenCalled();
     });
   });
+
+  
 });
