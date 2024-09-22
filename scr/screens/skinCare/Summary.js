@@ -87,6 +87,7 @@ const Summary = () => {
           data={dataWithPercentage}
           spacing={0}
           outerRadius={"95%"}
+          testID="pie-chart"
         >
           <Labels />
         </PieChart>

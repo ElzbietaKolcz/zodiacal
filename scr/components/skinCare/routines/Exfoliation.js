@@ -158,6 +158,7 @@ const Exfoliation = () => {
             options={cosmetics.map((cosmetic) => cosmetic.product_name)}
             onSelect={handleSelectCosmetic}
             handleFABPress={handleFABPress}
+            testID="FAB"
           />
         )}
         <View style={tw`bg-white mb-2 mt-2`}>

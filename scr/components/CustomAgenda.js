@@ -129,6 +129,7 @@ const CustomAgenda = () => {
             onPress={() => handleCheckbox(item.id, item.state, item.period)}
             uncheckedColor="#535353"
             color="#8D03A5"
+            testID={item.id}
           />
         </View>
       </View>

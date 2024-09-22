@@ -16,7 +16,7 @@ jest.mock("../firebase", () => ({
   db: {},
 }));
 
-describe("InputGoalWeek component", () => {
+describe("CustomTextInput component", () => {
   let store;
 
   beforeEach(() => {

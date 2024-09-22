@@ -6,13 +6,11 @@ import { removeBirthday } from "../scr/features/birthdaySlice";
 
 const mockStore = configureStore([]);
 
-// Mockowanie slice'a
 jest.mock("../scr/features/birthdaySlice", () => ({
   ...jest.requireActual("../scr/features/birthdaySlice"),
   removeBirthday: jest.fn(),
 }));
 
-// Helper function to create the store with initial state
 const createStore = (birthdays = [], username = "testUsername", uid = "testUserId") => {
   return mockStore({
     birthdays,
@@ -25,7 +23,6 @@ const createStore = (birthdays = [], username = "testUsername", uid = "testUserI
   });
 };
 
-// Helper function to render component with store
 const renderWithStore = (store) => {
   return render(
     <Provider store={store}>
@@ -86,6 +83,4 @@ describe("EditBirthdays component", () => {
       expect(removeBirthday).toHaveBeenCalled();
     });
   });
-
-  
 });
