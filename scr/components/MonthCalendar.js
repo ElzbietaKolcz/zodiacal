@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import tw from "twrnc";
 
@@ -10,6 +10,43 @@ const MonthCalendar = ({
   userEvents,
   userHolidays,
 }) => {
+  useEffect(() => {
+    // Funkcja do sprawdzania wydarzeń/urodzin na dzisiaj
+    const checkTodayEvents = () => {
+      const today = new Date();
+      const currentDay = today.getDate();
+      const currentMonth = today.getMonth() + 1;
+
+      // Sprawdź urodziny
+      userBirthdays.forEach((birthday) => {
+        if (birthday.day === currentDay && birthday.month === currentMonth) {
+          Alert.alert("Urodziny!", `Dziś są urodziny ${birthday.name}`);
+        }
+      });
+
+      // Sprawdź wydarzenia
+      if (userEvents) {
+        userEvents.forEach((event) => {
+          if (event.day === currentDay && event.month === currentMonth) {
+            Alert.alert("Wydarzenie!", `Dziś ma miejsce: ${event.name}`);
+          }
+        });
+      }
+
+      // Sprawdź święta
+      if (userHolidays) {
+        userHolidays.forEach((holiday) => {
+          if (holiday.day === currentDay && holiday.month === currentMonth) {
+            Alert.alert("Święto!", `Dziś obchodzimy: ${holiday.name}`);
+          }
+        });
+      }
+    };
+
+    // Wywołaj sprawdzanie po załadowaniu komponentu
+    checkTodayEvents();
+  }, [userBirthdays, userEvents, userHolidays]);
+
   const markedDates = generateMarkedDates(
     userBirthdays,
     userEvents,

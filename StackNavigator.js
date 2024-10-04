@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import tw from "twrnc"; // Import twrnc
+import { View, Text, Alert } from "react-native";
 
 import Home from "./scr/screens/Home";
 import Horoscope from "./scr/screens/horoscop/Horoscope";
@@ -45,6 +47,13 @@ export default function StackNavigator() {
     return unsubscribe;
   }, [dispatch]);
 
+  const TabBarLabel = ({ icon, label }) => (
+    <View style={tw`items-center`}>
+      {icon}
+      <Text style={tw`text-xs mt-1`}>{label}</Text> {/* Użycie twrnc */}
+    </View>
+  );
+
   function HomeTabs({ navigation, route }) {
     useEffect(() => {
       if (route.params?.initialScreen) {
@@ -64,10 +73,15 @@ export default function StackNavigator() {
             component={HoroscopeForm}
             options={{
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="zodiac-aquarius"
-                  color={color}
-                  size={size}
+                <TabBarLabel
+                  icon={
+                    <MaterialCommunityIcons
+                      name="zodiac-aquarius"
+                      color={color}
+                      size={size}
+                    />
+                  }
+       
                 />
               ),
               headerShown: false,
@@ -79,10 +93,15 @@ export default function StackNavigator() {
             component={Horoscope}
             options={{
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="zodiac-aquarius"
-                  color={color}
-                  size={size}
+                <TabBarLabel
+                  icon={
+                    <MaterialCommunityIcons
+                      name="zodiac-aquarius"
+                      color={color}
+                      size={size}
+                    />
+                  }
+      
                 />
               ),
               headerShown: false,
@@ -95,10 +114,15 @@ export default function StackNavigator() {
           component={YearlyCalendar}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="calendar-month"
-                color={color}
-                size={size}
+              <TabBarLabel
+                icon={
+                  <MaterialCommunityIcons
+                    name="calendar-month"
+                    color={color}
+                    size={size}
+                  />
+                }
+   
               />
             ),
             headerShown: false,
@@ -110,10 +134,15 @@ export default function StackNavigator() {
           component={Home}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="home"
-                color={color}
-                size={size}
+              <TabBarLabel
+                icon={
+                  <MaterialCommunityIcons
+                    name="home"
+                    color={color}
+                    size={size}
+                  />
+                }
+      
               />
             ),
             headerShown: false,
@@ -125,10 +154,15 @@ export default function StackNavigator() {
           component={DayCalendar}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="white-balance-sunny"
-                color={color}
-                size={size}
+              <TabBarLabel
+                icon={
+                  <MaterialCommunityIcons
+                    name="white-balance-sunny"
+                    color={color}
+                    size={size}
+                  />
+                }
+
               />
             ),
             headerShown: false,
@@ -140,10 +174,15 @@ export default function StackNavigator() {
           component={SkinCare}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="face-woman"
-                color={color}
-                size={size}
+              <TabBarLabel
+                icon={
+                  <MaterialCommunityIcons
+                    name="face-woman"
+                    color={color}
+                    size={size}
+                  />
+                }
+
               />
             ),
             headerShown: false,
@@ -176,7 +215,7 @@ export default function StackNavigator() {
             initialParams={{ initialScreen: true }}
             component={HomeTabs}
           />
-            <Stack.Screen
+          <Stack.Screen
             name="Settings"
             options={{ headerShown: true }}
             component={Settings}

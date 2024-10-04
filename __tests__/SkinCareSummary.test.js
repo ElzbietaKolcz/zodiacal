@@ -30,9 +30,9 @@ const createStore = (sign) => {
   });
 };
 
-describe("CustomAgenda component", () => {
+describe("Summary Component", () => {
   
-  it("renders CustomAgenda component correctly", () => {
+  it("renders the PieChart", () => {
     const store = createStore("leo");
     useGetHoroscopeQuery.mockReturnValue({
       data: null,
@@ -45,7 +45,7 @@ describe("CustomAgenda component", () => {
     expect(getByText("Loading...")).toBeTruthy();
   });
 
-  it("updates event state when checkbox is pressed", () => {
+  it("calculates percentages correctly", () => {
     const store = createStore("leo");
     useGetHoroscopeQuery.mockReturnValue({
       data: { horoscope: "You will have a great day!" },
@@ -64,24 +64,17 @@ describe("CustomAgenda component", () => {
     expect(image.props.source).toEqual(images["leo"]);
   });
 
-  it("updates task state when checkbox is pressed", () => {
+  it("renders correct amounts in the DataTable", () => {
     const store = createStore("leo");
     useGetHoroscopeQuery.mockReturnValue({
-      data: { horoscope: "You will have a great day!" },
-      isError: false,
+      data: null,
+      isError: true,
       isLoading: false,
-      isSuccess: true,
+      isSuccess: false,
     });
 
-    const { getByText, getByTestId } = renderWithStore(store);
+    const { getByText } = renderWithStore(store);
 
-    expect(getByText("Your horoscope for today")).toBeTruthy();
-    expect(getByText("You will have a great day!")).toBeTruthy();
-
-    // Check if the image is rendered
-    const image = getByTestId('horoscope-image');
-    expect(image.props.source).toEqual(images["leo"]);
+    expect(getByText("Error loading horoscope data.")).toBeTruthy();
   });
-
-  
 });

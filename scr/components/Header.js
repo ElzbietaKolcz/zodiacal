@@ -43,7 +43,7 @@ function Header() {
           onPress={() => navigation.navigate("Settings")}
           testID="button"
         >
-          Settings
+          LOGOUT
         </Button>
       </View>
     </View>
