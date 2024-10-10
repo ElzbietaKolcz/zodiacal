@@ -67,15 +67,13 @@ const YearlyCalendar = () => {
     try {
       const q = query(collectionRef, orderBy("day"));
       const querySnapshot = await getDocs(q);
-
       const data = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-
       dispatch(setBirthdays(data));
     } catch (error) {
-      console.error("Błąd podczas pobierania danych:", error.message);
+      console.error("Error while downloading data:", error.message);
     }
   };
 
@@ -87,31 +85,28 @@ const YearlyCalendar = () => {
           db,
           `users/${userId}/birthday`,
         );
-
         const newUserBirthdayData = {
           name: name,
           day: parseInt(day, 10),
           month: parseInt(month, 10),
         };
-
         const docRef = await addDoc(
           userBirthdaysCollectionRef,
           newUserBirthdayData,
         );
-
         setInputName("");
         setInputDay("");
         setInputMonth("");
-
         fetchData(userBirthdaysCollectionRef);
       }
     } catch (error) {
       console.error(
-        "Błąd podczas dodawania nowych urodzin użytkownika:",
+        "Error adding new user birthday:",
         error.message,
       );
     }
   };
+
 
   const dispatch = useDispatch();
   const birthdays = useSelector((state) => state.birthdays);

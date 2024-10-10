@@ -45,13 +45,11 @@ const EditBirthdays = () => {
         db,
         `users/${user.uid}/birthday`,
       );
-
       await deleteDoc(doc(userBirthdaysCollectionRef, birthdayId));
       fetchData(userBirthdaysCollectionRef, setUserBirthdaysData);
-
       console.log(`Birthday with ID ${birthdayId} deleted successfully.`);
     } catch (error) {
-      console.error("Błąd podczas usuwania urodzin:", error.message);
+      console.error("Error while deleting birthday:", error.message);
     }
   };
 

@@ -83,7 +83,7 @@ const SignIn = ({ navigation }) => {
           .then(async (userAuth) => {
             const userDoc = await db.collection("users").doc(userAuth.user.uid).get();
             const sign = userDoc.data().sign;
-            console.log("Pobrana wartość 'sign' z Firebase:", sign); // Dodaj log
+            console.log("Pobrana wartość 'sign' z Firebase:", sign);
   
             dispatch(
               login({

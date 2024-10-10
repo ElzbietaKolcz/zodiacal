@@ -80,13 +80,11 @@ const InputGoalMonth = ({ index }) => {
           db,
           `users/${userId}/${currentYear}/${currentMonth}/goals`,
         );
-
         const newGoalData = {
           state: checked,
           name: goal,
           index: index,
         };
-
         if (userGoalToUpdate) {
           await setDoc(
             doc(userGoalCollectionRef, userGoalToUpdate.id),
@@ -94,7 +92,6 @@ const InputGoalMonth = ({ index }) => {
             { merge: true },
           );
           dispatch(updateGoal({ index, name: goal }));
-
           const updatedGoals = userGoals.map((userGoal) =>
             userGoal.index === index ? { ...userGoal, name: goal } : userGoal,
           );
