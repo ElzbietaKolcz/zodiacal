@@ -33,6 +33,9 @@
         "projectId": "0aa8f328-d386-494c-bafd-27981dbeaefc"
       }
     },
-    "owner": "elk13"
+    "owner": "elk13",
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }
